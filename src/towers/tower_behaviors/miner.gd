@@ -48,7 +48,7 @@ func on_attack(_event: Event):
 		CombatLog.log_ability(tower, null, "Goldrush")
 
 		var gold_amount: float = tower.get_player().get_gold()
-		goldrush_bt.apply_custom_timed(tower, tower, int(_stats.attack_speed_base + pow(gold_amount,0.5) / _stats.attack_speed_divisor), 5 + tower.get_level() * 0.1)
+		goldrush_bt.apply_custom_timed(tower, tower, int(_stats.attack_speed_base + sqrt(gold_amount) / _stats.attack_speed_divisor), 5 + tower.get_level() * 0.1)
 
 
 func on_damage(event: Event):
@@ -68,7 +68,7 @@ func on_create(preceding: Tower):
 
 func on_tower_details() -> MultiboardValues:
 	var gold_amount: float = tower.get_player().get_gold()
-	var excavation_value: int = 20 + int(pow(gold_amount, 0.5) / 5)
+	var excavation_value: int = 20 + int(sqrt(gold_amount) / 5)
 	var gold_gained_text: String = Utils.format_float(tower.user_real, 2)
 	var goldrush_bonus_text: String = "%d%%" % excavation_value
 

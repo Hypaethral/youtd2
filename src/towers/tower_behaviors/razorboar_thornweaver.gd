@@ -68,7 +68,7 @@ func on_projectile_hit(_projectile: Projectile, target: Unit):
 	else:
 		active_stacks = 0
 
-	var thorns_multiplier: float = pow(1.0 + QUILLSPRAY_STACK_BONUS, active_stacks)
+	var thorns_multiplier: float = DetMath.ipow(1.0 + QUILLSPRAY_STACK_BONUS, active_stacks)
 	var damage_ratio: float = (QUILLSPRAY_DAMAGE_RATIO + QUILLSPRAY_DAMAGE_RATIO_ADD * level) * thorns_multiplier
 	var damage: float = damage_ratio * tower.get_current_attack_damage_with_bonus()
 

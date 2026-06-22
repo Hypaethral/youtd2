@@ -16,7 +16,12 @@ const START_WAVE_ACTION_COOLDOWN: float = 2.0
 
 
 var _id: int = -1
-var _lives: float = 100
+# NOTE: lives are stored as centiunits (lives percent * 100) so
+# that all mutation happens in integer arithmetic, matching the
+# gold/experience centi pattern. This keeps lives bit-identical
+# across clients/architectures for multiplayer determinism. For
+# example 99.5% is stored as 9950. 100% (full) is 10000.
+var _lives_centi: int = 100 * 100
 var _level: int = 1
 var _player_list: Array[Player] = []
 var _finished_the_game: bool = false
@@ -85,23 +90,39 @@ func get_id() -> int:
 
 
 # NOTE: Team.getLivesPercent() in JASS
+# Returns lives as a percent (0-100) for display and gameplay
+# reads. Sub-percent precision is preserved (e.g. 99.5).
 func get_lives_percent() -> float:
-	return _lives
+	return _lives_centi / 100.0
+
+
+# Returns the raw lives centiunits (lives percent * 100). Use
+# this for the multiplayer checksum so that sub-percent
+# divergence cannot hide behind floori().
+func get_lives_centi() -> int:
+	return _lives_centi
 
 
 func get_lives_string() -> String:
-	var lives_string: String = Utils.format_percent(floori(_lives) / 100.0, 2)
+	var lives_string: String = Utils.format_percent(floori(get_lives_percent()) / 100.0, 2)
 
 	return lives_string
 
 
 func modify_lives(amount: float):
-	_lives = max(0.0, _lives + amount)
+	modify_lives_centi(roundi(amount * 100.0))
 
-	if Config.unlimited_portal_lives() && _lives == 0:
-		_lives = 1
 
-	var out_of_lives: bool = _lives <= 0
+# Integer entry point for lives mutation. All lives arithmetic
+# happens here in centiunits to stay deterministic.
+func modify_lives_centi(amount_centi: int):
+	_lives_centi = max(0, _lives_centi + amount_centi)
+
+#	NOTE: 100 centi == 1% lives
+	if Config.unlimited_portal_lives() && _lives_centi == 0:
+		_lives_centi = 100
+
+	var out_of_lives: bool = _lives_centi <= 0
 
 	if out_of_lives && !_finished_the_game:
 		_do_game_lose()

@@ -45,7 +45,7 @@ func on_damaged(event: Event):
 	var path_index: int = creep._current_path_index
 	var path_point: Vector2 = Utils.get_path_point_wc3(path, path_index)
 	var distance_to_path_point_squared: float = creep_pos.distance_squared_to(path_point)
-	var dart_would_overshoot_path_point: bool = distance_to_path_point_squared < pow(DART_DISTANCE, 2)
+	var dart_would_overshoot_path_point: bool = distance_to_path_point_squared < DART_DISTANCE * DART_DISTANCE
 
 	if dart_would_overshoot_path_point:
 		return

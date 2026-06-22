@@ -286,7 +286,10 @@ func _generate_random_tower_for_element(player: Player, element: Element.enm, ch
 	var group_weights: Dictionary = {}
 	for tower in group:
 		var cost: int = TowerProperties.get_cost(tower)
-		var weight: float = pow(cost, weight_cost_power)
+#		NOTE: DetMath.powf (deterministic) instead of pow() so
+#		tower-roll weights -> synced_rng selection stay identical
+#		across architectures. See src/singletons/det_math.gd.
+		var weight: float = DetMath.powf(float(cost), weight_cost_power)
 		group_weights[tower] = weight
 
 	var random_tower: int = Utils.random_weighted_pick(Globals.synced_rng, group_weights)

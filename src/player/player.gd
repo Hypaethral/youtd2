@@ -479,8 +479,18 @@ func get_gold() -> float:
 	return _gold_centi / 100.0
 
 
+# Raw centiunits (gold * 100). Use for the multiplayer checksum
+# so sub-unit divergence cannot hide behind floori().
+func get_gold_centi() -> int:
+	return _gold_centi
+
+
 func get_gold_farmed() -> float:
 	return _gold_farmed_centi / 100.0
+
+
+func get_gold_farmed_centi() -> int:
+	return _gold_farmed_centi
 
 
 # NOTE: player.modifyIncomeRate in JASS
