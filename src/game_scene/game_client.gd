@@ -275,10 +275,12 @@ func _calculate_game_state_checksum():
 
 	for player in player_list:
 		var total_damage: int = floori(player.get_total_damage())
-		var gold_farmed: int = floori(player.get_gold_farmed())
-		var gold: int = floori(player.get_gold())
+#		NOTE: hash centiunit accumulators directly (not floori of
+#		the divided float) so sub-unit divergence cannot hide.
+		var gold_farmed: int = player.get_gold_farmed_centi()
+		var gold: int = player.get_gold_centi()
 		var tomes: int = player.get_tomes()
-		var lives: int = floori(player.get_team().get_lives_percent())
+		var lives: int = player.get_team().get_lives_centi()
 		var level: int = player.get_team().get_level()
 
 		game_state.append(total_damage)
@@ -306,7 +308,7 @@ func _calculate_game_state_checksum():
 		var tower_uid: int = tower.get_uid()
 		var tower_id: int = tower.get_id()
 		var tower_level: int = tower.get_level()
-		var tower_exp: int = floori(tower.get_exp())
+		var tower_exp: int = tower.get_exp_centi()
 
 		game_state.append(tower_uid)
 		game_state.append(tower_id)

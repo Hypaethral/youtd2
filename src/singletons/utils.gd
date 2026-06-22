@@ -199,7 +199,7 @@ func add_ui_error(player: Player, text: String):
 
 
 func get_polygon_bounding_box(poly: Polygon2D) -> Rect2:
-	var float_max: float = pow(2, 31) - 1
+	var float_max: float = float((1 << 31) - 1)
 	var float_min: float = -float_max
 	var vec_min: Vector2 = Vector2(float_max, float_max)
 	var vec_max: Vector2 = Vector2(float_min, float_min)

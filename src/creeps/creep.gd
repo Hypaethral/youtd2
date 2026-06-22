@@ -189,13 +189,16 @@ func get_damage_to_portal() -> float:
 
 	var type_multiplier: float = CreepSize.get_portal_damage_multiplier(_size)
 
-	var damage_done_power: float
+	var damage_done_power: int
 	if _size == CreepSize.enm.BOSS:
 		damage_done_power = 4
 	else:
 		damage_done_power = 5
 
-	var damage_reduction_from_hp_ratio: float = (1 - pow(damage_done, damage_done_power))
+#	NOTE: DetMath.ipow (deterministic integer power) instead of
+#	pow() so portal damage -> lives stays bit-identical across
+#	architectures. See src/singletons/det_math.gd.
+	var damage_reduction_from_hp_ratio: float = (1 - DetMath.ipow(damage_done, damage_done_power))
 	var damage_to_portal: float = 2.5 * type_multiplier * damage_reduction_from_hp_ratio * _portal_damage_multiplier
 
 	var player: Player = get_player()

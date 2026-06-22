@@ -1214,9 +1214,9 @@ func _get_prop_with_diminishing_returns(type: ModificationType.enm) -> float:
 	var value: float = max(0, _mod_value_map[type])
 
 	if value > 1.7:
-		return 1.7 + (value - 1.7) / pow(1.0 + value - 1.7, 0.66)
+		return 1.7 + (value - 1.7) / DetMath.powf(1.0 + value - 1.7, 0.66)
 	elif value < 0.6:
-		return 0.6 / pow(1.0 + 0.6 - value, 1.6)
+		return 0.6 / DetMath.powf(1.0 + 0.6 - value, 1.6)
 	else:
 		return value
 
@@ -1720,7 +1720,7 @@ func get_prop_move_speed() -> float:
 	if base_value > 1.0:
 		value = base_value
 	else:
-		value = pow(3.0, base_value - 1.0)
+		value = DetMath.powf(3.0, base_value - 1.0)
 
 	return value
 
@@ -1869,6 +1869,12 @@ func get_attack_type() -> AttackType.enm:
 
 func get_exp() -> float:
 	return _experience_centi / 100.0
+
+
+# Raw centiunits (exp * 100). Use for the multiplayer checksum
+# so sub-unit divergence cannot hide behind floori().
+func get_exp_centi() -> int:
+	return _experience_centi
 
 
 func reached_max_level() -> bool:

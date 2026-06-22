@@ -185,6 +185,6 @@ func get_plague_spread_time():
 	else:
 		army_buff_level = army_buff.get_level()
 	
-	var plague_spread_time: float = 1.5 * pow(1.1, -army_buff_level)
+	var plague_spread_time: float = 1.5 * DetMath.ipow(1.1, -army_buff_level)
 
 	return plague_spread_time
