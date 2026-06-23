@@ -892,7 +892,6 @@ func _on_game_menu_quit_pressed():
 func _on_player_requested_quit_to_title():
 	_quit_to_title()
 
-
 func _quit_to_title():
 	_save_player_exp_on_quit()
 	_cleanup_all_objects()
@@ -903,7 +902,6 @@ func _quit_to_title():
 #	4.1->4.3 migration, for unknown reason.
 	var title_screen_scene: PackedScene = load("res://src/ui/title_screen/title_screen.tscn")
 	get_tree().change_scene_to_packed(title_screen_scene)
-
 
 func _on_tutorial_controller_tutorial_triggered(tutorial_id):
 #	NOTE: ignore tutorial triggers in build mode because

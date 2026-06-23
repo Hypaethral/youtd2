@@ -34,6 +34,7 @@ signal player_stopped_build_process()
 signal mouse_entered_unit(unit: Unit)
 signal mouse_exited_unit(unit: Unit)
 signal item_started_flying_to_item_stash(item: Item, canvas_pos: Vector2)
+signal host_requested_drop_lagging_players()
 
 # NOTE: signals for triggering tutorials
 signal finished_tutorial_section(tutorial_id: int)

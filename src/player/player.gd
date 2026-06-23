@@ -72,6 +72,7 @@ var _player_name: String = "Player"
 var _chat_ignored: bool = false
 var _attack_range_bonus: float = 0.0
 var _tower_exp_bonus: float = 0.0
+var _is_dropped: bool = false
 
 @export var _item_stash: ItemContainer
 @export var _horadric_stash: ItemContainer
@@ -188,6 +189,8 @@ func generate_waves():
 
 
 func start_wave(level: int):
+	if (_is_dropped):
+		return
 	_wave_spawner.start_wave(level)
 
 
@@ -211,11 +214,11 @@ func wave_is_in_progress() -> bool:
 
 
 func current_wave_is_finished() -> bool:
-	return _wave_spawner.current_wave_is_finished()
+	return _is_dropped || _wave_spawner.current_wave_is_finished()
 
 
 func wave_is_finished(level: int) -> bool:
-	return _wave_spawner.wave_is_finished(level)
+	return _is_dropped || _wave_spawner.wave_is_finished(level)
 
 
 func set_builder(builder_id: int):
@@ -756,6 +759,10 @@ func _determine_player_name() -> String:
 
 	return player_name
 
+func drop():
+	_is_dropped = true
+	_team.remove_player(self)
+	_player_name = "<DISCONNECTED>"
 
 #########################
 ###     Callbacks     ###

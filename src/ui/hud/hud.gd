@@ -20,6 +20,8 @@ class_name HUD extends Control
 @export var _ping_label: Label
 @export var _players_are_lagging_indicator: MarginContainer
 @export var _lagging_player_list_label: Label
+@onready var _quit_button: Button = $PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/QuitButton
+@onready var _drop_players_button: Button = $PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/DropPlayersButton
 @export var _multiplayer_pause_indicator: Control
 @export var _mission_tracker_container: MissionTrackerContainer
 @export var _one_time_help_popup: OneTimeHelpPopup
@@ -60,7 +62,11 @@ func toggle_ping_indicator_visibility():
 
 func set_waiting_for_lagging_players_indicator_visible(indicator_visible: bool):
 	_players_are_lagging_indicator.visible = indicator_visible
+	var is_host = multiplayer.is_server()
+	_quit_button.visible = indicator_visible
 
+	if (is_host):
+		_drop_players_button.visible = indicator_visible
 
 func set_waiting_for_lagging_players_indicator_player_list(lagging_player_list: Array):
 	var lagging_player_list_text: String = ""
@@ -235,6 +241,8 @@ func _on_local_game_lose():
 func _on_quit_button_pressed():
 	EventBus.player_requested_quit_to_title.emit()
 
+func _on_drop_lagging_button_pressed():
+	EventBus.host_requested_drop_lagging_players.emit()
 
 func _on_one_time_help_popup_close_pressed() -> void:
 	_one_time_help_popup.visible = false

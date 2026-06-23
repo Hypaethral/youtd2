@@ -84,6 +84,14 @@ func add_player(player: Player):
 	player.wave_spawned.connect(_on_player_wave_spawned)
 	player.wave_finished.connect(_on_player_wave_finished)
 
+func remove_player(player: Player):
+	var found_player_index = -1
+	for i in _player_list.size():
+		if _player_list[i].get_id() == player.get_id():
+			found_player_index = i
+
+	if (found_player_index != -1):
+		_player_list.remove_at(found_player_index)
 
 func get_id() -> int:
 	return _id
@@ -418,7 +426,6 @@ func _on_player_wave_finished(level: int):
 #	level, then we shouldn't start next wave timer.
 	if finished_current_level && need_to_start_next_wave_timer && can_start_next_wave_timer:
 		_start_timer_before_next_wave(Constants.TIME_BETWEEN_WAVES)
-
 
 #########################
 ###       Static      ###

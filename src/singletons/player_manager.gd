@@ -5,6 +5,7 @@ extends Node
 
 
 signal players_created()
+signal player_dropped(int)
 
 
 var _id_to_player_map: Dictionary = {}
@@ -65,6 +66,8 @@ func get_player_by_nakama_user_id(user_id: String) -> Player:
 func get_player_list() -> Array[Player]:
 	return _player_list.duplicate()
 
+func get_undropped_player_list() -> Array[Player]:
+	return _player_list.filter(func(p): return !p._is_dropped)
 
 func reset():
 	_id_to_player_map = {}
@@ -89,6 +92,11 @@ func add_player(player: Player):
 			return a.get_id() < b.get_id()
 			)
 
+func drop_player(id: int):
+	var maybePlayer: Array[Player] = _player_list.filter(func(p): return p.get_id() == id)
+	if maybePlayer.size() != 0:
+		print_verbose("found a player to drop: id=%s name=%s builder=%s" % [id, maybePlayer.front().get_player_name(), maybePlayer.front().get_builder()])
+		maybePlayer.front().drop()
 
 func send_players_created_signal():
 	players_created.emit()

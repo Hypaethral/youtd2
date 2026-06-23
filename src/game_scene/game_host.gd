@@ -80,6 +80,8 @@ func _ready():
 	if !multiplayer.is_server():
 		return
 
+	EventBus.host_requested_drop_lagging_players.connect(_on_host_requested_drop_lagging_players)
+
 	PlayerManager.players_created.connect(_on_players_created)
 	
 	_turn_length = Utils.get_turn_length()
@@ -133,17 +135,18 @@ func receive_action(action: Dictionary):
 @rpc("any_peer", "call_local", "reliable")
 func receive_timeslot_checksum(tick: int, checksum: PackedByteArray):
 	var peer_id: int = multiplayer.get_remote_sender_id()
-	var player: Player = PlayerManager.get_player_by_peer_id(peer_id)
-	var player_id: int = player.get_id()
+	var this_player: Player = PlayerManager.get_player_by_peer_id(peer_id)
+	var this_player_id: int = this_player.get_id()
 
 	if !_checksum_map.has(tick):
 		_checksum_map[tick] = {}
 
-	_checksum_map[tick][player_id] = checksum
+	_checksum_map[tick][this_player_id] = checksum
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
-	var player_count: int = player_list.size()
-	var collected_all_checksums_for_tick: bool = _checksum_map[tick].size() == player_count
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
+
+	var collected_all_checksums_for_tick: bool = \
+		player_list.all(func(p): return _checksum_map[tick].has(p.get_id()))
 
 	if collected_all_checksums_for_tick:
 		_verify_checksums(tick)
@@ -230,7 +233,7 @@ func _update_state_running():
 		_current_tick += 1
 
 #	Send timeslots
-	var player_list: Array[Player] = PlayerManager.get_player_list()
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
 
 	for player in player_list:
 		var player_id: int = player.get_id()
@@ -261,7 +264,7 @@ func _save_timeslot():
 func _get_highest_ping() -> int:
 	var highest_ping: int = 0
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
 
 	for player in player_list:
 		var player_id: int = player.get_id()
@@ -284,7 +287,7 @@ func _get_lagging_players() -> Array[Player]:
 	if player_mode == PlayerMode.enm.SINGLEPLAYER:
 		return lagging_player_list
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
 
 	var ticks_msec: int = Time.get_ticks_msec()
 
@@ -311,7 +314,7 @@ func _verify_checksums(tick: int):
 
 	var authority_checksum: PackedByteArray = player_to_checksum[authority_player_id]
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
 
 	var desynced_players: Array[String] = []
 
@@ -351,7 +354,7 @@ func _log_desync_detected(tick: int, authority_player: Player, desynced_players:
 	var authority_checksum_hex: String = authority_checksum.hex_encode()
 	push_error("  Authority checksum: %s" % authority_checksum_hex)
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
 	for player in player_list:
 		var player_id: int = player.get_id()
 		if player_id == authority_player_id:
@@ -393,7 +396,7 @@ func _log_detailed_desync_data(tick: int):
 	log_lines.append("DETAILED DESYNC DATA COMPARISON - tick %d" % tick)
 	log_lines.append("========================================")
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
 	var authority_player: Player = PlayerManager.get_player_by_peer_id(1)
 	var authority_player_id: int = authority_player.get_id()
 
@@ -711,3 +714,23 @@ func _on_alive_check_timer_timeout():
 
 	var lagging_player_name_list: Array[String] = _get_player_name_list(lagging_players)
 	_game_client.set_lagging_players.rpc(lagging_player_name_list)
+
+func _on_host_requested_drop_lagging_players():
+	if !multiplayer.is_server():
+		return
+	if _state != HostState.WAITING_FOR_LAGGING_PLAYERS:
+		return
+	var lagging_players: Array[Player] = _get_lagging_players()
+	var players_are_lagging: bool = lagging_players.size() > 0
+	if players_are_lagging:
+		# -- enet handling --
+		# todo: handle non-enet also
+		for player in PlayerManager.get_undropped_player_list():
+			var peer_id = player.get_peer_id()
+			for to_drop in lagging_players:
+				Globals._enet_peer_id_to_player_name[to_drop.get_peer_id()] = "<DISCONNECTED>"
+				_game_client.receive_drop_player_notification.rpc_id(peer_id, to_drop.get_id())
+			_game_client.set_enet_player_names.rpc_id(peer_id, Globals._enet_peer_id_to_player_name)
+			_game_client.set_lagging_players.rpc_id(peer_id, [])
+	else:
+		return

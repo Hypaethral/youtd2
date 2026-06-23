@@ -43,8 +43,6 @@ func _update_player_list_in_lobby_menu():
 		var fallback_string: String = "Player %d" % peer_id
 		var player_name: String = _peer_id_to_player_name_map.get(peer_id, fallback_string)
 		player_list.append(player_name)
-	
-	print_verbose("[player name debug] lobby has player list `%s`" % player_list)
 
 	_lan_lobby_menu.set_player_list(player_list)
 
@@ -55,7 +53,6 @@ func _update_player_list_in_lobby_menu():
 @rpc("any_peer", "call_local", "reliable")
 func _give_local_player_name_to_host(player_name: String):
 	var peer_id: int = multiplayer.get_remote_sender_id()
-	print_verbose("[player name debug] peer `%s` sending name `%s` to server" % [peer_id, player_name])
 	_peer_id_to_player_name_map[peer_id] = player_name
 
 	_receive_player_name_map_from_host.rpc(_peer_id_to_player_name_map)
@@ -65,7 +62,6 @@ func _give_local_player_name_to_host(player_name: String):
 func _receive_player_name_map_from_host(player_name_map: Dictionary):
 	_peer_id_to_player_name_map = player_name_map
 
-	print_verbose("[player name debug] received nameMap `%s`" % player_name_map)
 #	NOTE: need to update displayed player list to show
 #	updated player names
 	_update_player_list_in_lobby_menu()
@@ -194,8 +190,6 @@ func _on_lan_lobby_menu_start_pressed():
 		Utils.show_popup_message(self, tr("GENERIC_ERROR_TITLE"), tr("SETUP_LAN_ERROR_ONLY_HOST_CAN_START"))
 		
 		return
-	
-	print_verbose("[player name debug] lan starting with this player name map `%s`" % _peer_id_to_player_name_map)
 
 	var difficulty: Difficulty.enm = _current_match_config.get_difficulty()
 	var game_length: int = _current_match_config.get_game_length()

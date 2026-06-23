@@ -424,7 +424,6 @@ grow_horizontal = 0
 grow_vertical = 0
 
 [node name="PlayersAreLaggingIndicator" type="MarginContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -458,6 +457,12 @@ Alice"
 horizontal_alignment = 1
 
 [node name="QuitButton" type="Button" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Quit to Title"
+
+[node name="DropPlayersButton" type="Button" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Quit to Title"
 
@@ -468,3 +473,4 @@ layout_mode = 1
 [connection signal="close_pressed" from="MarginContainer3/VBoxContainer/OneTimeHelpPopup" to="." method="_on_one_time_help_popup_close_pressed"]
 [connection signal="details_pressed" from="MarginContainer5/VBoxContainer2/UnitMenu" to="." method="_on_unit_menu_details_pressed"]
 [connection signal="pressed" from="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/DropPlayersButton" to="." method="_on_drop_lagging_button_pressed"]

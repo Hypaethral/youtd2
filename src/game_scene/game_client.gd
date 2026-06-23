@@ -159,6 +159,10 @@ func receive_pong():
 	_game_host.receive_ping_time_for_player.rpc_id(1, ping_time)
 
 
+@rpc("authority", "call_local", "reliable")
+func set_enet_player_names(player_name_map: Dictionary):
+	Globals._enet_peer_id_to_player_name = player_name_map
+
 # NOTE: arg must be Array instead of Array[String]. RPC
 # calls have typing issues
 @rpc("authority", "call_local", "reliable")
@@ -167,7 +171,6 @@ func set_lagging_players(lagging_player_list: Array):
 
 	_hud.set_waiting_for_lagging_players_indicator_player_list(lagging_player_list)
 	_hud.set_waiting_for_lagging_players_indicator_visible(players_are_lagging)
-
 
 # Receive desync notification from server and send back stored checksum data
 @rpc("authority", "call_local", "reliable")
@@ -180,6 +183,12 @@ func receive_desync_notification(tick: int):
 	else:
 		push_error("  ERROR: No stored checksum data for tick %d" % tick)
 
+# notification from the authority to drop a given player.  Typically a result of lagging players,
+# but the lagging players list will be reset *separately* once the host recovers from the wait loop 
+@rpc("authority", "call_local", "reliable")
+func receive_drop_player_notification(id: int):
+	push_warning("dropping player by id %s" % id)
+	PlayerManager.drop_player(id)
 
 #########################
 ###      Private      ###
