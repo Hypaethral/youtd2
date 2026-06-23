@@ -408,7 +408,7 @@ func _on_peer_connected(_peer_id: int):
 		peer_id_list.append_array(multiplayer.get_peers())
 		peer_id_list.sort()
 
-		_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.NAKAMA, peer_id_list)
+		_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.NAKAMA, peer_id_list, {})
 
 
 func _on_host_created_game_match(game_match_id: String):

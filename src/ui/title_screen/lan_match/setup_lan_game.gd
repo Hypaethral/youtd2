@@ -44,6 +44,8 @@ func _update_player_list_in_lobby_menu():
 		var player_name: String = _peer_id_to_player_name_map.get(peer_id, fallback_string)
 		player_list.append(player_name)
 	
+	print_verbose("[player name debug] lobby has player list `%s`" % player_list)
+
 	_lan_lobby_menu.set_player_list(player_list)
 
 
@@ -53,6 +55,7 @@ func _update_player_list_in_lobby_menu():
 @rpc("any_peer", "call_local", "reliable")
 func _give_local_player_name_to_host(player_name: String):
 	var peer_id: int = multiplayer.get_remote_sender_id()
+	print_verbose("[player name debug] peer `%s` sending name `%s` to server" % [peer_id, player_name])
 	_peer_id_to_player_name_map[peer_id] = player_name
 
 	_receive_player_name_map_from_host.rpc(_peer_id_to_player_name_map)
@@ -61,7 +64,8 @@ func _give_local_player_name_to_host(player_name: String):
 @rpc("authority", "call_local", "reliable")
 func _receive_player_name_map_from_host(player_name_map: Dictionary):
 	_peer_id_to_player_name_map = player_name_map
-	
+
+	print_verbose("[player name debug] received nameMap `%s`" % player_name_map)
 #	NOTE: need to update displayed player list to show
 #	updated player names
 	_update_player_list_in_lobby_menu()
@@ -191,8 +195,8 @@ func _on_lan_lobby_menu_start_pressed():
 		
 		return
 	
-	Globals._enet_peer_id_to_player_name = _peer_id_to_player_name_map
-	
+	print_verbose("[player name debug] lan starting with this player name map `%s`" % _peer_id_to_player_name_map)
+
 	var difficulty: Difficulty.enm = _current_match_config.get_difficulty()
 	var game_length: int = _current_match_config.get_game_length()
 	var game_mode: GameMode.enm = _current_match_config.get_game_mode()
@@ -205,7 +209,7 @@ func _on_lan_lobby_menu_start_pressed():
 	peer_id_list.append_array(multiplayer.get_peers())
 	peer_id_list.sort()
 
-	_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.ENET, peer_id_list)
+	_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.ENET, peer_id_list, _peer_id_to_player_name_map)
 
 
 func _on_lan_connect_menu_join_pressed():

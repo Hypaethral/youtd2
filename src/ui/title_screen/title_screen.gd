@@ -62,7 +62,7 @@ func switch_to_tab(tab: TitleScreen.Tab):
 
 # NOTE: this function transitions the game from title screen to game scene. Can be called either by client itself or the host if the game is in multiplayer mode.
 @rpc("any_peer", "call_local", "reliable")
-func start_game(player_mode: PlayerMode.enm, wave_count: int, game_mode: GameMode.enm, difficulty: Difficulty.enm, team_mode: TeamMode.enm, origin_seed: int, connection_type: Globals.ConnectionType, peer_id_list: Array):
+func start_game(player_mode: PlayerMode.enm, wave_count: int, game_mode: GameMode.enm, difficulty: Difficulty.enm, team_mode: TeamMode.enm, origin_seed: int, connection_type: Globals.ConnectionType, peer_id_list: Array, player_name_map: Dictionary):
 #	NOTE: save game settings into globals so that GameScene
 #	can access them
 	Globals._player_mode = player_mode
@@ -75,7 +75,7 @@ func start_game(player_mode: PlayerMode.enm, wave_count: int, game_mode: GameMod
 #	NOTE: store the host-provided authoritative peer list so
 #	that all clients set up the same player roster.
 	Globals._game_peer_id_list = peer_id_list
-	
+	Globals._enet_peer_id_to_player_name = player_name_map
 #	NOTE: need to add a delay so that the game properly
 #	switches to displaying LOADING tab before starting
 #	change_scene_to_packed()
@@ -121,7 +121,7 @@ func _on_configure_singleplayer_menu_start_button_pressed():
 
 	var peer_id_list: Array = [multiplayer.get_unique_id()]
 
-	start_game(PlayerMode.enm.SINGLEPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.ENET, peer_id_list)
+	start_game(PlayerMode.enm.SINGLEPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.ENET, peer_id_list, {})
 
 
 func _on_generic_tab_cancel_pressed():
