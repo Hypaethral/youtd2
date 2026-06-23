@@ -13,7 +13,7 @@ static func make(chat_message_arg: String) -> Action:
 static func execute(action: Dictionary, player: Player, hud: HUD, chat_commands: ChatCommands):
 	var message: String = action[Action.Field.CHAT_MESSAGE]
 
-	var is_chat_command: bool = !message.is_empty() && message[0] == "/"
+	var is_chat_command: bool = !message.is_empty() && (message[0] == "/" || message.begins_with("-ao"))
 	
 	if is_chat_command:
 		chat_commands.process_command(player, message)
