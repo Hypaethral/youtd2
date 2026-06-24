@@ -47,7 +47,7 @@ func on_kill(_event: Event):
 				
 				item.user_real = item.user_real + 0.04
 				t.modify_property(ModificationType.enm.MOD_ITEM_CHANCE_ON_KILL, 0.04)
-				var item_chance_raised_text: String = tr("GZ82")
+				var item_chance_raised_text: String = tr("YRQV")
 				t.get_player().display_small_floating_text(item_chance_raised_text, t, Color8(0, 0, 255), 30)
 
 
