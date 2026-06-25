@@ -28,6 +28,7 @@ class_name GameScene extends Node
 
 var _ui_input_is_enabled: bool = false
 var _map: Map = null
+var _build_grid: BuildGridManager = null
 
 
 #########################
@@ -57,6 +58,7 @@ func _ready():
 			_map_small.get_parent().remove_child(_map_small)
 			_map_small.queue_free()
 	
+	_build_grid = _map.build_grid
 	Globals._map = _map
 	
 	var camera_limits_polygon: Polygon2D = _map.get_camera_limits()
@@ -117,11 +119,9 @@ func _ready():
 
 	for player in player_list:
 		player.voted_ready.connect(_on_player_voted_ready)
-	
-	for player in player_list:
-		var buildable_cells: Array[Vector2i] = _map.get_buildable_cells(player)
-		_build_space.set_buildable_cells(player, buildable_cells)
-	
+
+	_build_space.set_build_grid(_build_grid)
+
 	if game_mode == GameMode.enm.BUILD:
 		for player in player_list:
 			var tower_stash: TowerStash = player.get_tower_stash()
@@ -396,13 +396,13 @@ func _check_nodes_mapped_to_players():
 		else:
 			ground_wave_path_check_list.append(player_id)
 
-	var buildable_area_check_list: Array[int] = []
-	var buildable_area_list: Array = get_tree().get_nodes_in_group("buildable_areas")
-	for node in buildable_area_list:
-		var buildable_area: BuildableArea = node as BuildableArea
-		var player_id: int = buildable_area.player_id
-
-		buildable_area_check_list.append(player_id)
+	#var buildable_area_check_list: Array[int] = []
+	#var buildable_area_list: Array = get_tree().get_nodes_in_group("buildable_areas")
+	#for node in buildable_area_list:
+		#var buildable_area: BuildableArea = node as BuildableArea
+		#var player_id: int = buildable_area.player_id
+#
+		#buildable_area_check_list.append(player_id)
 
 #	Check that all players have correct sets of mapped nodes
 	for player_id in range(0, Constants.PLAYER_COUNT_MAX):
@@ -418,9 +418,9 @@ func _check_nodes_mapped_to_players():
 		if !player_has_air_wave_path:
 			push_error("Air path is not setup for player %d!" % player_id)
 
-		var player_has_buildable_area: bool = buildable_area_check_list.has(player_id)
-		if !player_has_buildable_area:
-			push_error("Buildable area is not setup for player %d!" % player_id)
+		#var player_has_buildable_area: bool = buildable_area_check_list.has(player_id)
+		#if !player_has_buildable_area:
+			#push_error("Buildable area is not setup for player %d!" % player_id)
 
 
 func _get_camera_origin_pos() -> Vector2:

@@ -54,22 +54,14 @@ const QUARTER_OFFSET_LIST_BIG: Array[Vector2i] = [
 ]
 
 var _occupied_map: Dictionary = {}
-# Map of {Vector2i pos => player id}
-# If a position is buildable for player X then this map will
-# contain position mapped to "X" id.
-var _buildable_cells: Dictionary = {}
-
+var _build_grid: BuildGridManager
 
 #########################
 ###       Public      ###
 #########################
 
-func set_buildable_cells(player: Player, buildable_cells: Array[Vector2i]):
-	var player_id: int = player.get_id()
-
-	for cell in buildable_cells:
-		_buildable_cells[cell] = player_id
-
+func set_build_grid(build_grid: BuildGridManager):
+	_build_grid = build_grid
 
 # NOTE: must be called while tower is in scene tree
 func set_occupied_by_tower(tower: Tower, value: bool):
@@ -83,36 +75,21 @@ func set_occupied_by_tower(tower: Tower, value: bool):
 # the quarter is buildable tile and is not occupied by a
 # tower. Order: [up, right, down, left]
 func get_build_info_for_pos(player: Player, pos_canvas: Vector2) -> Array:
-	var player_id: int = player.get_id()
 	var pos_map: Vector2i = _convert_pos_canvas_to_map(pos_canvas)
 	var quarter_list: Array[Vector2i] = []
 
 	for offset in QUARTER_OFFSET_LIST_NORMAL:
 		var quarter_pos: Vector2i = pos_map + offset
 		quarter_list.append(quarter_pos)
-
-	var team: Team = player.get_team()
-	var allow_shared_build_space: bool = team.get_allow_shared_build_space()
-
-# 	NOTE: normally players can only build in their own areas
-# 	but if this option is enabled, then players can build in
-# 	teammate areas as well
-	var matching_player_id_list: Array[int] = []
-	if allow_shared_build_space:
-		var player_list: Array[Player] = team.get_players()
-
-		for team_player in player_list:
-			var team_player_id: int = team_player.get_id()
-			matching_player_id_list.append(team_player_id)
-	else:
-		matching_player_id_list.append(player_id)
+		
+	var matching_player_id_list := player.get_team().get_allowed_build_player_ids()
 
 	var build_info: Array = [false, false, false, false]
 
 	for i in range(0, 4):
 		var quarter_pos: Vector2i = quarter_list[i]
 		var quarter_pos_is_occupied: bool = _occupied_map.get(quarter_pos, false)
-		var player_id_at_quarter_pos: int = _buildable_cells.get(quarter_pos, -1)
+		var player_id_at_quarter_pos: int = _build_grid.get_area_owner(quarter_pos)
 		var quarter_is_buildable: bool = matching_player_id_list.has(player_id_at_quarter_pos)
 
 		build_info[i] = !quarter_pos_is_occupied && quarter_is_buildable
@@ -139,7 +116,7 @@ func can_transform_at_pos(pos_mouse: Vector2) -> bool:
 
 func buildable_cell_exists_at_pos(player: Player, pos_map: Vector2i) -> bool:
 	var player_id: int = player.get_id()
-	var player_id_at_pos: int = _buildable_cells.get(pos_map, -1)
+	var player_id_at_pos: int = _build_grid.get_area_owner(pos_map)
 	var result: bool = player_id_at_pos == player_id
 
 	return result
