@@ -46,11 +46,18 @@ func _get_hit_list() -> Array[Unit]:
 	var hit_unit_list: Array[Unit] = []
 	var current_position: Vector2 = _target_position
 
-	for i in range(0, _chain_count):
-		var unit_list: Array[Unit] = Utils.get_units_in_range(_caster, TargetType.new(TargetType.CREEPS), current_position, CHAIN_DISTANCE)
+#	NOTE: build a membership set of already-hit units so we
+#	can exclude them in a single pass instead of Array.erase()
+#	per hit unit (O(n) each).
+	var already_hit: Dictionary = {}
 
-		for unit in hit_unit_list:
-			unit_list.erase(unit)
+	for i in range(0, _chain_count):
+		var range_list: Array[Unit] = Utils.get_units_in_range(_caster, TargetType.new(TargetType.CREEPS), current_position, CHAIN_DISTANCE)
+
+		var unit_list: Array[Unit] = []
+		for unit in range_list:
+			if !already_hit.has(unit):
+				unit_list.append(unit)
 
 		if unit_list.is_empty():
 			break
@@ -59,6 +66,7 @@ func _get_hit_list() -> Array[Unit]:
 
 		var hit_unit: Unit = unit_list[0]
 		hit_unit_list.append(hit_unit)
+		already_hit[hit_unit] = true
 		current_position = hit_unit.get_position_wc3_2d()
 	
 	return hit_unit_list

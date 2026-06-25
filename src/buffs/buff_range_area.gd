@@ -27,18 +27,20 @@ func _on_manual_timer_timeout():
 
 	var caster: Unit = _buff.get_caster()
 	var buffed_unit_pos: Vector2 = buffed_unit.get_position_wc3_2d()
-	var all_units_in_range: Array = Utils.get_units_in_range(caster, _target_type, buffed_unit_pos, _radius)
+#	NOTE: get_units_in_range() already filters by _target_type
+#	(via type.match), so all returned units match - no need to
+#	re-check here.
+	var matching_units: Array = Utils.get_units_in_range(caster, _target_type, buffed_unit_pos, _radius)
 
-	var matching_units: Array = []
-
-	for unit in all_units_in_range:
-		var target_match: bool = _target_type.match(unit)
-
-		if target_match:
-			matching_units.append(unit)
+#	NOTE: build a membership set of the previous frame's units
+#	so the "just came in range" check is O(1) instead of an
+#	O(n) Array.has() per unit.
+	var prev_set: Dictionary = {}
+	for unit in _prev_units_in_range:
+		prev_set[unit] = true
 
 	for unit in matching_units:
-		var unit_just_came_in_range: bool = !_prev_units_in_range.has(unit)
+		var unit_just_came_in_range: bool = !prev_set.has(unit)
 
 		if unit_just_came_in_range:
 			unit_came_in_range.emit(_handler, unit)

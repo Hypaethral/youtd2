@@ -682,13 +682,20 @@ func _remove_target(target):
 
 func _get_next_bounce_target(bounce_pos: Vector3, visited_list: Array[Unit]) -> Creep:
 	var bounce_pos_2d: Vector2 = Vector2(bounce_pos.x, bounce_pos.y)
-	var creep_list: Array = Utils.get_units_in_range(self, _attack_target_type, bounce_pos_2d, Constants.BOUNCE_ATTACK_RANGE)
+	var range_list: Array = Utils.get_units_in_range(self, _attack_target_type, bounce_pos_2d, Constants.BOUNCE_ATTACK_RANGE)
 
+#	NOTE: build a membership set of visited creeps and filter
+#	in a single pass instead of Array.erase() per visited creep
+#	(O(n) each).
+	var visited: Dictionary = {}
 	for visited_creep in visited_list:
-		if !Utils.unit_is_valid(visited_creep):
-			continue
+		if Utils.unit_is_valid(visited_creep):
+			visited[visited_creep] = true
 
-		creep_list.erase(visited_creep)
+	var creep_list: Array = []
+	for creep in range_list:
+		if !visited.has(creep):
+			creep_list.append(creep)
 
 	Utils.sort_unit_list_by_distance(creep_list, bounce_pos_2d)
 

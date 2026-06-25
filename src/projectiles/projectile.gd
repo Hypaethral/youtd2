@@ -413,13 +413,18 @@ func _collide_with_units() -> bool:
 
 # 	Remove units that have already collided. This way, we
 # 	collide only once per unit.
+#	NOTE: build a membership set once and filter in a single
+#	order-preserving pass instead of Array.erase() per
+#	already-collided unit (which is O(n) each, O(n^2) total).
+	var already_collided: Dictionary = {}
 	for unit in _collision_history:
-		if !Utils.unit_is_valid(unit):
-			continue
+		if Utils.unit_is_valid(unit):
+			already_collided[unit] = true
 
-		units_in_range.erase(unit)
-
-	var collided_list: Array = units_in_range
+	var collided_list: Array = []
+	for unit in units_in_range:
+		if !already_collided.has(unit):
+			collided_list.append(unit)
 
 	for unit in collided_list:
 		if _collision_handler.is_valid():
