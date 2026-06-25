@@ -752,18 +752,32 @@ func get_units_in_range(caster: Unit, type: TargetType, center: Vector2, radius:
 		TargetType.UnitType.CREEPS: group_name = "creeps"
 		TargetType.UnitType.CORPSES: group_name = "corpses"
 
-	var node_list: Array[Node] = get_tree().get_nodes_in_group(group_name)
-
 	radius = Utils.apply_unit_range_extension(radius, type)
+
+#	NOTE: query the spatial grid for candidate units near the
+#	center instead of scanning the whole group. The grid returns
+#	a superset (units in overlapping cells); the exact distance/
+#	type/player filtering below is unchanged, so the final
+#	(sorted) result is identical to the old brute-force scan.
+#	The range extension must be applied first so the candidate
+#	cell range covers the extended radius.
+	var node_list: Array = SpatialGrid.query_candidates(group_name, center, radius)
 
 	var player_towers_is_set: bool = type.player_towers_is_set()
 
 #	NOTE: not using Array.filter() here because it takes
 #	more time than for loop
 	var filtered_unit_list: Array[Unit] = []
-	
+
 	for node in node_list:
 		var unit: Unit = node as Unit
+
+#		NOTE: guard against stale references. Group membership
+#		auto-cleared on free, but the grid holds references, so
+#		a unit freed without going through the removal hooks
+#		could linger for a frame.
+		if !is_instance_valid(unit):
+			continue
 
 		if unit.is_queued_for_deletion():
 			continue
