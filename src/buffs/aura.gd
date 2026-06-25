@@ -111,11 +111,17 @@ func _on_manual_timer_timeout():
 	var caster_position: Vector2 = _caster.get_position_wc3_2d()
 	var units_in_range: Array = Utils.get_units_in_range(_caster, _target_type, caster_position, _aura_range)
 
+#	NOTE: build a membership set so the in-range check below is
+#	O(1) instead of an O(n) Array.has() per current target.
+	var in_range_set: Dictionary = {}
+	for unit in units_in_range:
+		in_range_set[unit] = true
+
 # 	Remove buff from units that have went out of range
 	var removed_target_list: Array = []
 
 	for target in _target_list:
-		var in_range = units_in_range.has(target)
+		var in_range = in_range_set.has(target)
 
 		if !in_range:
 			removed_target_list.append(target)

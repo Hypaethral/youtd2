@@ -58,13 +58,18 @@ func _on_move_timer_timeout():
 	var creep_list: Array = Utils.get_units_in_range(_caster, TargetType.new(TargetType.CREEPS), _current_swarm_pos, current_radius)
 
 #	Deal damage once to each creep in path
+#	NOTE: build a membership set and filter in a single
+#	order-preserving pass instead of Array.erase() per
+#	already-damaged creep (O(n) each).
+	var already_damaged: Dictionary = {}
 	for already_damaged_creep in _already_damaged_list:
-		if !Utils.unit_is_valid(already_damaged_creep):
-			continue
-
-		creep_list.erase(already_damaged_creep)
+		if Utils.unit_is_valid(already_damaged_creep):
+			already_damaged[already_damaged_creep] = true
 
 	for creep in creep_list:
+		if already_damaged.has(creep):
+			continue
+
 		do_spell_damage(creep, _damage)
 		_already_damaged_list.append(creep)
 
