@@ -231,14 +231,6 @@ func enable_allow_shared_build_space():
 func get_allow_shared_build_space() -> bool:
 	return _allow_shared_build_space
 
-func get_allowed_build_player_ids() -> Array[int]:
-	if get_allow_shared_build_space():
-		var ids: Array[int] = []
-		for p in get_players():
-			ids.append(p.get_id())
-		return ids
-
-	return [PlayerManager.get_local_player().get_id()]
 
 #########################
 ###      Private      ###

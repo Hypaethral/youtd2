@@ -79,8 +79,7 @@ class_name Map extends Node2D
 
 @export var _camera_limits: Polygon2D
 @export var _ground_indicator_map: TileMap
-@onready var build_grid: BuildGridManager = $BuildGridManager
-var build_area_vfx_by_player_id: Dictionary = {}
+
 
 #########################
 ###     Built-in      ###
@@ -89,10 +88,7 @@ var build_area_vfx_by_player_id: Dictionary = {}
 func _ready():
 	EventBus.player_started_build_process.connect(_on_player_started_build_process)
 	EventBus.player_stopped_build_process.connect(_on_player_stopped_build_process)
-	for child in $BuildGridVfxParent.get_children():
-		child.set_grid(build_grid)
-		build_area_vfx_by_player_id[child.player_id] = child
-		child.rebuild()
+
 
 #########################
 ###       Public      ###
@@ -103,7 +99,10 @@ func get_camera_limits() -> Polygon2D:
 
 
 func get_buildable_cells(player: Player) -> Array[Vector2i]:
-	return build_grid.get_owned_cells(player.get_id())
+	var buildable_area: BuildableArea = _get_buildable_area(player)
+	var buildable_cells: Array[Vector2i] = buildable_area.get_used_cells()
+
+	return buildable_cells
 
 
 func pos_is_on_ground(pos: Vector2) -> bool:
@@ -117,55 +116,36 @@ func pos_is_on_ground(pos: Vector2) -> bool:
 # NOTE: if "allow_shared_build_space" option is enabled,
 # then need to make all local team's players buildable areas
 # visible.
-#func _set_buildable_area_visible(value: bool):
-	#var local_player: Player = PlayerManager.get_local_player()
-	#var local_team: Team = local_player.get_team()
-	#var allow_shared_build_space: bool = local_team.get_allow_shared_build_space()
-#
-	#var player_list: Array[Player] = []
-	#if allow_shared_build_space:
-		#player_list = local_team.get_players()
-	#else:
-		#player_list.append(local_player)
-#
-	#for the_player in player_list:
-		#var buildable_area: BuildableArea = _get_buildable_area(the_player)
-		#buildable_area.visible = value
-
-
 func _set_buildable_area_visible(value: bool):
-	var local_player := PlayerManager.get_local_player()
-	var team := local_player.get_team()
+	var local_player: Player = PlayerManager.get_local_player()
+	var local_team: Team = local_player.get_team()
+	var allow_shared_build_space: bool = local_team.get_allow_shared_build_space()
 
-	var players := []
-	if team.get_allow_shared_build_space():
-		players = team.get_players()
+	var player_list: Array[Player] = []
+	if allow_shared_build_space:
+		player_list = local_team.get_players()
 	else:
-		players = [local_player]
+		player_list.append(local_player)
 
-	for p in players:
-		var vfx: BuildAreaVFX = build_area_vfx_by_player_id.get(p.get_id())
-		if vfx == null:
-			continue
-		if value:
-			vfx.visible = true
-		else:
-			vfx.visible = false
+	for the_player in player_list:
+		var buildable_area: BuildableArea = _get_buildable_area(the_player)
+		buildable_area.visible = value
+
 
 #########################
 ###      Private      ###
 #########################
-#
-#func _get_buildable_area(player: Player) -> BuildableArea:
-	#var buildable_area_list: Array = get_tree().get_nodes_in_group("buildable_areas")
-#
-	#for buildable_area in buildable_area_list:
-		#var player_match: bool = buildable_area.player_id == player.get_id()
-#
-		#if player_match:
-			#return buildable_area
-#
-	#return null
+
+func _get_buildable_area(player: Player) -> BuildableArea:
+	var buildable_area_list: Array = get_tree().get_nodes_in_group("buildable_areas")
+
+	for buildable_area in buildable_area_list:
+		var player_match: bool = buildable_area.player_id == player.get_id()
+
+		if player_match:
+			return buildable_area
+
+	return null
 
 
 #########################
