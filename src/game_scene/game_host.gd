@@ -190,9 +190,9 @@ func receive_checksum_data_from_client(tick: int, checksum_data: Dictionary):
 
 	_checksum_data_map[tick][player_id] = checksum_data
 
-	var player_list: Array[Player] = PlayerManager.get_player_list()
-	var player_count: int = player_list.size()
-	var collected_all_data: bool = _checksum_data_map[tick].size() == player_count
+	var player_list: Array[Player] = PlayerManager.get_undropped_player_list()
+	var collected_all_data: bool = \
+		player_list.all(func(p): return _checksum_data_map[tick].has(p.get_id()))
 
 	if collected_all_data:
 		_log_detailed_desync_data(tick)
