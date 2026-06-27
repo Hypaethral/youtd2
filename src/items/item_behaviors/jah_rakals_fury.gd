@@ -14,7 +14,7 @@ func item_init():
 	multiboard.set_key(0, attack_speed_increase_label)
 
 func on_attack(event: Event):
-	var target_id = event.get_target().get_instance_id()
+	var target_id = event.get_target().get_uid()
 	var carrier = item.get_carrier()
 
 	# Convert stored value to integer percent (0–100)
@@ -54,28 +54,6 @@ func on_attack(event: Event):
 			ModificationType.enm.MOD_ATTACKSPEED,
 			float(delta) / 100.0
 		)
-
-func on_attack_old(event: Event):
-	if item.user_int == event.get_target().get_instance_id():
-# 		100% attack speed limit
-		if item.user_real != 1.00 && item.user_real + 0.02 > 1.00:
-#			Add the remaining bonus (99% -> 101%; limit -> 100%; add 100% - 99% = 1%)
-			item.get_carrier().modify_property(ModificationType.enm.MOD_ATTACKSPEED, 1.00 - item.user_real)
-			item.user_real = 1.00
-		else:
-#			Add bonus
-			item.get_carrier().modify_property(ModificationType.enm.MOD_ATTACKSPEED, 0.02)
-			item.user_real = item.user_real + 0.02
-	else:
-#		Save current target
-		item.user_int = event.get_target().get_instance_id()
-#		Temp variable to store the current bonus
-		item.user_real2 = item.user_real
-#		Calculate the new bonus (Current bonus * (50% + towerlevel%))
-		item.user_real = item.user_real * (50.0 + item.get_carrier().get_level()) / 100
-#		Change the bonus (new Bonus - current Bonus)
-		item.get_carrier().modify_property(ModificationType.enm.MOD_ATTACKSPEED, item.user_real - item.user_real2)
-
 
 func on_create():
 	item.user_real = 0.00

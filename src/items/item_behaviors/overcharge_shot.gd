@@ -12,7 +12,7 @@ func load_triggers(triggers: BuffType):
 func overcharge_pt_on_collision(P: Projectile, U: Unit):
 	var T: Tower
 
-	if U.get_instance_id() != P.user_int:
+	if U.get_uid() != P.user_int:
 #		Not the original target
 		T = P.get_caster()
 		T.do_attack_damage(U, P.user_real, T.calc_attack_multicrit(0, 0, 0))
@@ -34,5 +34,5 @@ func on_damage(event: Event):
 		C = event.get_target()
 		angle = rad_to_deg(atan2(C.get_y() - T.get_y(), C.get_x() - T.get_x()))
 		P = Projectile.create_from_unit(overcharge_pt, T, C, angle, 1.0, 1.0)
-		P.user_int = C.get_instance_id()
+		P.user_int = C.get_uid()
 		P.user_real = T.get_current_attack_damage_with_bonus() * (0.35 + 0.006 * T.get_level())
