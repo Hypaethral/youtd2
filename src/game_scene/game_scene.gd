@@ -40,7 +40,6 @@ func _ready():
 	Globals.reset()
 	PlayerManager.reset()
 	GroupManager.reset()
-	SpatialGrid.reset()
 
 #	Replace small map with big map if playing in multiplayer
 #	NOTE: need to swap instead of using big map for both

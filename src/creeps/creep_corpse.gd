@@ -39,7 +39,6 @@ func _ready():
 	super()
 
 	add_to_group("corpses")
-	SpatialGrid.add("corpses", self)
 
 	_set_visual_node(_visual)
 	

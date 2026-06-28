@@ -121,11 +121,6 @@ var _uid: int = 0
 var _position_wc3: Vector3
 var _total_stun_duration: float = 0.0
 
-# SpatialGrid bookkeeping. _grid_group is "" when the unit is
-# not tracked by the grid. See spatial_grid.gd.
-var _grid_group: String = ""
-var _grid_cell: Vector2i = Vector2i.ZERO
-
 var _selection_indicator: Node = null
 var _unit_selection_outline: Node = null
 
@@ -295,8 +290,6 @@ func get_uid() -> int:
 # NOTE: you must call this instead of queue_free(), so that
 # tree_exited() signal is emitted immediately
 func remove_from_game():
-	SpatialGrid.remove(self)
-
 	var parent: Node = get_parent()
 
 	if parent != null && is_inside_tree():
@@ -1353,12 +1346,6 @@ func get_position_wc3() -> Vector3:
 
 func set_position_wc3(value: Vector3):
 	_position_wc3 = value
-
-#	NOTE: keep the spatial grid in sync on every position write
-#	(this is the single chokepoint for all position changes,
-#	including movement and teleports). No-op if not tracked.
-	if _grid_group != "":
-		SpatialGrid.update_position(self)
 
 	position.x = Utils.to_pixels(_position_wc3.x)
 	position.y = Utils.to_pixels(_position_wc3.y / 2)

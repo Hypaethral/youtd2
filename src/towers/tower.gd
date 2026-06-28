@@ -105,7 +105,6 @@ func _ready():
 	_item_container.items_changed.connect(_on_item_container_items_changed)
 
 	GroupManager.add("towers", self, get_uid())
-	SpatialGrid.add("towers", self)
 
 	mana_changed.connect(_on_mana_changed)
 	_on_mana_changed()
