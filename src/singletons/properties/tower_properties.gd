@@ -207,7 +207,7 @@ func get_missile_speed(tower_id: int) -> int:
 # enough.
 func get_missile_arc(tower_id: int) -> float:
 	var arc_from_csv: float = _get_property(tower_id, CsvProperty.MISSILE_ARC) as float
-	var arc: float = 0.5 * sin(arc_from_csv * deg_to_rad(45)) 
+	var arc: float = 0.5 * DetMath.sin(arc_from_csv * deg_to_rad(45))
 
 	return arc
 

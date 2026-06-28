@@ -158,7 +158,7 @@ func line_damage(origin_pos: Vector2, direction: float):
 			break
 
 		var current_distance: float = distance * i
-		var offset: Vector2 = Vector2.from_angle(deg_to_rad(direction)) * current_distance
+		var offset: Vector2 = DetMath.from_angle(deg_to_rad(direction)) * current_distance
 		var current_pos: Vector2 = origin_pos + offset
 
 		var it: Iterate = Iterate.over_units_in_range_of(tower, TargetType.new(TargetType.CREEPS), Vector2(current_pos.x, current_pos.y), 85)

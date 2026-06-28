@@ -143,7 +143,7 @@ func moth_pt_on_interpolation_finished(p: Projectile, _hit_target: Unit):
 		p.get_z() + Globals.synced_rng.randf_range(-min(35, p.get_z() - 35), 65) - Utils.divide_safe(p.get_z() / 10, divider)
 		)
 
-	var angle: float = rad_to_deg(atan2(target_pos.y - p.get_y(), target_pos.x - p.get_x()))
+	var angle: float = rad_to_deg(DetMath.atan2(target_pos.y - p.get_y(), target_pos.x - p.get_x()))
 	var angle_diff: float = angle - p.get_direction()
 
 	if angle_diff > 180:

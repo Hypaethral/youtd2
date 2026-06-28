@@ -155,3 +155,171 @@ static func _ensure_init() -> void:
 		i += 1
 
 	_exp2_lut = lut
+
+
+#########################
+###  Trigonometry     ###
+#########################
+
+# Deterministic sin/cos/atan2 via integer fixed-point CORDIC.
+#
+# Godot's sin()/cos()/atan2() (and the Vector2 helpers built on
+# them: rotated(), angle(), angle_to(), from_angle()) are NOT
+# bit-identical across platforms - the C standard places no
+# accuracy bound on transcendentals, so libm/SIMD/x87 differ
+# between machines. Any simulation code that feeds their output
+# back into game state (notably homing-projectile movement, which
+# re-runs trig every tick) will desync host vs clients.
+#
+# CORDIC uses only integer adds, arithmetic shifts and a hardcoded
+# table of arctangents, so it is exact-reproducible on every
+# machine. The constants below are precomputed in Q.SHIFT (the
+# atan table is baked as literals rather than built from atan() at
+# runtime, since atan() itself is non-deterministic). Accuracy is
+# ~1e-8 rad, far below the game's centi (0.01) quantization.
+
+const PI_FP: int = 3373259426       # pi in Q.SHIFT
+const TWO_PI_FP: int = 6746518852   # 2*pi in Q.SHIFT
+const HALF_PI_FP: int = 1686629713  # pi/2 in Q.SHIFT
+
+# CORDIC gain-corrected initial x: prod(1/sqrt(1+2^-2i)) in Q.SHIFT.
+const CORDIC_K_FP: int = 652032874
+
+# _ATAN_FP[i] = atan(2^-i) in Q.SHIFT, for i in [0, SHIFT).
+const _ATAN_FP: Array[int] = [
+	843314857, 497837829, 263043837, 133525159, 67021687,
+	33543516, 16775851, 8388437, 4194283, 2097149,
+	1048576, 524288, 262144, 131072, 65536,
+	32768, 16384, 8192, 4096, 2048,
+	1024, 512, 256, 128, 64,
+	32, 16, 8, 4, 2,
+]
+
+
+# Returns Vector2(cos(rad), sin(rad)) - both at once, since one
+# CORDIC pass produces them together. Drop-in for
+# Vector2.from_angle(rad).
+static func sincos(rad: float) -> Vector2:
+#	Convert to fixed-point and range-reduce to [-pi, pi]. Inputs
+#	are bounded (angles derived from normalized directions /
+#	atan2 outputs), so this loops at most a couple of times.
+	var z: int = roundi(rad * float(ONE))
+
+	while z > PI_FP:
+		z -= TWO_PI_FP
+	while z < -PI_FP:
+		z += TWO_PI_FP
+
+#	Reduce to [-pi/2, pi/2] (CORDIC convergence range). cos is
+#	odd about +-pi/2 so its sign flips; sin stays correct.
+	var cos_sign: int = 1
+	if z > HALF_PI_FP:
+		z = PI_FP - z
+		cos_sign = -1
+	elif z < -HALF_PI_FP:
+		z = -PI_FP - z
+		cos_sign = -1
+
+	var x: int = CORDIC_K_FP
+	var y: int = 0
+
+	var i: int = 0
+	while i < SHIFT:
+		var dx: int = x >> i
+		var dy: int = y >> i
+
+		if z >= 0:
+			x -= dy
+			y += dx
+			z -= _ATAN_FP[i]
+		else:
+			x += dy
+			y -= dx
+			z += _ATAN_FP[i]
+
+		i += 1
+
+	return Vector2(float(cos_sign * x) / float(ONE), float(y) / float(ONE))
+
+
+static func sin(rad: float) -> float:
+	return sincos(rad).y
+
+
+static func cos(rad: float) -> float:
+	return sincos(rad).x
+
+
+# Deterministic atan2(y, x), result in radians in (-pi, pi].
+# Drop-in for Vector2(x, y).angle().
+static func atan2(y: float, x: float) -> float:
+	var xfp: int = roundi(x * float(ONE))
+	var yfp: int = roundi(y * float(ONE))
+
+	if xfp == 0 && yfp == 0:
+		return 0.0
+
+#	CORDIC vectoring in the first quadrant on |x|, |y|: rotate the
+#	vector onto the +x axis, accumulating the angle in z. This
+#	yields atan(|y|/|x|) in [0, pi/2]; map back via the signs.
+	var vx: int = absi(xfp)
+	var vy: int = absi(yfp)
+	var z: int = 0
+
+	var i: int = 0
+	while i < SHIFT:
+		var dx: int = vx >> i
+		var dy: int = vy >> i
+
+		if vy > 0:
+			vx += dy
+			vy -= dx
+			z += _ATAN_FP[i]
+		else:
+			vx -= dy
+			vy += dx
+			z -= _ATAN_FP[i]
+
+		i += 1
+
+	var base: float = float(z) / float(ONE)
+
+	if xfp >= 0:
+		if yfp >= 0:
+			return base
+		else:
+			return -base
+	else:
+		var pi: float = float(PI_FP) / float(ONE)
+		if yfp >= 0:
+			return pi - base
+		else:
+			return -(pi - base)
+
+
+# Deterministic Vector2.rotated(rad).
+static func rotated(v: Vector2, rad: float) -> Vector2:
+	var cs: Vector2 = sincos(rad)
+	var c: float = cs.x
+	var s: float = cs.y
+
+	return Vector2(v.x * c - v.y * s, v.x * s + v.y * c)
+
+
+# Deterministic Vector2.from_angle(rad).
+static func from_angle(rad: float) -> Vector2:
+	return sincos(rad)
+
+
+# Deterministic Vector2(v).angle() == atan2(v.y, v.x).
+static func vector_angle(v: Vector2) -> float:
+	return atan2(v.y, v.x)
+
+
+# Deterministic a.angle_to(b): signed angle from a to b, in
+# (-pi, pi]. Built from cross/dot (exact float mul/add) + atan2.
+static func angle_between(a: Vector2, b: Vector2) -> float:
+	var cross: float = a.x * b.y - a.y * b.x
+	var dot: float = a.x * b.x + a.y * b.y
+
+	return atan2(cross, dot)

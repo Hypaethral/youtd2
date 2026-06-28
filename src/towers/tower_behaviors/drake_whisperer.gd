@@ -389,7 +389,7 @@ func bronze_drake_pt_periodic(p: Projectile):
 #		Test if the target is in a 90 degree cone in front
 #		of the drake
 		var position_diff: Vector2 = next.get_position_wc3_2d() - p.get_position_wc3_2d()
-		var angle_to_creep: float = rad_to_deg(position_diff.angle())
+		var angle_to_creep: float = rad_to_deg(DetMath.vector_angle(position_diff))
 		var angle_diff: float = angle_to_creep - p.get_direction()
 
 		var angle_diff_is_ok: bool = angle_diff <= -310 || angle_diff >= 310 || (angle_diff >= 50 && angle_diff <= 50)
@@ -397,7 +397,7 @@ func bronze_drake_pt_periodic(p: Projectile):
 		if !angle_diff_is_ok:
 			break
 
-		var offset_vector: Vector2 = Vector2(100, 0).rotated(rad_to_deg(p.get_direction()))
+		var offset_vector: Vector2 = DetMath.rotated(Vector2(100, 0), rad_to_deg(p.get_direction()))
 		var from_pos: Vector3 = p.get_position_wc3() + Vector3(offset_vector.x, offset_vector.y, 0)
 
 		var atk_proj: Projectile = Projectile.create_linear_interpolation_from_point_to_unit(bronze_drake_attack_pt, tower, 0, 0, from_pos, next, 0.30, true)

@@ -80,7 +80,7 @@ func on_death(event: Event):
 	var adult_specials: Array[int] = adult.get_special_list()
 	var adult_facing: float = adult.get_unit_facing()
 	var child_pos_path_offset: float = Globals.synced_rng.randf_range(50, 150)
-	var adult_move_vector: Vector2 = Vector2(child_pos_path_offset, 0).rotated(deg_to_rad(adult_facing))
+	var adult_move_vector: Vector2 = DetMath.rotated(Vector2(child_pos_path_offset, 0), deg_to_rad(adult_facing))
 
 	var child_portal_damage_multiplier: float = 1.0 / child_count / 2
 
@@ -89,7 +89,7 @@ func on_death(event: Event):
 		child_creep.set_properties(adult_path, player, adult_size, adult_armor_type, adult_race, child_health, adult_armor, adult_level)
 
 		var random_offset: Vector2 = Vector2(Globals.synced_rng.randf_range(-1, 1) * CHILD_POS_RAND_OFFSET, Globals.synced_rng.randf_range(-1, 1) * CHILD_POS_RAND_OFFSET)
-		var offset_on_path: Vector2 = i * adult_move_vector.rotated(deg_to_rad(180))
+		var offset_on_path: Vector2 = i * DetMath.rotated(adult_move_vector, deg_to_rad(180))
 		var child_pos: Vector2 = adult_pos + random_offset + offset_on_path
 		
 		child_creep.set_base_mana(child_mana)

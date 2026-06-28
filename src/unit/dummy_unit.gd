@@ -103,6 +103,14 @@ func do_spell_damage(target: Unit, damage: float):
 
 # NOTE: dummyUnit.doSpellDamageAoE() in JASS
 func do_spell_damage_aoe(center: Vector2, radius: float, damage: float, sides_ratio: float):
+#	NOTE: caster may become invalid if the launching unit is
+#	freed (e.g. sold) before the dummy resolves. Guard before
+#	passing _caster into the typed get_units_in_range(caster:
+#	Unit, ...) parameter, which aborts the engine on a
+#	previously-freed reference. Matches do_spell_damage().
+	if !Utils.unit_is_valid(_caster):
+		return
+
 	var creep_list: Array = Utils.get_units_in_range(_caster, TargetType.new(TargetType.CREEPS), center, radius)
 
 	for creep in creep_list:

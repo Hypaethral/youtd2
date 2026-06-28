@@ -51,7 +51,7 @@ func on_damage(event: Event):
 	for i in range(0, cast_count):
 		var radius: float = Globals.synced_rng.randf_range(0, 300)
 		var angle: float = deg_to_rad(Globals.synced_rng.randf_range(0, 360))
-		var offset_vector: Vector2 = Vector2(radius, 0).rotated(angle)
+		var offset_vector: Vector2 = DetMath.rotated(Vector2(radius, 0), angle)
 		var coconut_pos: Vector2 = target_pos + offset_vector
 		var projectile: Projectile = Projectile.create(coco_pt, tower, 1.0, tower.calc_spell_crit_no_bonus(), Vector3(coconut_pos.x, coconut_pos.y, 1000), 90)
 		projectile.set_projectile_scale(0.30)

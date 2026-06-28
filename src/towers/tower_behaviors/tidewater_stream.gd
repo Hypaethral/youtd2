@@ -41,7 +41,7 @@ func tower_init():
 
 func on_attack(event: Event):
 	var target: Unit = event.get_target()
-	var facing: float = rad_to_deg(atan2(target.get_y() - tower.get_y(), target.get_x() - tower.get_x()))
+	var facing: float = rad_to_deg(DetMath.atan2(target.get_y() - tower.get_y(), target.get_x() - tower.get_x()))
 	var wave_chance: float = 0.15 + 0.006 * tower.get_level()
 
 	if !tower.calc_chance(wave_chance):

@@ -19,6 +19,7 @@ func _initialize():
 	_test_ipow()
 	_test_powf()
 	_test_isqrt()
+	_test_trig()
 	_print_golden()
 	print("=== done ===")
 
@@ -81,6 +82,38 @@ func _test_isqrt():
 	print("isqrt  incorrect results in [0,100000): %d" % bad)
 
 
+func _test_trig():
+	var max_sin: float = 0.0
+	var max_cos: float = 0.0
+
+#	Sweep the full [-2pi, 2pi] range (projectile directions come
+#	from deg_to_rad of angles normalized to [-360, 360]).
+	for i in range(-6283, 6284):
+		var rad: float = i / 1000.0
+		max_sin = max(max_sin, absf(DetMath.sin(rad) - sin(rad)))
+		max_cos = max(max_cos, absf(DetMath.cos(rad) - cos(rad)))
+
+	print("sin    max abs error vs libm: %s" % max_sin)
+	print("cos    max abs error vs libm: %s" % max_cos)
+
+	var max_atan: float = 0.0
+
+	for yi in range(-50, 51):
+		for xi in range(-50, 51):
+			var y: float = yi * 20.0
+			var x: float = xi * 20.0
+			if x == 0.0 and y == 0.0:
+				continue
+			var got: float = DetMath.atan2(y, x)
+			var ref: float = atan2(y, x)
+#			Compare as a wrapped difference so +-pi doesn't read
+#			as a huge error.
+			var d: float = fmod(got - ref + PI + TAU, TAU) - PI
+			max_atan = max(max_atan, absf(d))
+
+	print("atan2  max abs error vs libm: %s" % max_atan)
+
+
 # Golden reference values, captured on ARM (Godot 4.3)
 # TODO: consider making this a realtime check that gates multiplayer connections (or prints a warning)
 func _golden_cases() -> Array:
@@ -91,6 +124,12 @@ func _golden_cases() -> Array:
 		["powf(800.0,0.6)",    DetMath.powf(800.0, 0.6),    0x404B983741000000],
 		["ipow(0.97,5)",       DetMath.ipow(0.97, 5),       0x3FEB7ABFC78B016B],
 		["ipow(1.1,-10)",      DetMath.ipow(1.1, -10),      0x3FD8ACBDC2D2B1C5],
+		["sin(0.7)",           DetMath.sin(0.7),            0x3FE49D6E60000000],
+		["cos(0.7)",           DetMath.cos(0.7),            0x3FE8799660000000],
+		["sin(2.5)",           DetMath.sin(2.5),            0x3FE326AF00000000],
+		["cos(-3.0)",          DetMath.cos(-3.0),           -0x401051FB40000000],
+		["atan2(3,4)",         DetMath.atan2(3.0, 4.0),     0x3FE4978FA3800000],
+		["atan2(-5,-2)",       DetMath.atan2(-5.0, -2.0),   -0x4000C776D0C00000],
 	]
 
 

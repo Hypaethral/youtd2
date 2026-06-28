@@ -50,7 +50,7 @@ func on_attack(event: Event):
 	var y2: float = target.get_y()
 	var x: float = tower.get_x()
 	var y: float = tower.get_y()
-	var facing: float = rad_to_deg(atan2(y2 - y, x2 - x))
+	var facing: float = rad_to_deg(DetMath.atan2(y2 - y, x2 - x))
 	var angle: float = -20
 	var edge_damage: float = 1500 + 150 * level
 
@@ -70,7 +70,7 @@ func on_attack(event: Event):
 
 		var edge_angle: float = deg_to_rad(facing + angle)
 
-		swarm_st.point_cast_from_caster_on_point(tower, Vector2(x + 25 * cos(edge_angle), y + 25 * sin(edge_angle)), edge_damage, tower.calc_spell_crit_no_bonus())
+		swarm_st.point_cast_from_caster_on_point(tower, Vector2(x + 25 * DetMath.cos(edge_angle), y + 25 * DetMath.sin(edge_angle)), edge_damage, tower.calc_spell_crit_no_bonus())
 
 		angle += 20
 
