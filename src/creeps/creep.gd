@@ -47,7 +47,8 @@ func _ready():
 	super()
 
 	GroupManager.add("creeps", self, get_uid())
-	
+	SpatialGrid.add("creeps", self)
+
 	var max_health = get_overall_health()
 	_health_bar.set_max(max_health)
 	_health_bar.set_min(0.0)
