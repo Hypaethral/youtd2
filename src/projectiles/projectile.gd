@@ -418,6 +418,18 @@ func _update_interpolated(delta: float):
 
 # Returns true if projectile expired because of a collision
 func _collide_with_units() -> bool:
+#	NOTE: guard against a freed caster. A projectile can
+#	outlive the unit that launched it (e.g. PTSP boars have
+#	long hang time and the tower may be sold mid-flight). The
+#	caster is normally cleaned up via DummyUnit's tree_exited
+#	connection, but that net isn't always timely, so we must
+#	not pass a previously-freed reference into the typed
+#	get_units_in_range(caster: Unit, ...) parameter (which
+#	aborts the engine on a stale arg). Matches the
+#	unit_is_valid(_caster) guard in DummyUnit.do_spell_damage().
+	if !Utils.unit_is_valid(_caster):
+		return false
+
 	var units_in_range: Array[Unit] = Utils.get_units_in_range(_caster, _collision_target_type, get_position_wc3_2d(), _collision_radius)
 
 # 	Remove units that have already collided. This way, we
