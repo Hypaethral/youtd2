@@ -268,7 +268,10 @@ func _update_normal(delta: float):
 	set_speed(new_speed)
 
 #	Move forward, based on current direction
-	var move_vector: Vector2 = (Vector2(1, 0) * _speed * delta).rotated(deg_to_rad(_direction))
+#	NOTE: DetMath.rotated() instead of Vector2.rotated() so the
+#	per-tick position update is deterministic across machines
+#	(see det_math.gd trig section).
+	var move_vector: Vector2 = DetMath.rotated(Vector2(1, 0) * _speed * delta, deg_to_rad(_direction))
 	var new_position_2d: Vector2 = get_position_wc3_2d() + move_vector
 	set_position_wc3_2d(new_position_2d)
 	
@@ -298,8 +301,14 @@ func _update_normal(delta: float):
 	elif should_update_z_to_match_target_z:
 		var travel_vector: Vector3 = _target_pos - current_position
 		var travel_vector_flat: Vector3 = Vector3(travel_vector.x, travel_vector.y, 0)
-		var travel_angle_z: float = travel_vector.angle_to(travel_vector_flat)
-		var z_speed: float = get_speed() * sin(travel_angle_z)
+#		NOTE: deterministic mirror of travel_vector.angle_to(
+#		travel_vector_flat) then sin(): angle_to == atan2(
+#		cross.length(), dot), and cross.length()/dot/sin are
+#		routed through DetMath so the z update can't desync.
+		var cross_len: float = travel_vector.cross(travel_vector_flat).length()
+		var dot: float = travel_vector.dot(travel_vector_flat)
+		var travel_angle_z: float = DetMath.atan2(cross_len, dot)
+		var z_speed: float = get_speed() * DetMath.sin(travel_angle_z)
 		var new_z: float = move_toward(get_z(), _target_pos.z, z_speed * delta)
 		set_z(new_z)
 
@@ -370,7 +379,7 @@ func _update_interpolated(delta: float):
 #	direction for movement logic.
 	var new_pos_2d: Vector2 = get_position_wc3_2d()
 	var move_vector: Vector2 = new_pos_2d - old_position_2d
-	_direction = rad_to_deg(move_vector.angle())
+	_direction = rad_to_deg(DetMath.vector_angle(move_vector))
 
 	var reached_target: float = progress_ratio == 1.0
 
@@ -448,15 +457,15 @@ func _turn_towards_target(delta: float):
 	var target_pos_2d: Vector2 = VectorUtils.vector3_to_vector2(_target_pos)
 	var projectile_pos: Vector2 = get_position_wc3_2d()
 	var desired_direction_vector: Vector2 = target_pos_2d - projectile_pos
-	var desired_direction: float = rad_to_deg(desired_direction_vector.angle())
+	var desired_direction: float = rad_to_deg(DetMath.vector_angle(desired_direction_vector))
 
 	if turn_instantly:
 		set_direction(desired_direction)
 
 		return
 
-	var current_direction_vector: Vector2 = Vector2.from_angle(deg_to_rad(_direction))
-	var direction_diff: float = rad_to_deg(current_direction_vector.angle_to(desired_direction_vector))
+	var current_direction_vector: Vector2 = DetMath.from_angle(deg_to_rad(_direction))
+	var direction_diff: float = rad_to_deg(DetMath.angle_between(current_direction_vector, desired_direction_vector))
 	var turn_amount: float = sign(direction_diff) * min(rad_to_deg(_homing_control_value) * delta, abs(direction_diff))
 	var new_direction: float = _direction + turn_amount
 	
@@ -494,7 +503,9 @@ func _start_movement_normal(target_pos: Vector3, ignore_z: bool, expire_when_rea
 
 	var target_pos_2d: Vector2 = VectorUtils.vector3_to_vector2(_target_pos)
 	var from_pos_2d: Vector2 = get_position_wc3_2d()
-	var angle_to_target_pos: float = from_pos_2d.angle_to_point(target_pos_2d)
+#	NOTE: angle_to_point(p) == (p - self).angle(); routed through
+#	DetMath so the initial direction is deterministic.
+	var angle_to_target_pos: float = DetMath.vector_angle(target_pos_2d - from_pos_2d)
 	var initial_direction: float = rad_to_deg(angle_to_target_pos)
 	set_direction(initial_direction)
 

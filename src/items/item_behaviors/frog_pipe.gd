@@ -23,7 +23,7 @@ func daem_frog_attack(tower: Tower, target: Unit, temp: int):
 	var x: float = tower.get_x()
 	var y: float = tower.get_y()
 
-	var angle: float = rad_to_deg(atan2(target.get_y() - y, target.get_x() - x))
+	var angle: float = rad_to_deg(DetMath.atan2(target.get_y() - y, target.get_x() - x))
 
 	var p: Projectile = Projectile.create(frog_pt, tower, 0, 0, Vector3(x + Globals.synced_rng.randi_range(-40, 40), y + Globals.synced_rng.randi_range(-40, 40), 5.0), angle + temp)
 	p.set_color(Color8(100, 255, 100, 255))

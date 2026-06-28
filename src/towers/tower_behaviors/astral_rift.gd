@@ -91,7 +91,7 @@ func aura_bt_periodic(event: Event):
 func move_creep_back(creep: Unit):
 	var facing: float = creep.get_unit_facing()
 	var facing_reversed: float = facing - 180
-	var teleport_offset: Vector2 = Vector2(175 + tower.get_level(), 0).rotated(deg_to_rad(facing_reversed))
+	var teleport_offset: Vector2 = DetMath.rotated(Vector2(175 + tower.get_level(), 0), deg_to_rad(facing_reversed))
 	var current_creep_pos: Vector2 = creep.get_position_wc3_2d()
 	var new_creep_pos: Vector2 = current_creep_pos + teleport_offset
 	creep.set_position_wc3_2d(new_creep_pos)

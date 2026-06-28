@@ -61,7 +61,7 @@ func on_kill(event: Event):
 
 	for i in range(0, shard_count):
 		var shard_angle: float = first_angle + angle_between * i
-		var offset: Vector2 = Vector2(SHARD_SPREAD_RADIUS, 0).rotated(shard_angle)
+		var offset: Vector2 = DetMath.rotated(Vector2(SHARD_SPREAD_RADIUS, 0), shard_angle)
 		var shard_end_pos: Vector3 = shard_start_pos + Vector3(offset.x, offset.y, 0)
 
 		var p: Projectile = Projectile.create_linear_interpolation_from_point_to_point(shard_pt, tower, 1, 1, shard_start_pos, shard_end_pos, 0)

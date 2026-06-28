@@ -388,7 +388,11 @@ func _get_current_movement_angle() -> float:
 
 	var next_point: Vector2 = Utils.get_path_point_wc3(_path, _current_path_index)
 	var facing_vector: Vector2 = next_point - get_position_wc3_2d()
-	var facing_angle_radians: float = facing_vector.angle()
+#	NOTE: DetMath so facing is deterministic - gameplay reads it
+#	via get_unit_facing() (baby_tuskin, warrior_of_light,
+#	astral_rift, helicopter_zone), and the int() quantization in
+#	set_unit_facing() doesn't fully mask sub-degree rounding.
+	var facing_angle_radians: float = DetMath.vector_angle(facing_vector)
 	var facing_angle_degrees: float = rad_to_deg(facing_angle_radians)
 
 	return facing_angle_degrees

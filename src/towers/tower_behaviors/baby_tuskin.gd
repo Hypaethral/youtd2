@@ -60,7 +60,7 @@ func tower_init():
 func on_attack(event: Event):
 	var u: Unit = event.get_target()
 	var facing_delta: float
-	var unit_to_tower_vector: float = rad_to_deg(atan2(tower.get_y() - u.get_y(), tower.get_x() - u.get_x()))
+	var unit_to_tower_vector: float = rad_to_deg(DetMath.atan2(tower.get_y() - u.get_y(), tower.get_x() - u.get_x()))
 	var p: Projectile
 
 	if unit_to_tower_vector < 0:

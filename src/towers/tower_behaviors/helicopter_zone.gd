@@ -247,7 +247,7 @@ func copter_ability_shoot_in_front(copter: Copter):
 	p.set_speed(COPTER_SPEED_WHEN_START_SHOOTING)
 	
 	var copter_direction: float = p.get_direction()
-	var vector_between_missiles: Vector2 = Vector2(MISSILE_SPACING, 0).rotated(deg_to_rad(copter_direction))
+	var vector_between_missiles: Vector2 = DetMath.rotated(Vector2(MISSILE_SPACING, 0), deg_to_rad(copter_direction))
 
 	var missile_count: int = 0
 
@@ -350,7 +350,7 @@ func copter_find_target_in_front(copter: Copter) -> Unit:
 		missile_radius *= 1.5
 	var copter_pos: Vector2 = projectile.get_position_wc3_2d()
 	var copter_direction: float = projectile.get_direction()
-	var spacing_vector: Vector2 = Vector2(MISSILE_SPACING, 0).rotated(deg_to_rad(copter_direction))
+	var spacing_vector: Vector2 = DetMath.rotated(Vector2(MISSILE_SPACING, 0), deg_to_rad(copter_direction))
 	var missile_count: int = 0
 	
 	while true:
@@ -382,7 +382,7 @@ func move_projectile_behind_unit(projectile: Projectile, target: Unit, direction
 
 	var max_shoot_range: float = MISSILE_SPACING * MISSILE_COUNT_MAX + distance_offset
 	var target_pos: Vector2 = target.get_position_wc3_2d()
-	var pos_behind_target: Vector2 = target_pos + Vector2(max_shoot_range, 0).rotated(deg_to_rad(new_direction + 180))
+	var pos_behind_target: Vector2 = target_pos + DetMath.rotated(Vector2(max_shoot_range, 0), deg_to_rad(new_direction + 180))
 	projectile.set_position_wc3_2d(pos_behind_target)
 
 
@@ -390,7 +390,7 @@ func move_projectile_behind_unit(projectile: Projectile, target: Unit, direction
 func copter_turn(p: Projectile, target: Unit, turn: float, angle_margin: float):
 	var target_pos: Vector2 = target.get_position_wc3_2d()
 	var diff_vector: Vector2 = target_pos - p.get_position_wc3_2d()
-	var angle: float = rad_to_deg(diff_vector.angle())
+	var angle: float = rad_to_deg(DetMath.vector_angle(diff_vector))
 	var angle_diff: float = angle - p.get_direction()
 
 #	Normalize angle

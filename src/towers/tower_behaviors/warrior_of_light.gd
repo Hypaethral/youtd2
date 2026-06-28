@@ -44,8 +44,8 @@ func on_attack(event: Event):
 	var shockwave_damage: float = _stats.shockwave_damage + _stats.shockwave_damage_add * level
 	var facing_deg: float = creep.get_unit_facing() - 180
 	var facing_rad: float = deg_to_rad(facing_deg)
-	var x: float = creep.get_x() + 50 * cos(facing_rad)
-	var y: float = creep.get_y() + 50 * sin(facing_rad)
+	var x: float = creep.get_x() + 50 * DetMath.cos(facing_rad)
+	var y: float = creep.get_y() + 50 * DetMath.sin(facing_rad)
 
 	if !tower.calc_chance(shockwave_chance):
 		return

@@ -175,7 +175,7 @@ func do_rampage_of_pigs(target: Creep, target_pos_3d: Vector3, target_is_air, re
 	var tower_pos_3d: Vector3 = tower.get_position_wc3()
 	var tower_pos: Vector2 = tower.get_position_wc3_2d()
 	var vector_to_target: Vector2 = target_pos - tower_pos
-	var pig_direction: float = rad_to_deg(vector_to_target.angle())
+	var pig_direction: float = rad_to_deg(DetMath.vector_angle(vector_to_target))
 
 	var projectile: Projectile
 	if target_is_air:

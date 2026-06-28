@@ -169,7 +169,7 @@ func ashbringer_icicle_store():
 	var angle: float = prev_stored_icicle_angle + 360 / icicle_count_max
 	prev_stored_icicle_angle = angle
 
-	var offset: Vector2 = Vector2(100, 0).rotated(deg_to_rad(angle))
+	var offset: Vector2 = DetMath.rotated(Vector2(100, 0), deg_to_rad(angle))
 	var start_pos: Vector3 = Vector3(tower.get_x(), tower.get_y(), 200)
 	var icicle_pos: Vector3 = Vector3(tower.get_x() + offset.x, tower.get_y() + offset.y, 200)
 	var p: Projectile = Projectile.create_linear_interpolation_from_point_to_point(icicle_prop_pt, tower, 1.0, 0.0, start_pos, icicle_pos, 0.0)
@@ -300,7 +300,7 @@ func ashbringer_icy_bombardment(target: Unit):
 	while true:
 		var random_angle: float = deg_to_rad(Globals.synced_rng.randf_range(0, 360))
 		var random_distance: float = Globals.synced_rng.randf_range(0, 150)
-		var offset: Vector2 = Vector2(random_distance, 0).rotated(random_angle)
+		var offset: Vector2 = DetMath.rotated(Vector2(random_distance, 0), random_angle)
 		var launch_pos_2d: Vector2 = target_pos + offset
 		var launch_pos: Vector3 = Vector3(launch_pos_2d.x, launch_pos_2d.y, 0)
 		var p: Projectile = Projectile.create_linear_interpolation_from_point_to_point(bombardment_pt, tower, 0, 0, Vector3(tower.get_x(), tower.get_y(), 200), launch_pos, 0.2)
