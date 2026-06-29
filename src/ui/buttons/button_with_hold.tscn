@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://dl1arab5yhf8j"]
+
+[ext_resource type="Script" path="res://src/ui/buttons/button_with_hold.gd" id="2_0bcxv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxg6j"]
+resource_local_to_scene = true
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.6, 0.6, 0.6, 0.470588)
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_detail = 1
+anti_aliasing = false
+
+[node name="Button" type="Button"]
+offset_right = 242.0
+offset_bottom = 80.0
+text = "foo"
+script = ExtResource("2_0bcxv")
+duration_seconds_of_hold = 2.5
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 4.0
+offset_bottom = 4.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cxg6j")

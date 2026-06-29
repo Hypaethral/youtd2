@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cngv1rgplre2c"]
+[gd_scene load_steps=28 format=3 uid="uid://cngv1rgplre2c"]
 
 [ext_resource type="Theme" uid="uid://bql5sxaowafw3" path="res://resources/theme/wc3_theme.tres" id="1_xs0tv"]
 [ext_resource type="PackedScene" uid="uid://bakuxdbe6a7f0" path="res://src/ui/hud/mission_tracker_container.tscn" id="5_n7x4d"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://wqmh2igy5bn4" path="res://src/ui/hud/desync_indicator.tscn" id="19_mcs2s"]
 [ext_resource type="PackedScene" uid="uid://c4jswu0s2yq2o" path="res://src/ui/hud/multiplayer_pause_indicator.tscn" id="20_cbamn"]
 [ext_resource type="PackedScene" uid="uid://i0b3uilwt2as" path="res://src/ui/hud/build_version_label.tscn" id="21_ko2ou"]
+[ext_resource type="PackedScene" uid="uid://dl1arab5yhf8j" path="res://src/ui/buttons/button_with_hold.tscn" id="22_bxpq0"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_hfkwl"]
 physical_keycode = 84
@@ -456,15 +457,13 @@ text = "Dave
 Alice"
 horizontal_alignment = 1
 
-[node name="QuitButton" type="Button" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer"]
-visible = false
+[node name="QuitButton" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" instance=ExtResource("22_bxpq0")]
 layout_mode = 2
 text = "Quit to Title"
 
-[node name="DropPlayersButton" type="Button" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer"]
-visible = false
+[node name="DropPlayersButton" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" instance=ExtResource("22_bxpq0")]
 layout_mode = 2
-text = "Quit to Title"
+text = "Drop Lagging Players"
 
 [node name="MultiplayerPauseIndicator" parent="." instance=ExtResource("20_cbamn")]
 visible = false
@@ -472,5 +471,5 @@ layout_mode = 1
 
 [connection signal="close_pressed" from="MarginContainer3/VBoxContainer/OneTimeHelpPopup" to="." method="_on_one_time_help_popup_close_pressed"]
 [connection signal="details_pressed" from="MarginContainer5/VBoxContainer2/UnitMenu" to="." method="_on_unit_menu_details_pressed"]
-[connection signal="pressed" from="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/DropPlayersButton" to="." method="_on_drop_lagging_button_pressed"]
+[connection signal="done_holding" from="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_done_holding"]
+[connection signal="done_holding" from="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/DropPlayersButton" to="." method="_on_drop_lagging_players_button_done_holding"]

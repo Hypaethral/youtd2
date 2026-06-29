@@ -436,8 +436,11 @@ process_mode = 1
 size_flags_horizontal = 1
 mouse_filter = 2
 
+[node name="QuitButton" parent="UI/HUD/PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" index="1"]
+tooltip_text = "Press and hold to quit to title"
+
 [node name="DropPlayersButton" parent="UI/HUD/PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" index="2"]
-text = "Drop Lagging Players"
+tooltip_text = "Press and hold to drop lagging players"
 
 [node name="ShadowBelowBuilderMenu" type="ColorRect" parent="UI"]
 visible = false

@@ -238,10 +238,10 @@ func _on_local_game_lose():
 	_game_over_label.show()
 
 
-func _on_quit_button_pressed():
+func _on_quit_button_done_holding():
 	EventBus.player_requested_quit_to_title.emit()
 
-func _on_drop_lagging_button_pressed():
+func _on_drop_lagging_players_button_done_holding():
 	EventBus.host_requested_drop_lagging_players.emit()
 
 func _on_one_time_help_popup_close_pressed() -> void:
