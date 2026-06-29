@@ -456,7 +456,13 @@ func _on_multiplayer_button_pressed():
 		Utils.show_popup_message(self, tr("GENERIC_ERROR_TITLE"), tr("SETUP_ONLINE_ERROR_IN_BROWSER"))
 	
 		return
-	
+	# todo: profile setting?
+	if (true):
+		_title_screen.switch_to_tab(TitleScreen.Tab.ONLINE_MATCH_LIST)
+		_online_match_list_menu.set_state(OnlineMatchListMenu.State.FAILED_TO_CONNECT)
+		return
+
+	# actual nakama connection attempt 
 	var connection_state: NakamaConnection.State = NakamaConnection.get_state()
 	
 	match connection_state:

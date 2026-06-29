@@ -23,7 +23,8 @@ var _http_adapter = null
 var logger = NakamaLogger.new()
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	# temporarily disabled since nakama is always down anyways
+	process_mode = Node.PROCESS_MODE_DISABLED
 
 func get_client_adapter() -> NakamaHTTPAdapter:
 	if _http_adapter == null:
