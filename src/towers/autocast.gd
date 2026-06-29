@@ -195,6 +195,13 @@ func get_uid() -> int:
 	return _uid
 
 
+# NOTE: remove from the registry only on actual deletion (not
+# tree_exited, which can fire on reparenting).
+func _notification(what: int):
+	if what == NOTIFICATION_PREDELETE:
+		GroupManager.remove("autocasts", _uid)
+
+
 func toggle_auto_mode():
 	var new_paused_value: bool = !_auto_timer.is_paused()
 	_auto_timer.set_paused(new_paused_value)

@@ -34,13 +34,17 @@ var _map: Map = null
 ###     Built-in      ###
 #########################
 
+func _enter_tree() -> void:
+	GroupManager.reset()
+	SpatialGrid.reset()
+	# NOTE: ensure object UID counters are statically reset between sessions
+	_reset_uid_counters()
+
 func _ready():
 	print_verbose("GameScene has loaded.")
 	
 	Globals.reset()
 	PlayerManager.reset()
-	GroupManager.reset()
-	SpatialGrid.reset()
 
 #	Replace small map with big map if playing in multiplayer
 #	NOTE: need to swap instead of using big map for both
@@ -103,9 +107,6 @@ func _ready():
 	Globals.synced_rng.set_seed(origin_seed)
 
 	print_verbose("Origin seed to: ", origin_seed)
-
-#	NOTE: ensure object UID counters are statically reset between sessions
-	_reset_uid_counters()
 
 	_setup_players()
 	PlayerManager.send_players_created_signal()

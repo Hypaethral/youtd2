@@ -34,27 +34,11 @@ func add(group_name: String, node: Node, uid: int):
 	_group_map[group_name][uid] = node
 	_group_dirty[group_name] = true
 
-#	Safety net: remove the entry automatically when the node
-#	leaves the tree, even if it is freed without an explicit
-#	remove() call (mirrors SpatialGrid). This is the only
-#	removal trigger for ManualTimers, which are freed
-#	implicitly as children of their parent unit.
-	var remove_callable: Callable = remove.bind(group_name, uid, "tree_exited")
-	if !node.tree_exited.is_connected(remove_callable):
-		node.tree_exited.connect(remove_callable)
-
-
 # Remove a node from a group by uid. Idempotent and safe to
 # call while the node is being freed (the uid is passed in
 # instead of read via get_uid() for exactly this reason).
-func remove(group_name: String, uid: int, signal_source: String = "not_tree_exited"):
+func remove(group_name: String, uid: int):
 	if !_group_map.has(group_name):
-		return
-
-	if (group_name == "items" && signal_source == "tree_exited"):
-		# theory: items flying around exits and re-enters scene --
-		# guard against these generally-useful hooks for items specifically
-		# to confirm: this may also explain the initial timer not ticking down?
 		return
 
 	if _group_map[group_name].erase(uid):
@@ -90,16 +74,9 @@ func get_by_uid(group_name: String, uid: int) -> Node:
 # callers may iterate and mutate the group during iteration
 # safely.
 #
-# Freed (destroyed) nodes are never returned: the tree_exited
-# net normally prunes entries on removal, but a node can be
-# freed without our net firing (e.g. freed while already out of
-# the tree, or via a non-standard teardown path). We therefore
-# validate every entry and self-heal by erasing any dead ones,
-# so the per-tick update loop can never receive a freed
-# instance. Nodes that are still valid but pending deletion
-# (queue_free'd this tick) ARE returned - the caller's
-# is_queued_for_deletion()/is_inside_tree() guard handles them,
-# preserving the original snapshot semantics.
+# Nodes that are still valid but pending deletion (queue_free'd this tick)
+# are returned -- the caller's is_queued_for_deletion()/is_inside_tree() guard
+# handles them
 func get_ordered(group_name: String) -> Array:
 	if !_group_map.has(group_name):
 		return []
@@ -126,8 +103,8 @@ func get_ordered(group_name: String) -> Array:
 				continue
 			result.append(node)
 
-#	Self-heal: drop any entries whose node was freed without the
-#	tree_exited net pruning them, so they don't linger or crash.
+#	Self-heal: drop any entries whose node was freed, so they
+#	don't linger, accumulate, or crash the update loop.
 	if !dead_keys.is_empty():
 		for key in dead_keys:
 			by_uid.erase(key)

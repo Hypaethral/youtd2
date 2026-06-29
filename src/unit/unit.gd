@@ -292,6 +292,16 @@ func get_uid() -> int:
 	return _uid
 
 
+# NOTE: remove from the registry only on actual deletion, not on
+# tree_exited (which also fires on reparenting). PREDELETE never
+# fires on reparent. "creeps"/"towers" self-heal in
+# GroupManager.get_ordered(), so only the lookup-only "units"
+# group needs explicit removal here.
+func _notification(what: int):
+	if what == NOTIFICATION_PREDELETE:
+		GroupManager.remove("units", _uid)
+
+
 # NOTE: you must call this instead of queue_free(), so that
 # tree_exited() signal is emitted immediately
 func remove_from_game():

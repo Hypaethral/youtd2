@@ -1,16 +1,17 @@
 extends SceneTree
 
-# Verifies GroupManager never hands a freed (destroyed) node to
-# the per-tick update loop - the cause of the
-# "is_inside_tree() on previously freed instance" crash.
-#
-# Covers the real teardown paths:
-#  - queue_free() (e.g. projectile expiring)
-#  - remove_child() + queue_free() (Unit.remove_from_game)
-#  - child freed as part of a parent subtree (ManualTimers are
-#    children of their owning unit/projectile)
-#  - get_ordered() self-heals if a node is freed without the
-#    tree_exited net pruning it.
+# Validates GroupManager's reparent-safe lifecycle:
+#  1. A registered node that is REPARENTED (leaves+re-enters the
+#     tree without being freed) MUST stay in the registry. This
+#     is the items/timers bug: tree_exited-based removal wrongly
+#     evicted reparented nodes (which never re-register because
+#     _ready does not re-run).
+#  2. get_ordered() self-heals: a freed node in a per-tick group
+#     is pruned (covers creeps/towers/projectiles/manual_timers).
+#  3. NOTIFICATION_PREDELETE removal: lookup-only types remove
+#     themselves on real deletion (never on reparent), so those
+#     groups don't accumulate. Exercised here with a Probe node
+#     that mimics the _notification(PREDELETE) -> remove pattern.
 #
 # NOTE: nodes are created/torn down in _process (not _init),
 # because in a SceneTree script the root isn't ready during
@@ -22,14 +23,24 @@ var _gm: Node
 var _failed: bool = false
 var _step: int = 0
 
-var _proj: Node
-var _creep: Node
-var _timer_child: Node
-var _orphan: Node
+var _parent_a: Node
+var _parent_b: Node
+var _timer: Node      # per-tick group node, reparented then freed
+var _lookup: Node     # lookup-only node using PREDELETE removal
+
+
+# Mimics the _notification(NOTIFICATION_PREDELETE) -> GroupManager.remove
+# pattern added to Unit/Item/Autocast/ItemContainer.
+class PredeleteProbe extends Node:
+	var gm: Node
+	var uid: int
+	func _notification(what: int):
+		if what == NOTIFICATION_PREDELETE && gm != null:
+			gm.remove("items", uid)
 
 
 func _init():
-	print("=== GroupManager tree_exited / self-heal validation ===")
+	print("=== GroupManager reparent-safe lifecycle validation ===")
 	_gm = load("res://src/singletons/group_manager.gd").new()
 
 
@@ -37,60 +48,55 @@ func _process(_delta: float) -> bool:
 	_step += 1
 
 	if _step == 1:
-		_proj = Node.new()
-		get_root().add_child(_proj)
-		_gm.add("projectiles", _proj, 1)
+		_parent_a = Node.new()
+		_parent_b = Node.new()
+		get_root().add_child(_parent_a)
+		get_root().add_child(_parent_b)
 
-		_creep = Node.new()
-		get_root().add_child(_creep)
-		_gm.add("creeps", _creep, 2)
+#		A per-tick-group node (manual_timers) as a child of A.
+		_timer = Node.new()
+		_parent_a.add_child(_timer)
+		_gm.add("manual_timers", _timer, 1)
 
-#		A timer registered as a child of the creep.
-		_timer_child = Node.new()
-		_creep.add_child(_timer_child)
-		_gm.add("manual_timers", _timer_child, 3)
+#		A lookup-only node (items) using PREDELETE removal.
+		var probe := PredeleteProbe.new()
+		probe.gm = _gm
+		probe.uid = 2
+		_lookup = probe
+		_parent_a.add_child(_lookup)
+		_gm.add("items", _lookup, 2)
 
-#		An orphan we will free WITHOUT going through tree_exited
-#		removal, to exercise get_ordered()'s self-heal path.
-		_orphan = Node.new()
-		get_root().add_child(_orphan)
-		_gm.add("towers", _orphan, 4)
-
-		_check(_gm.get_ordered("projectiles").size() == 1, "projectile registered")
-		_check(_gm.get_ordered("creeps").size() == 1, "creep registered")
-		_check(_gm.get_ordered("manual_timers").size() == 1, "child timer registered")
-		_check(_gm.get_ordered("towers").size() == 1, "tower registered")
+		_check(_gm.get_ordered("manual_timers").size() == 1, "timer registered")
+		_check(_gm.get_by_uid("items", 2) != null, "lookup item registered")
 		return false
 
 	if _step == 2:
-#		queue_free path.
-		_proj.queue_free()
-#		remove_from_game path: creep leaves tree (taking its child
-#		timer with it) then frees.
-		get_root().remove_child(_creep)
-		_creep.queue_free()
+#		THE KEY CASE: reparent both nodes. They must NOT be evicted.
+		_timer.reparent(_parent_b)
+		_lookup.reparent(_parent_b)
 		return false
 
-	if _step < 5:
+	if _step == 3:
+		_check(_gm.get_ordered("manual_timers").size() == 1, "timer STILL registered after reparent")
+		_check(_gm.get_by_uid("items", 2) != null, "lookup item STILL findable after reparent")
+
+#		Now actually free them.
+		_timer.queue_free()       # per-tick: pruned by get_ordered self-heal
+		_lookup.queue_free()      # lookup-only: pruned by PREDELETE -> remove
 		return false
 
-	var proj: Array = _gm.get_ordered("projectiles")
-	var creep: Array = _gm.get_ordered("creeps")
-	var timer: Array = _gm.get_ordered("manual_timers")
-	_check(proj.is_empty(), "projectile pruned after queue_free (got %d)" % proj.size())
-	_check(creep.is_empty(), "creep pruned after remove_child+queue_free (got %d)" % creep.size())
-	_check(timer.is_empty(), "child timer pruned with parent subtree (got %d)" % timer.size())
+	if _step < 7:
+		return false
 
-#	Self-heal: free the orphan directly (its tree_exited net does
-#	run here, so to truly test self-heal we also assert no freed
-#	node is ever returned regardless of path).
-	_orphan.free()
-	var towers: Array = _gm.get_ordered("towers")
+	var timers: Array = _gm.get_ordered("manual_timers")
+	_check(timers.is_empty(), "timer self-healed after free (got %d)" % timers.size())
+	_check(_gm.get_by_uid("items", 2) == null, "lookup item removed via PREDELETE after free")
+	_check(_gm._group_map.get("items", {}).is_empty(), "items group did not accumulate (size %d)" % _gm._group_map.get("items", {}).size())
+
 	var all_valid: bool = true
-	for n in proj + creep + timer + towers:
+	for n in timers:
 		if !is_instance_valid(n):
 			all_valid = false
-	_check(towers.is_empty(), "tower pruned/self-healed after free (got %d)" % towers.size())
 	_check(all_valid, "get_ordered never returns a freed instance")
 
 	if _failed:
