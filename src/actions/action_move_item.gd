@@ -38,32 +38,27 @@ static func execute(action: Dictionary, player: Player):
 static func verify(player: Player, item: Item, src_container: ItemContainer, dest_container: ItemContainer, clicked_index: int) -> bool:
 	if item == null || src_container == null || dest_container == null:
 		Utils.add_ui_error(player, Utils.tr("MESSAGE_FAIL_MOVE_ITEM"))
-		
 		return false
 
 	var item_player_match: bool = item.get_player() == player
 	if !item_player_match:
 		Utils.add_ui_error(player, Utils.tr("MESSAGE_DONT_OWN_ITEM"))
-		
 		return false
 
 	var container_player_match: bool = src_container.get_player() == player && dest_container.get_player() == player
 	if !container_player_match:
 		Utils.add_ui_error(player, Utils.tr("MESSAGE_DONT_OWN_TOWER"))
-		
 		return false
 
 	var item_exists_in_src_container: bool = src_container.has(item)
 	if !item_exists_in_src_container:
 		Utils.add_ui_error(player, Utils.tr("MESSAGE_FAIL_MOVE_ITEM"))
-		
 		return false
 
 	var capacity: int = dest_container.get_capacity()
 
 	if clicked_index != -1 && clicked_index >= capacity:
 		Utils.add_ui_error(player, Utils.tr("MESSAGE_INVALID_SLOT_INDEX"))
-
 		return false
 
 #	NOTE: need to call can_add_item() instead of

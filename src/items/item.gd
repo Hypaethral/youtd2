@@ -54,7 +54,7 @@ func _init(id: int, player: Player):
 
 	_uid = _uid_max
 	Item._uid_max += 1
-	GroupManager.add("items", self, get_uid())
+	GroupManager.add("items", self, _uid)
 
 	_id = id
 	_player = player

@@ -39,7 +39,7 @@ func add(group_name: String, node: Node, uid: int):
 #	remove() call (mirrors SpatialGrid). This is the only
 #	removal trigger for ManualTimers, which are freed
 #	implicitly as children of their parent unit.
-	var remove_callable: Callable = remove.bind(group_name, uid)
+	var remove_callable: Callable = remove.bind(group_name, uid, "tree_exited")
 	if !node.tree_exited.is_connected(remove_callable):
 		node.tree_exited.connect(remove_callable)
 
@@ -47,8 +47,14 @@ func add(group_name: String, node: Node, uid: int):
 # Remove a node from a group by uid. Idempotent and safe to
 # call while the node is being freed (the uid is passed in
 # instead of read via get_uid() for exactly this reason).
-func remove(group_name: String, uid: int):
+func remove(group_name: String, uid: int, signal_source: String = "not_tree_exited"):
 	if !_group_map.has(group_name):
+		return
+
+	if (group_name == "items" && signal_source == "tree_exited"):
+		# theory: items flying around exits and re-enters scene --
+		# guard against these generally-useful hooks for items specifically
+		# to confirm: this may also explain the initial timer not ticking down?
 		return
 
 	if _group_map[group_name].erase(uid):
@@ -57,19 +63,23 @@ func remove(group_name: String, uid: int):
 
 func get_by_uid(group_name: String, uid: int) -> Node:
 	if !_group_map.has(group_name):
+		print_verbose("ERR: get_by_uid no items group for %s" % group_name)
 		return null
 
 	if !_group_map[group_name].has(uid):
+		print_verbose("ERR: get_by_uid uid=%s not in groupname=%s" % [uid, group_name])
 		return null
 
 	var is_valid: bool = is_instance_valid(_group_map[group_name][uid])
 
 	if !is_valid:
+		print_verbose("ERR: get_by_uid item uid=%s not valid group" % uid)
 		return
 
 	var node: Node = _group_map[group_name][uid]
 
 	if node.is_queued_for_deletion():
+		print_verbose("ERR: get_by_uid item uid=%s queued for deletion" % uid)
 		return null
 
 	return node
