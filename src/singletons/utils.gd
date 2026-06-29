@@ -950,28 +950,31 @@ func reset_scroll_container(scroll_container: ScrollContainer):
 	v_scroll_bar.set_value(0.0)
 
 
+# NOTE: returns towers in ascending-UID order, sourced from the
+# GroupManager registry (no scene-tree scrape, no per-call sort).
+# The validity filter ensures a tower freed this tick (but not
+# yet removed from the registry) is never included - important
+# for the deterministic checksum path.
 func get_tower_list() -> Array[Tower]:
-	var tower_node_list: Array[Node] = get_tree().get_nodes_in_group("towers")
 	var tower_list: Array[Tower] = []
 
-	for tower_node in tower_node_list:
-		var tower: Tower = tower_node as Tower
-		tower_list.append(tower)
+	for node in GroupManager.get_ordered("towers"):
+		if !is_instance_valid(node) || node.is_queued_for_deletion():
+			continue
 
-	Utils.sort_objects_for_multiplayer(tower_list)
+		tower_list.append(node as Tower)
 
 	return tower_list
 
 
 func get_creep_list() -> Array[Creep]:
-	var creep_node_list: Array[Node] = get_tree().get_nodes_in_group("creeps")
 	var creep_list: Array[Creep] = []
 
-	for creep_node in creep_node_list:
-		var creep: Creep = creep_node as Creep
-		creep_list.append(creep)
+	for node in GroupManager.get_ordered("creeps"):
+		if !is_instance_valid(node) || node.is_queued_for_deletion():
+			continue
 
-	Utils.sort_objects_for_multiplayer(creep_list)
+		creep_list.append(node as Creep)
 
 	return creep_list
 
@@ -1110,8 +1113,23 @@ func sort_objects_for_multiplayer(object_list: Array):
 	var player_mode: PlayerMode.enm = Globals.get_player_mode()
 	var is_multiplayer: bool = player_mode == PlayerMode.enm.MULTIPLAYER
 
-	if is_multiplayer:
-		object_list.sort_custom(func(a, b): return a.get_uid() < b.get_uid())
+	if !is_multiplayer:
+		return
+
+#	NOTE: decorate-sort-undecorate so the comparator compares
+#	already-extracted ints instead of calling get_uid() once per
+#	comparison. The per-comparison method call was the dominant
+#	cost of the old sort_custom(func(a, b): a.get_uid() < ...).
+	var decorated: Array = []
+	decorated.resize(object_list.size())
+
+	for i in object_list.size():
+		decorated[i] = [object_list[i].get_uid(), object_list[i]]
+
+	decorated.sort_custom(func(a, b): return a[0] < b[0])
+
+	for i in decorated.size():
+		object_list[i] = decorated[i][1]
 
 
 # Converts time in seconds to game ticks

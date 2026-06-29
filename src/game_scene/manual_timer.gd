@@ -30,7 +30,7 @@ func _ready():
 	_uid = _uid_max
 	_uid_max += 1
 
-	add_to_group("manual_timers")
+	GroupManager.add("manual_timers", self, _uid)
 
 	if autostart:
 		start()

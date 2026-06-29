@@ -450,15 +450,10 @@ func _update_state():
 #	NOTE: use separate groups so that update() calls are
 #	ordered by type. This makes gameplay logic more
 #	consistent.
-	var timer_list: Array = get_tree().get_nodes_in_group("manual_timers")
-	Utils.sort_objects_for_multiplayer(timer_list)
-
-	var creep_list: Array[Creep] = Utils.get_creep_list()
-
-	var projectile_list: Array = get_tree().get_nodes_in_group("projectiles")
-	Utils.sort_objects_for_multiplayer(projectile_list)
-
-	var tower_list: Array[Tower] = Utils.get_tower_list()
+	var timer_list: Array = GroupManager.get_ordered("manual_timers")
+	var creep_list: Array = GroupManager.get_ordered("creeps")
+	var projectile_list: Array = GroupManager.get_ordered("projectiles")
+	var tower_list: Array = GroupManager.get_ordered("towers")
 	var node_list: Array = []
 	node_list.append_array(timer_list)
 	node_list.append_array(creep_list)
@@ -472,7 +467,10 @@ func _update_state():
 # 	timer B. Timer B is now outside tree but still inside
 # 	timer_list!
 	for node in node_list:
-		var should_update: bool = node.is_inside_tree() && !node.is_queued_for_deletion()
+#		NOTE: is_instance_valid() must come first - the others
+#		can't be called on a freed instance. GroupManager already
+#		filters freed nodes, but guard defensively here too.
+		var should_update: bool = is_instance_valid(node) && node.is_inside_tree() && !node.is_queued_for_deletion()
 		if !should_update:
 			continue
 

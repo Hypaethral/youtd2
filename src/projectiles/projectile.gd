@@ -95,6 +95,8 @@ func _ready():
 	_uid = _uid_max
 	_uid_max += 1
 
+	GroupManager.add("projectiles", self, _uid)
+
 	_initial_scale = scale
 	_spawn_time = Utils.get_time()
 
