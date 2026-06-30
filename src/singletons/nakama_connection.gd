@@ -34,6 +34,9 @@ func _ready():
 	var server_key: String = Secrets.get_secret(Secrets.Key.SERVER_KEY)
 	_client = Nakama.create_client(server_key, Constants.NAKAMA_ADDRESS, Constants.NAKAMA_PORT, Constants.NAKAMA_PROTOCOL, Nakama.DEFAULT_TIMEOUT, NakamaLogger.LOG_LEVEL.INFO)
 
+	if (true):
+		return
+
 	connect_to_server()
 
 
