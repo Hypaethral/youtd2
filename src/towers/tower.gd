@@ -66,13 +66,22 @@ var _is_in_combat: bool = false
 @export var _visual: Node2D
 @export var _range_indicator_parent: Node2D
 @export var _sprite_parent: Node2D
-
+@export var _upgrade_indicator_sprite: AnimatedSprite2D
 
 #########################
 ###     Built-in      ###
 #########################
 
 func _ready():
+	_redraw_upgrade_indicator()
+	var local_player = PlayerManager.get_local_player()
+	
+	# wave spawned signal to display floating indicator
+	local_player.wave_spawned.connect(_on_wave_spawned_event)
+
+	# element research signal issued to display floating indicator
+	local_player.element_level_changed.connect(_on_element_researched_event)
+
 	super()
 
 # 	NOTE: see explanation of z_index setup in map.gd
@@ -609,7 +618,7 @@ func _attack_target(target: Unit, target_is_first: bool) -> Unit:
 	return target
 
 
-func _update_target_list():	
+func _update_target_list():
 # 	NOTE: need to extend attack range by "tower radius".
 # 	This is how it works in the original game.
 	var attack_range: float = get_range() + Constants.RANGE_CHECK_BONUS_FOR_TOWERS
@@ -707,6 +716,18 @@ func _get_next_bounce_target(bounce_pos: Vector3, visited_list: Array[Unit]) -> 
 	else:
 		return null
 
+func _redraw_upgrade_indicator():
+	var upgrade_id: int = TowerProperties.get_upgrade_id_for_tower(self.get_id())
+
+	var can_upgrade: bool
+	if upgrade_id != -1:
+		var owning_player = self.get_player()
+		var requirements_are_satisfied: bool = TowerProperties.requirements_are_satisfied(upgrade_id, owning_player)
+		can_upgrade = requirements_are_satisfied
+	else:
+		can_upgrade = false
+
+	_upgrade_indicator_sprite.visible = can_upgrade
 
 #########################
 ###     Callbacks     ###
@@ -738,6 +759,11 @@ func _on_projectile_target_hit(projectile: Projectile, target: Unit):
 		AttackStyle.BOUNCE:
 			_on_projectile_target_hit_bounce(projectile, target)
 
+func _on_wave_spawned_event(level: int):
+	_redraw_upgrade_indicator()
+
+func _on_element_researched_event():
+	_redraw_upgrade_indicator()
 
 # NOTE: only the first target is considered to be the "main
 # target" in case of multishot. This is how it works in
