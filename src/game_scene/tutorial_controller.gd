@@ -67,10 +67,14 @@ func _ready():
 #########################
 
 func connect_to_local_player(local_player: Player):
-	local_player.selected_builder.connect(_on_local_player_selected_builder)
-	local_player.element_level_changed.connect(_on_local_player_element_level_changed)
-	local_player.rolled_starting_towers.connect(_on_local_player_rolled_towers)
-	local_player.wave_finished.connect(_on_local_player_wave_finished)
+	if (Settings.get_bool_setting(Settings.SHOW_TUTORIAL_ON_START)):
+		local_player.selected_builder.connect(_on_local_player_selected_builder)
+		local_player.element_level_changed.connect(_on_local_player_element_level_changed)
+		local_player.rolled_starting_towers.connect(_on_local_player_rolled_towers)
+		local_player.wave_finished.connect(_on_local_player_wave_finished)
+		return true
+	print_verbose("based on profile settings, not setting up tutorial triggers")
+	return false
 
 
 #########################

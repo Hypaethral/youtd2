@@ -112,7 +112,13 @@ func _ready():
 	PlayerManager.send_players_created_signal()
 
 	var local_player: Player = PlayerManager.get_local_player()
-	_tutorial_controller.connect_to_local_player(local_player)
+	var tutorial_enabled = _tutorial_controller.connect_to_local_player(local_player)
+	if (tutorial_enabled):
+		_tutorial_menu.visible = true
+		_tutorial_menu.get_parent().visible = true
+	else:
+		_tutorial_menu.visible = false
+		_tutorial_menu.get_parent().visible = false
 	_hud.connect_to_local_player(local_player)
 	
 	var player_list: Array[Player] = PlayerManager.get_player_list()

@@ -51,7 +51,8 @@ func get_uid() -> int:
 # tree_exited, which can fire on reparenting).
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		GroupManager.remove("item_containers", _uid)
+		if (GroupManager != null):
+			GroupManager.remove("item_containers", _uid)
 
 
 func set_capacity(new_capacity: int):
