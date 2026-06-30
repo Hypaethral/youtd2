@@ -27,6 +27,7 @@ var _player_list: Array[Player] = []
 var _finished_the_game: bool = false
 var _player_defined_autospawn_time: float = -1
 var _allow_shared_build_space: bool = false
+var _wisdom_bonus_lives_centi: int = 0
 
 @export var _next_wave_timer: ManualTimer
 @export var _portal_damage_sound_cooldown_timer: Timer
@@ -116,6 +117,22 @@ func get_lives_string() -> String:
 
 	return lives_string
 
+
+# don't double-apply life wisdom upgrades when co-op
+func apply_wisdom_upgrade_for_team(amount: float):
+	var new_amount = roundi(amount * 100.0)
+	var old_amount = _wisdom_bonus_lives_centi
+	if (new_amount > old_amount):
+		_wisdom_bonus_lives_centi = new_amount
+		if (old_amount == 0):
+			modify_lives_centi(new_amount)
+		else:
+			print_verbose("applying a higher-value wisdom upgrade: %s > %s" % [new_amount, old_amount])
+			modify_lives_centi(-1 * old_amount)
+			modify_lives_centi(new_amount)
+	else:
+		print_verbose("ignoring a lower-value wisdom upgrade: %s <= %s" % [new_amount, old_amount])
+		pass
 
 func modify_lives(amount: float):
 	modify_lives_centi(roundi(amount * 100.0))

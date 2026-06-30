@@ -35,8 +35,9 @@ static func execute(action: Dictionary, player: Player):
 		
 	if wisdom_upgrades[WisdomUpgradeProperties.Id.BOND_OF_UNITY]:
 		var lives_bonus: float = 20 * wisdom_multiplier
-		player.get_team().modify_lives(lives_bonus)
-	
+		# don't double-apply life wisdom upgrade when co-op
+		player.get_team().apply_wisdom_upgrade_for_team(lives_bonus)
+
 	if wisdom_upgrades[WisdomUpgradeProperties.Id.FOUNDATION_OF_KNOWLEDGE]:
 		var tower_bonus_exp: float = 30 * wisdom_multiplier
 		player.set_tower_exp_bonus(tower_bonus_exp)
