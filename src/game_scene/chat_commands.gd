@@ -27,6 +27,7 @@ const PRINT_RANGES_TO_TOWERS: Array[String] = ["/print-ranges-to-towers", "/prtt
 const ALLOW_ALL: Array[String] = ["/allow-all"]
 
 const CREATE_ITEM: Array[String] = ["/createitem", "/ci"]
+const SEARCH_ITEM_ID: Array[String] = ["/searchitem", "/si"]
 const PAUSE_WAVES: Array[String] = ["/pause-waves", "/pw"]
 const UNPAUSE_WAVES: Array[String] = ["/unpause-waves", "/upw"]
 const ADD_EXP: Array[String] = ["/add-exp", "/ae"]
@@ -43,6 +44,7 @@ const HOST_COMMAND_LIST_OF_LISTS: Array = [
 
 const DEV_COMMAND_LIST_OF_LISTS: Array = [
 	CREATE_ITEM,
+	SEARCH_ITEM_ID,
 	PAUSE_WAVES,
 	UNPAUSE_WAVES,
 	ADD_EXP,
@@ -145,6 +147,8 @@ func process_command(player: Player, command: String):
 		_command_gamespeed(player, command_args)
 	elif CREATE_ITEM.has(command_main):
 		_command_create_item(player, command_args)
+	elif SEARCH_ITEM_ID.has(command_main):
+		_command_search_item(player, command_args)
 	elif PAUSE_WAVES.has(command_main):
 		_command_pause_waves(player)
 	elif UNPAUSE_WAVES.has(command_main):
@@ -243,6 +247,33 @@ func _command_create_item(player: Player, args: Array):
 	item.fly_to_stash(0.0)
 
 	_add_status(player, tr("COMMAND_CREATED_ITEM").format({ITEM_ID = item_id}))
+
+
+func _command_search_item(player: Player, args: Array):
+	if args.size() != 1:
+		_add_error(player, tr("COMMAND_INVALID_ARGS"))
+
+		return
+
+	var search_string: String = args[0].to_lower()
+
+	var search_result_list: Array = []
+
+	var any_found: bool = false
+
+	var id_list: Array = ItemProperties.get_item_id_list()
+	for item_id in id_list:
+		var item_name: String = ItemProperties.get_display_name(item_id)
+		var item_name_lower: String = item_name.to_lower()
+		var name_match: bool = item_name_lower.contains(search_string)
+
+		if name_match:
+			_add_status(player, "\"%s\", id = %d" % [item_name, item_id])
+
+			any_found = true
+
+	if !any_found:
+		_add_status(player, "Didn't find any items with matching names.")
 
 
 func _command_autospawn(player: Player, args: Array):

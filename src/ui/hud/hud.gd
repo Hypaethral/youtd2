@@ -20,8 +20,8 @@ class_name HUD extends Control
 @export var _ping_label: Label
 @export var _players_are_lagging_indicator: MarginContainer
 @export var _lagging_player_list_label: Label
-@onready var _quit_button: Button = $PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/QuitButton
-@onready var _drop_players_button: Button = $PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/DropPlayersButton
+@export var _quit_button: ButtonWithHold
+@export var _drop_players_button: ButtonWithHold
 @export var _multiplayer_pause_indicator: Control
 @export var _mission_tracker_container: MissionTrackerContainer
 @export var _one_time_help_popup: OneTimeHelpPopup
