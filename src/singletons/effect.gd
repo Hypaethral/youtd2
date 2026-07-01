@@ -10,17 +10,21 @@ extends Node
 const Z_INDEX_BELOW_CREEPS: int = 9
 const Z_INDEX_BELOW_TOWERS: int = 19
 
+var _effect_container: Node = null
+var _initialized := false
+
+func init(game_scene: Node):
+	_effect_container = game_scene.get_node("World/EffectsContainer")
+	_initialized = true
+	
 
 # NOTE: Effect.createAnimated() in JASS
 func create_animated(effect_path: String, effect_pos: Vector3, facing: float) -> int:
-	var effects_container: Node = get_tree().get_root().get_node_or_null("GameScene/World/EffectsContainer")
-	
-	if effects_container == null:
+	if _effect_container == null or !is_instance_valid(_effect_container):
 		push_warning("effects_container is null. You can ignore this warning during game restart.")
-
 		return 0
 
-	var id: int = effects_container.create_animated(effect_path, effect_pos, facing)
+	var id: int = _effect_container.create_animated(effect_path, effect_pos, facing)
 	set_auto_destroy_enabled(id, true)
 
 #	NOTE: by default, set z_index of effect to 100 so that
@@ -67,14 +71,12 @@ func create_simple_at_unit_attached(effect_path: String, unit: Unit, body_part: 
 		
 		return create_animated(effect_path, Vector3.ZERO, 0.0)
 
-	var effects_container: Node = get_tree().get_root().get_node_or_null("GameScene/World/EffectsContainer")
-	
-	if effects_container == null:
+	if _effect_container == null || !is_instance_valid(_effect_container):
 		push_warning("effects_container is null. You can ignore this warning during game restart.")
 
 		return 0
 
-	var id: int = effects_container.create_simple_at_unit_attached(effect_path, unit, body_part, z_offset)
+	var id: int = _effect_container.create_simple_at_unit_attached(effect_path, unit, body_part, z_offset)
 	set_auto_destroy_enabled(id, true)
 
 	return id
@@ -108,15 +110,13 @@ func set_scale(effect_id: int, scale: float):
 	var effect: Node2D = _get_effect(effect_id)
 	if effect == null:
 		return
-	
-	var effects_container: Node = get_tree().get_root().get_node_or_null("GameScene/World/EffectsContainer")
-	
-	if effects_container == null:
+
+	if _effect_container == null || !is_instance_valid(_effect_container):
 		push_warning("effects_container is null. You can ignore this warning during game restart.")
 
-		return
+		return 0
 
-	var original_scale: Vector2 = effects_container.get_effect_original_scale(effect_id)
+	var original_scale: Vector2 = _effect_container.get_effect_original_scale(effect_id)
 	
 	effect.scale = original_scale * scale
 
@@ -211,14 +211,11 @@ func set_z_index(effect_id: int, z_index):
 #########################
 
 func _get_effect(effect_id: int) -> Node2D:
-	var effects_container: Node = get_tree().get_root().get_node_or_null("GameScene/World/EffectsContainer")
-	
-	if effects_container == null:
+	if _effect_container == null or !is_instance_valid(_effect_container):
 		push_warning("effects_container is null. You can ignore this warning during game restart.")
-
 		return null
 
-	var effect: Node2D = effects_container.get_effect(effect_id)
+	var effect: Node2D = _effect_container.get_effect(effect_id)
 
 	return effect
 

@@ -43,6 +43,7 @@ func _enter_tree() -> void:
 func _ready():
 	print_verbose("GameScene has loaded.")
 	Utils.init(self)
+	Effect.init(self)
 	Globals.reset()
 	PlayerManager.reset()
 
