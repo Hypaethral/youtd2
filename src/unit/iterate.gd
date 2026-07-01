@@ -50,10 +50,13 @@ func next() -> Unit:
 #	O(n^2)). Yields the same units in the same front-to-back
 #	order as the old filter-then-pop_front.
 	while !_next_list.is_empty():
-		var candidate: Unit = _next_list.pop_front()
+		if(is_instance_valid(_next_list.front())):
+			var candidate: Unit = _next_list.pop_front()
 
-		if Utils.unit_is_valid(candidate):
-			return candidate
+			if Utils.unit_is_valid(candidate):
+				return candidate
+		else:
+			_next_list.pop_front()
 
 	return null
 
