@@ -7,6 +7,18 @@ class_name UtilsStatic extends Node
 # f-n where no Object is available. Using Utils as that
 # Object solves the problem.
 
+var _object_container: Node = null
+var _client: Node = null
+var _time: Node = null
+
+var _initialized := false
+
+func init(game_scene: Node) -> void:
+	_object_container = game_scene.get_node("World/ObjectContainer")
+	_client = game_scene.get_node("Gameplay/GameClient")
+	_time = game_scene.get_node("Gameplay/GameTime")
+	_initialized = true
+
 
 static func convert_string_to_id_list(string: String) -> Array[int]:
 	var id_list: Array[int] = []
@@ -412,32 +424,18 @@ func get_tower_at_position(position_wc3: Vector2) -> Tower:
 
 # NOTE: Game.getGameTime() in JASS
 func get_time() -> float:
-	var game_time: Node = get_tree().get_root().get_node_or_null("GameScene/Gameplay/GameTime")
-
-	if game_time == null:
+	if _time == null or !is_instance_valid(_time):
 		push_warning("game_time is null. You can ignore this warning during game restart.")
-
 		return 0.0
-
-	var time: float = game_time.get_time()
-
-	return time
-
+	return _time.get_time()
 
 # Returns current game tick. Used for deterministic calculations
 # in multiplayer to avoid float precision drift issues.
 func get_current_tick() -> int:
-	var game_client: Node = get_tree().get_root().get_node_or_null("GameScene/Gameplay/GameClient")
-
-	if game_client == null:
+	if _client == null or !is_instance_valid(_client):
 		push_warning("game_client is null. You can ignore this warning during game restart.")
-
 		return 0
-
-	var tick: int = game_client.get_current_tick()
-
-	return tick
-
+	return _client.get_current_tick()
 
 # Returns current time of day in the game world, in hours.
 # Between 0.0 and 24.0.
@@ -465,14 +463,11 @@ func filter_item_list(item_list: Array[Item], rarity_filter: Array = [], type_fi
 
 
 func add_object_to_world(object: Node):
-	var object_container: Node = get_tree().get_root().get_node_or_null("GameScene/World/ObjectContainer")
-	
-	if object_container == null:
-		push_warning("object_container is null. You can ignore this warning during game restart.")
-		
+	if _object_container == null or !is_instance_valid(_object_container):
+		push_error("ObjectContainer not initialized or invalid")
 		return
 
-	object_container.add_child(object, true)
+	_object_container.add_child(object, true)
 
 
 # NOTE: currently, we assure that text fits inside the
