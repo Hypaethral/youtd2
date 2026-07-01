@@ -4,4 +4,11 @@
 
 [resource]
 shader = ExtResource("1_l0ov5")
-shader_parameter/effect_visible = 0.0
+shader_parameter/effect_strength = 0.0
+shader_parameter/wave_count = 3
+shader_parameter/travel_time = 0.6
+shader_parameter/gap_time = 0.0
+shader_parameter/width = 0.3
+shader_parameter/glow_color = Vector3(1, 0.9, 0.35)
+shader_parameter/pause_time = 1.5
+shader_parameter/fade_time = 0.5
