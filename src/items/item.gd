@@ -121,7 +121,8 @@ func get_uid() -> int:
 # unlike tree_exited - does not fire on reparent.
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		GroupManager.remove("items", _uid)
+		if (GroupManager != null):
+			GroupManager.remove("items", _uid)
 
 
 func add_aura(aura_id: int, object_with_buff_var: Object):

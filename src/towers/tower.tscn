@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/towers/tower.gd" id="2"]
 [ext_resource type="StyleBox" uid="uid://cefr72vfj04ja" path="res://resources/theme/unit_menu/mana_bar_background.tres" id="2_35wpd"]
 [ext_resource type="StyleBox" uid="uid://rku7yxxl0iit" path="res://resources/theme/unit_menu/mana_bar_fill.tres" id="3_vryaj"]
-[ext_resource type="PackedScene" uid="uid://iylxa888irv4" path="res://src/effects/tower_can_be_upgraded_2.tscn" id="4_cm7fa"]
+[ext_resource type="SpriteFrames" uid="uid://c83nkjdipn2b0" path="res://resources/effects/upgrade_exclaim.tres" id="4_wgtuc"]
 
 [node name="Tower" type="Node2D" node_paths=PackedStringArray("_mana_bar", "_tower_selection_area", "_visual", "_range_indicator_parent", "_sprite_parent", "_upgrade_indicator_sprite")]
 script = ExtResource("2")
@@ -12,7 +12,8 @@ _tower_selection_area = NodePath("Visual/TowerSelectionArea")
 _visual = NodePath("Visual")
 _range_indicator_parent = NodePath("Visual/RangeIndicatorParent")
 _sprite_parent = NodePath("Visual/SpriteParent")
-_upgrade_indicator_sprite = NodePath("Visual/TowerCanBeUpgraded2")
+_upgrade_indicator_sprite = NodePath("Visual/TowerCanBeUpgradedFlex")
+_upgrade_indicator_style = 3
 
 [node name="Visual" type="Node2D" parent="."]
 z_index = 1
@@ -42,11 +43,9 @@ metadata/_edit_use_anchors_ = true
 [node name="RangeIndicatorParent" type="Node2D" parent="Visual"]
 visible = false
 
-[node name="TowerCanBeUpgraded2" parent="Visual" instance=ExtResource("4_cm7fa")]
+[node name="TowerCanBeUpgradedFlex" type="AnimatedSprite2D" parent="Visual"]
 visible = false
-z_index = 1
-rotation = 0.349066
-frame_progress = 0.0
-offset = Vector2(0, -25)
+sprite_frames = ExtResource("4_wgtuc")
+autoplay = "default"
 
 [connection signal="selected_changed" from="." to="." method="_on_selected_changed"]

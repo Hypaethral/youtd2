@@ -199,7 +199,8 @@ func get_uid() -> int:
 # tree_exited, which can fire on reparenting).
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		GroupManager.remove("autocasts", _uid)
+		if (GroupManager != null):
+			GroupManager.remove("autocasts", _uid)
 
 
 func toggle_auto_mode():

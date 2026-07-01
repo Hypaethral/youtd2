@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dwmvt2htcdo0i"]
+
+[ext_resource type="Shader" path="res://resources/shaders/foo.gdshader" id="1_l0ov5"]
+
+[resource]
+shader = ExtResource("1_l0ov5")
+shader_parameter/effect_visible = 0.0

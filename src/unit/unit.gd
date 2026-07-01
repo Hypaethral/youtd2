@@ -247,8 +247,10 @@ func _ready():
 	add_child(regen_timer)
 	regen_timer.start()
 
-	var builder: Builder = get_player().get_builder()
-	builder.apply_effects(self)
+	var owner2 = get_player()
+	if (owner2 != null && is_instance_valid(owner2)):
+		var builder: Builder = owner2.get_builder()
+		builder.apply_effects(self)
 
 #	NOTE: add dummy sprite and selection outline, in case
 #	some Unit subclass doesn't set them up. This prevents
@@ -299,7 +301,8 @@ func get_uid() -> int:
 # group needs explicit removal here.
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		GroupManager.remove("units", _uid)
+		if (GroupManager != null):
+			GroupManager.remove("units", _uid)
 
 
 # NOTE: you must call this instead of queue_free(), so that

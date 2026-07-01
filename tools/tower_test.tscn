@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://npe8no22h8pb"]
+
+[ext_resource type="Script" path="res://tools/tower_test.gd" id="1_dsmta"]
+[ext_resource type="Script" path="res://src/game_scene/camera_controller.gd" id="2_iilff"]
+
+[node name="TowerTest" type="Node" node_paths=PackedStringArray("_camera_controller")]
+script = ExtResource("1_dsmta")
+_camera_controller = NodePath("Node2/CameraController")
+
+[node name="Node" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="Node"]
+z_index = 1000
+position = Vector2(2.08165e-12, 2.08165e-12)
+scale = Vector2(0.31481, 0.5)
+limit_smoothed = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="Node2" type="Node" parent="."]
+
+[node name="CameraController" type="Node" parent="Node2" node_paths=PackedStringArray("_camera")]
+script = ExtResource("2_iilff")
+ZOOM_MAX = 4.0
+_camera = NodePath("../../Node/Camera2D")

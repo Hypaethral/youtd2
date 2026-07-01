@@ -22,6 +22,20 @@ const ELEMENT_TO_EXPLOSION_ART: Dictionary = {
 	Element.enm.NONE: "res://src/effects/projectile_explosion_storm.tscn",
 }
 
+enum UpgradeIndicatorStyle {
+	DERPY_EXCLAIM,
+	TROLLY_WIDE_BLACK,
+	TROLLY_THIN_BLACK,
+	TROLLY_THIN_WHITE,
+	SHADER_GLOW
+}
+
+const UPGRADE_STYLE_TO_UPGRADE_ANIMATION: Dictionary = {
+	UpgradeIndicatorStyle.DERPY_EXCLAIM: preload("res://resources/effects/upgrade_exclaim.tres"),
+	UpgradeIndicatorStyle.TROLLY_WIDE_BLACK: preload("res://resources/effects/upgrade_trolly_v1.tres"),
+	UpgradeIndicatorStyle.TROLLY_THIN_BLACK: preload("res://resources/effects/upgrade_trolly_black.tres"),
+	UpgradeIndicatorStyle.TROLLY_THIN_WHITE: preload("res://resources/effects/upgrade_trolly_white.tres")
+}
 
 const TOWER_SELECTION_VISUAL_SIZE: int = 128
 static var TARGET_TYPE_GROUND_ONLY: TargetType = TargetType.new(TargetType.CREEPS + TargetType.SIZE_MASS + TargetType.SIZE_NORMAL + TargetType.SIZE_CHAMPION + TargetType.SIZE_BOSS)
@@ -60,13 +74,16 @@ var _current_crit_damage: float = 0
 var _transform_is_allowed: bool = true
 var _is_in_combat: bool = false
 
-
 @export var _mana_bar: ProgressBar
 @export var _tower_selection_area: Area2D
 @export var _visual: Node2D
 @export var _range_indicator_parent: Node2D
 @export var _sprite_parent: Node2D
 @export var _upgrade_indicator_sprite: AnimatedSprite2D
+@export var _upgrade_indicator_style: UpgradeIndicatorStyle = UpgradeIndicatorStyle.SHADER_GLOW
+@export var _can_be_upgraded: bool
+
+var _upgrade_shader
 
 #########################
 ###     Built-in      ###
@@ -76,11 +93,12 @@ func _ready():
 	_redraw_upgrade_indicator()
 	var local_player = PlayerManager.get_local_player()
 	
-	# wave spawned signal to display floating indicator
-	local_player.wave_spawned.connect(_on_wave_spawned_event)
+	if (local_player!= null):
+		# wave spawned signal to display floating indicator
+		local_player.wave_spawned.connect(_on_wave_spawned_event)
 
-	# element research signal issued to display floating indicator
-	local_player.element_level_changed.connect(_on_element_researched_event)
+		# element research signal issued to display floating indicator
+		local_player.element_level_changed.connect(_on_element_researched_event)
 
 	super()
 
@@ -716,18 +734,49 @@ func _get_next_bounce_target(bounce_pos: Vector3, visited_list: Array[Unit]) -> 
 	else:
 		return null
 
-func _redraw_upgrade_indicator():
-	var upgrade_id: int = TowerProperties.get_upgrade_id_for_tower(self.get_id())
+func set_upgrade_indicator_style(style: UpgradeIndicatorStyle):
+	_upgrade_indicator_style = style
+	_redraw_upgrade_indicator()
 
+func _recalculate_can_be_upgraded():
+	var upgrade_id: int = TowerProperties.get_upgrade_id_for_tower(self.get_id())
 	var can_upgrade: bool
 	if upgrade_id != -1:
+		var local_player = PlayerManager.get_local_player()
 		var owning_player = self.get_player()
-		var requirements_are_satisfied: bool = TowerProperties.requirements_are_satisfied(upgrade_id, owning_player)
-		can_upgrade = requirements_are_satisfied
+		if (owning_player != null && local_player != null):
+			var requirements_are_satisfied: bool = TowerProperties.requirements_are_satisfied(upgrade_id, owning_player)
+			can_upgrade = requirements_are_satisfied
 	else:
 		can_upgrade = false
+	_can_be_upgraded = can_upgrade
 
-	_upgrade_indicator_sprite.visible = can_upgrade
+func _redraw_upgrade_indicator():
+	match _upgrade_indicator_style:
+		UpgradeIndicatorStyle.SHADER_GLOW:
+			if (_can_be_upgraded):
+				_sprite.material.set_shader_parameter("effect_strength", 0.8)
+				var fade = 0.1 + ((_sprite.texture.get_height() / 200.0) * 0.1)
+				_sprite.material.set_shader_parameter("fade_time", fade)
+			else:
+				_sprite.material.set_shader_parameter("effect_strength", 0.0)
+			# don't handle all the sprite stuff
+			return
+		UpgradeIndicatorStyle.TROLLY_THIN_BLACK, UpgradeIndicatorStyle.TROLLY_THIN_WHITE:
+			_upgrade_indicator_sprite.scale = Vector2(0.3,0.3)
+		UpgradeIndicatorStyle.DERPY_EXCLAIM:
+			_upgrade_indicator_sprite.flip_h = true
+		_:
+			pass
+
+	var s_off = _sprite.get_offset()
+	var s_offer = (_sprite.texture.get_height() * _sprite.get_scale()[1] / 3 / min(1, _upgrade_indicator_sprite.get_scale()[1] * 2)) # + (_upgrade_indicator_sprite.sprite_frames.get_frame_texture("default", 0).get_height() * _upgrade_indicator_sprite.get_scale()[1])
+	_upgrade_indicator_sprite.set_offset(Vector2(s_off[0], s_off[1]))
+	_upgrade_indicator_sprite.position.y = s_offer * -1
+	_upgrade_indicator_sprite.visible = _can_be_upgraded
+	_upgrade_indicator_sprite.sprite_frames = UPGRADE_STYLE_TO_UPGRADE_ANIMATION[_upgrade_indicator_style]
+	if (_can_be_upgraded):
+		_upgrade_indicator_sprite.play()
 
 #########################
 ###     Callbacks     ###
@@ -760,9 +809,11 @@ func _on_projectile_target_hit(projectile: Projectile, target: Unit):
 			_on_projectile_target_hit_bounce(projectile, target)
 
 func _on_wave_spawned_event(level: int):
+	_recalculate_can_be_upgraded()
 	_redraw_upgrade_indicator()
 
 func _on_element_researched_event():
+	_recalculate_can_be_upgraded()
 	_redraw_upgrade_indicator()
 
 # NOTE: only the first target is considered to be the "main
@@ -1280,7 +1331,7 @@ func get_attack_enabled() -> bool:
 # script for tower and attach to scene. Script name matches
 # with scene name so this can be done automatically instead
 # of having to do it by hand in scene editor.
-static func make(id: int, player: Player, preceding_tower: Tower = null) -> Tower:
+static func make(id: int, player: Player, preceding_tower: Tower = null, recalculate_upgradability: bool = true) -> Tower:
 	var tower: Tower = Preloads.tower_scene.instantiate()
 	var script_path: String = TowerProperties.get_script_path(id)
 	var tower_behavior_script: Script = load(script_path)
@@ -1291,6 +1342,7 @@ static func make(id: int, player: Player, preceding_tower: Tower = null) -> Towe
 	var visual_node: Node2D = tower.get_node("Visual")
 	var sprite_parent_node: Node2D = tower.get_node("Visual/SpriteParent")
 	
+	tower_sprite.material = preload("res://resources/shaders/upgrade_effect_shader.tres").duplicate()
 	if visual_node == null:
 		push_error("visual node is null")
 		
@@ -1303,5 +1355,9 @@ static func make(id: int, player: Player, preceding_tower: Tower = null) -> Towe
 
 	tower.set_id(id)
 	tower.set_player(player)
+	tower.set_upgrade_indicator_style(UpgradeIndicatorStyle.SHADER_GLOW)
+	if (recalculate_upgradability):
+		tower._recalculate_can_be_upgraded()
+		tower._redraw_upgrade_indicator()
 
 	return tower

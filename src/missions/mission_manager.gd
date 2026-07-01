@@ -82,10 +82,11 @@ func _mission_requirements_are_satisfied(mission_id) -> bool:
 
 func _on_players_created():
 	var local_player: Player = PlayerManager.get_local_player()
-	var local_team: Team = local_player.get_team()
-	
-	local_team.game_lose.connect(_on_game_lose)
-	local_team.game_win.connect(_on_game_win)
+	if (local_player != null):
+		var local_team: Team = local_player.get_team()
+
+		local_team.game_lose.connect(_on_game_lose)
+		local_team.game_win.connect(_on_game_win)
 
 
 # Some missions should be removed at the start of the game
