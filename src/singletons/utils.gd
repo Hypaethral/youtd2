@@ -467,7 +467,9 @@ func add_object_to_world(object: Node):
 		push_error("ObjectContainer not initialized or invalid")
 		return
 
-	_object_container.add_child(object, true)
+	# NOTE: intentionally NOT passing force_readable_name=true.
+	# we prefer UID management via GroupManager for performance
+	_object_container.add_child(object)
 
 
 # NOTE: currently, we assure that text fits inside the

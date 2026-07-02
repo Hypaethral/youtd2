@@ -37,6 +37,10 @@ var _map: Map = null
 func _enter_tree() -> void:
 	GroupManager.reset()
 	SpatialGrid.reset()
+	# NOTE: free pooled projectiles so parked nodes holding refs to
+	# freed casters/types from a prior game don't survive across the
+	# static UID counter reset below.
+	ProjectilePool.reset()
 	# NOTE: ensure object UID counters are statically reset between sessions
 	_reset_uid_counters()
 

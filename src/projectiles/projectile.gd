@@ -73,6 +73,13 @@ var _visual_path: String
 var _use_lightning_visual: bool
 var _explosion_art: String
 
+# Pooling (see ProjectilePool)
+# _type_ref lets us disconnect type.tree_exited on release
+var _type_ref: ProjectileType = null
+# _attached_visual / _attached_visual_path store a visual subtree across reuse
+var _attached_visual: Node2D = null
+var _attached_visual_path: String = ""
+
 var user_int: int = 0
 var user_int2: int = 0
 var user_int3: int = 0
@@ -89,9 +96,18 @@ var user_real3: float = 0.0
 ###     Built-in      ###
 #########################
 
+# NOTE: do not call super() from here, use semaphore pattern for instantiation
+# See ProjectilePool.  DummyUnit._ready's caster connect is done from
+# _acquire_init via _connect_caster() instead.
 func _ready():
-	super()
+	pass
 
+
+# Initializes a projectile for a new flight. Called from create()
+# at the point add_object_to_world used to trigger _ready, so UID
+# assignment happens in byte-identical deterministic order to the
+# pre-pooling code. Runs for both fresh and recycled projectiles.
+func _acquire_init():
 	_uid = _uid_max
 	_uid_max += 1
 
@@ -100,16 +116,175 @@ func _ready():
 	_initial_scale = scale
 	_spawn_time = Utils.get_time()
 
-	var visual_exists: bool = ResourceLoader.exists(_visual_path)
-	if !visual_exists:
-		if PRINT_SPRITE_NOT_FOUND_ERROR:
-			print_debug("Failed to find sprite for projectile. Tried at path:", _visual_path)
+	_connect_caster()
 
-		_visual_path = FALLBACK_PROJECTILE_VISUAL
+#	Re-register the baked LifetimeTimer in the manual_timers
+#	group on reuse. On a fresh projectile the timer's own _ready
+#	(run during add_child, after this) registers it, and its uid
+#	is still 0 here - so skip and let _ready handle it.
+	if _lifetime_timer.get_uid() != 0:
+		GroupManager.add("manual_timers", _lifetime_timer, _lifetime_timer.get_uid())
 
-	var visual_scene: PackedScene = load(_visual_path)
-	var visual: Node2D = visual_scene.instantiate()
+#	Start the lifetime timer if create() requested one via
+#	set_remaining_lifetime while out of tree. A fresh timer's
+#	_ready autostart handles this; a recycled timer's _ready does
+#	not re-run, so start it here. Harmless double-start for the
+#	fresh case (start() just resets the countdown to wait_time).
+	if _lifetime_timer.autostart:
+		_lifetime_timer.start(_lifetime_timer.wait_time)
+
+	_attach_visual(_visual_path)
+
+
+# logic associated with semaphore release -- return to pool in neutral state
+# Called on release (from _return_to_pool). Only clears fields that create()
+# does NOT overwrite, plus accumulated/transient state.
+func _release_reset():
+#	Homing / interpolation. set_homing_target(null) also
+#	disconnects the target's tree_exited and nulls _target_unit.
+	set_homing_target(null)
+	_target_pos = Vector3.INF
+	_ignore_target_z = false
+	_interpolation_is_stopped = false
+	_interpolation_start = Vector3.ZERO
+	_interpolation_progress = 0
+	_interpolation_z_arc_height = 0
+	_bezier_is_enabled = false
+	_bezier_control_1 = Vector3.ZERO
+	_bezier_control_2 = Vector3.ZERO
+	_expire_when_homing_ends = true
+	_avert_destruct_requested = false
+
+#	Callables that create() does not always set.
+	_periodic_handler = Callable()
+	_damage_event_handler = Callable()
+	_kill_event_handler = Callable()
+
+#	Accumulators (also drop stale Unit refs held while parked).
+	_tower_bounce_visited_list.clear()
+	_collision_history.clear()
+	_tower_crit_count = 0
+	_tower_crit_ratio = 0.0
+	user_int = 0
+	user_int2 = 0
+	user_int3 = 0
+	user_real = 0.0
+	user_real2 = 0.0
+	user_real3 = 0.0
+
+#	Toggles.
+	_collision_enabled = true
+	_periodic_enabled = true
+
+#	Critical: reset the cleanup guard or the reused node's
+#	_cleanup() no-ops forever and the projectile becomes immortal.
+	_cleanup_done = false
+
+#	Node / visual transform back to defaults.
+	modulate = Color.WHITE
+	_visual_node.scale = Vector2.ONE
+	_visual_node.position = Vector2.ZERO
+	_visual_node.show()
+
+#	Stop the lifetime timer so a zero-lifetime type doesn't
+#	inherit a running timer from the previous flight.
+	_lifetime_timer.stop()
+	_lifetime_timer.autostart = false
+
+
+# Attaches the visual subtree for visual_path, reusing the
+# already-attached one when the type is unchanged (the common
+# case of a tower firing the same projectile repeatedly).
+func _attach_visual(visual_path: String):
+	if _attached_visual != null && _attached_visual_path == visual_path:
+		_reset_visual(_attached_visual)
+
+		return
+
+	if _attached_visual != null:
+		_visual_node.remove_child(_attached_visual)
+		ProjectilePool.release_visual(_attached_visual_path, _attached_visual)
+		_attached_visual = null
+
+	var visual: Node2D = ProjectilePool.acquire_visual(visual_path)
 	_visual_node.add_child(visual)
+	_attached_visual = visual
+	_attached_visual_path = visual_path
+
+	_reset_visual(visual)
+
+
+# Resets cosmetic state of a (possibly recycled) visual so it
+# matches a freshly instantiated one. Purely visual - not read by
+# sim logic, so it never touches determinism.
+func _reset_visual(visual: Node2D):
+	visual.rotation = 0
+	visual.position = Vector2.ZERO
+	_restart_particles(visual)
+
+
+func _restart_particles(node: Node):
+	if node is CPUParticles2D || node is GPUParticles2D:
+		node.restart()
+
+	for child in node.get_children():
+		_restart_particles(child)
+
+
+# Returns the projectile to ProjectilePool instead of freeing it.
+# Overrides DummyUnit._dispose (called from _cleanup after the
+# cleanup handler runs).
+func _dispose():
+	_return_to_pool()
+
+
+func _return_to_pool():
+#	Remove from the ordered projectiles registry explicitly: a
+#	pooled node stays is_instance_valid forever, so GroupManager's
+#	self-heal never drops it and it would keep being update()'d.
+	GroupManager.remove("projectiles", _uid)
+
+#	Tear down type.tree_exited. ProjectileTypes are long-lived
+#	children of tower behaviors, so this is the most dangerous
+#	stale connection to leave on a recycled projectile.
+	if is_instance_valid(_type_ref) && _type_ref.tree_exited.is_connected(_on_projectile_type_tree_exited):
+		_type_ref.tree_exited.disconnect(_on_projectile_type_tree_exited)
+	_type_ref = null
+
+#	Tear down caster.tree_exited (caster may already be freed).
+	if is_instance_valid(_caster) && _caster.tree_exited.is_connected(_on_caster_tree_exited):
+		_caster.tree_exited.disconnect(_on_caster_tree_exited)
+
+#	Free the periodic timer if this flight had one. create()
+#	builds a fresh one per applicable type, so we do not pool it.
+	if _periodic_timer != null:
+		if is_instance_valid(_periodic_timer):
+			GroupManager.remove("manual_timers", _periodic_timer.get_uid())
+
+			if _periodic_timer.timeout.is_connected(_on_periodic_timer_timeout):
+				_periodic_timer.timeout.disconnect(_on_periodic_timer_timeout)
+
+			remove_child(_periodic_timer)
+			_periodic_timer.queue_free()
+
+		_periodic_timer = null
+
+#	Drop the baked lifetime timer from the ordered registry while
+#	parked; _acquire_init re-adds it (with its stable uid) on the
+#	next flight.
+	GroupManager.remove("manual_timers", _lifetime_timer.get_uid())
+
+#	Reset per-flight state (also disconnects target.tree_exited).
+	_release_reset()
+
+#	Detach from the tree WITHOUT freeing, then park in the pool.
+#	The attached visual subtree stays parented under _visual_node
+#	so the next same-type flight reuses it for free.
+	var parent: Node = get_parent()
+	if parent != null && is_inside_tree():
+		parent.remove_child(self)
+
+	ProjectilePool.release(self)
 
 
 #########################
@@ -855,7 +1030,9 @@ static func create_bezier_interpolation_from_unit_to_point(type: ProjectileType,
 
 # NOTE: Projectile.create() in JASS
 static func create(type: ProjectileType, caster: Unit, damage_ratio: float, crit_ratio: float, initial_pos: Vector3, facing: float) -> Projectile:
-	var projectile: Projectile = Preloads.projectile_scene.instantiate()
+	var projectile: Projectile = ProjectilePool.acquire()
+
+	projectile._type_ref = type
 
 	projectile.set_speed(type._speed)
 	projectile._acceleration = type._acceleration
@@ -905,6 +1082,11 @@ static func create(type: ProjectileType, caster: Unit, damage_ratio: float, crit
 		projectile.set_remaining_lifetime(type._lifetime)
 
 	type.tree_exited.connect(projectile._on_projectile_type_tree_exited)
+
+#	NOTE: _acquire_init() must run right here (where _ready used
+#	to fire, inside add_child) so UID assignment stays in
+#	byte-identical deterministic order vs the pre-pooling code.
+	projectile._acquire_init()
 
 	Utils.add_object_to_world(projectile)
 

@@ -21,7 +21,19 @@ var _position_wc3: Vector3
 #########################
 
 func _ready():
-	_caster.tree_exited.connect(_on_caster_tree_exited)
+	_connect_caster()
+
+
+# Connects the caster's tree_exited so the dummy cleans itself up
+# if the caster is freed mid-flight. Extracted from _ready so that
+# Projectile (which is pooled and does NOT re-run _ready on reuse)
+# can (re)connect the caster from _acquire_init instead.
+func _connect_caster():
+	if !Utils.unit_is_valid(_caster):
+		return
+
+	if !_caster.tree_exited.is_connected(_on_caster_tree_exited):
+		_caster.tree_exited.connect(_on_caster_tree_exited)
 
 
 #########################
@@ -151,6 +163,13 @@ func _cleanup():
 	if _cleanup_handler.is_valid():
 		_cleanup_handler.call(self)
 
+	_dispose()
+
+
+# Overridable disposal step. Base behavior frees the node.
+# Projectile overrides this to return itself to ProjectilePool
+# instead of freeing.
+func _dispose():
 	remove_from_game()
 
 

@@ -744,7 +744,7 @@ func _recalculate_can_be_upgraded():
 	if upgrade_id != -1:
 		var local_player = PlayerManager.get_local_player()
 		var owning_player = self.get_player()
-		if (owning_player != null && local_player != null):
+		if (owning_player != null && local_player != null && local_player.get_id() == owning_player.get_id()):
 			var requirements_are_satisfied: bool = TowerProperties.requirements_are_satisfied(upgrade_id, owning_player)
 			can_upgrade = requirements_are_satisfied
 	else:
