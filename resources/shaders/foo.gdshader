@@ -9,12 +9,12 @@ uniform float gap_time = 0.0;
 uniform float width = 0.3;
 uniform vec3 glow_color = vec3(1.0, 0.9, 0.35);
 uniform float pause_time = 1.5;
-uniform float fade_time = 0.5;
+uniform float fade_time = 0.3;
 
 void fragment() {
-	vec4 color = texture(TEXTURE, UV);
+	vec4 color = COLOR; // or, ignoring color modulation: color = texture(TEXTURE, UV);
 
-	// Bottom = 0, Top = 1
+	// start from the bottom
 	float y = 1.0 - UV.y;
 
 	float ripple = 0.0;
@@ -28,7 +28,7 @@ void fragment() {
 
 	float t = mod(TIME, total_cycle);
 
-	// Draw every active wave in the burst.
+	// Draw active waves
 	for (int i = 0; i < wave_count; i++) {
 
 		float wave_start = float(i) * wave_period;
@@ -38,9 +38,6 @@ void fragment() {
 		float life_end = travel_time + fade_time;
 
 		if (local_time >= life_start && local_time <= life_end) {
-
-			//float wave = mix(0, width + (1.5 * width), local_time / travel_time);
-			//float wave = local_time / travel_time;
 			float progress = clamp(local_time / travel_time, 0.0, 1.0);
 			float wave = progress;
 
@@ -58,7 +55,6 @@ void fragment() {
 	}
 
 	ripple = clamp(ripple, 0.0, 1.0);
-
 	color.rgb += glow_color * ripple * effect_strength;
 
 	COLOR = color;

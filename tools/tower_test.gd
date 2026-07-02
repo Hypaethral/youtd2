@@ -31,6 +31,35 @@ func _ready() -> void:
 			add_child(t)
 			t.position = Vector2(column_offset, row_offset)
 			column_offset += 155
+
+	row_offset += 240
+	column_offset = 0
+	var t1 = Tower.make(159, player, null, false)
+	var t2 = Tower.make(159, player, null, false)
+	var t3 = Tower.make(159, player, null, false)
+	var t4 = Tower.make(159, player, null, false)
+	var t5 = Tower.make(159, player, null, false)
+	t1._can_be_upgraded = false
+	add_child(t1)
+	t1.position = Vector2(column_offset, row_offset)
+	column_offset += 155
+	t2._can_be_upgraded = false
+	t2.set_upgrade_indicator_style(Tower.UpgradeIndicatorStyle.DERPY_EXCLAIM)
+	add_child(t2)
+	t2.position = Vector2(column_offset, row_offset)
+	column_offset += 155
+	t3._can_be_upgraded = true
+	add_child(t3)
+	t3.position = Vector2(column_offset, row_offset)
+	column_offset += 155
+	t4._can_be_upgraded = true
+	add_child(t4)
+	t4.position = Vector2(column_offset, row_offset)
+	column_offset += 155
+	t5._can_be_upgraded = true
+	add_child(t5)
+	t5.position = Vector2(column_offset, row_offset)
+
 	pass
 
 
