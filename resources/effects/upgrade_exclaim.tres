@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=16 format=3 uid="uid://c83nkjdipn2b0"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://c83nkjdipn2b0"]
 
 [ext_resource type="Texture2D" uid="uid://bwkj17di4hra1" path="res://assets/effects/tower_can_be_upgraded.png" id="1_0lra4"]
 
@@ -103,7 +103,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j7ksw")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 12.0
 }]

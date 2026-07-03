@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=97 format=3 uid="uid://bql5sxaowafw3"]
+[gd_resource type="Theme" format=3 uid="uid://bql5sxaowafw3"]
 
 [ext_resource type="FontFile" uid="uid://d1pnwehsosppo" path="res://assets/fonts/Friz Quadrata Std Medium.otf" id="1"]
 [ext_resource type="StyleBox" uid="uid://vnjg5mo0nmg" path="res://resources/theme/common/rect_container_l.tres" id="1_7apqd"]

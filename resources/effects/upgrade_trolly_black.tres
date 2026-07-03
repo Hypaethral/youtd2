@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=43 format=3 uid="uid://bpwg2w6l6s75c"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bpwg2w6l6s75c"]
 
 [ext_resource type="Texture2D" uid="uid://boxo2p27akft8" path="res://assets/effects/lvlup_thinblack2.png" id="1_yrkfy"]
 
@@ -292,7 +292,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pbkv7")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 25.0
 }]

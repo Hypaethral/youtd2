@@ -1,6 +1,6 @@
-[gd_scene load_steps=22 format=3 uid="uid://d12sm4nc5wwqt"]
+[gd_scene format=3 uid="uid://d12sm4nc5wwqt"]
 
-[ext_resource type="Script" path="res://src/ui/title_screen/title_screen.gd" id="1_dx8oa"]
+[ext_resource type="Script" uid="uid://dgpxc6qv4nf5y" path="res://src/ui/title_screen/title_screen.gd" id="1_dx8oa"]
 [ext_resource type="PackedScene" uid="uid://cusqgcgg37fj7" path="res://src/ui/title_screen/lan_match/setup_lan_game.tscn" id="2_2qgi3"]
 [ext_resource type="Theme" uid="uid://bql5sxaowafw3" path="res://resources/theme/wc3_theme.tres" id="2_ec3wj"]
 [ext_resource type="PackedScene" uid="uid://bran1c08eptno" path="res://src/ui/title_screen/online/setup_online_game.tscn" id="3_mias5"]
@@ -23,7 +23,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vbfm6"]
 
-[node name="TitleScreen" type="Node" node_paths=PackedStringArray("_tab_container", "_configure_singleplayer_menu", "_spacer_before_quit_button", "_quit_button", "_notification_panel")]
+[node name="TitleScreen" type="Node" unique_id=1331298880 node_paths=PackedStringArray("_tab_container", "_configure_singleplayer_menu", "_spacer_before_quit_button", "_quit_button", "_notification_panel")]
 script = ExtResource("1_dx8oa")
 _tab_container = NodePath("UI/TabContainer")
 _configure_singleplayer_menu = NodePath("UI/TabContainer/ConfigureSingleplayerMenu")
@@ -31,20 +31,20 @@ _spacer_before_quit_button = NodePath("UI/TabContainer/MainTab/VBoxContainer/Spa
 _quit_button = NodePath("UI/TabContainer/MainTab/VBoxContainer/QuitButton")
 _notification_panel = NodePath("UI/MarginContainer2/NotificationPanel")
 
-[node name="SetupLanGame" parent="." node_paths=PackedStringArray("_title_screen", "_lan_connect_menu", "_lan_lobby_menu", "_create_lan_match_menu") instance=ExtResource("2_2qgi3")]
+[node name="SetupLanGame" parent="." unique_id=404319375 node_paths=PackedStringArray("_title_screen", "_lan_connect_menu", "_lan_lobby_menu", "_create_lan_match_menu") instance=ExtResource("2_2qgi3")]
 _title_screen = NodePath("..")
 _lan_connect_menu = NodePath("../UI/TabContainer/LanConnectMenu")
 _lan_lobby_menu = NodePath("../UI/TabContainer/LanLobbyMenu")
 _create_lan_match_menu = NodePath("../UI/TabContainer/CreateLanMatchMenu")
 
-[node name="SetupOnlineGame" parent="." node_paths=PackedStringArray("_title_screen", "_online_match_list_menu", "_online_lobby_menu", "_create_online_match_menu", "_connecting_to_server_indicator") instance=ExtResource("3_mias5")]
+[node name="SetupOnlineGame" parent="." unique_id=357012533 node_paths=PackedStringArray("_title_screen", "_online_match_list_menu", "_online_lobby_menu", "_create_online_match_menu", "_connecting_to_server_indicator") instance=ExtResource("3_mias5")]
 _title_screen = NodePath("..")
 _online_match_list_menu = NodePath("../UI/TabContainer/OnlineMatchListMenu")
 _online_lobby_menu = NodePath("../UI/TabContainer/OnlineLobbyMenu")
 _create_online_match_menu = NodePath("../UI/TabContainer/CreateOnlineMatchMenu")
 _connecting_to_server_indicator = NodePath("../UI/ConnectingToServerIndicator")
 
-[node name="UI" type="Control" parent="."]
+[node name="UI" type="Control" parent="." unique_id=243678623]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,7 +53,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_ec3wj")
 
-[node name="TextureRect" type="TextureRect" parent="UI"]
+[node name="TextureRect" type="TextureRect" parent="UI" unique_id=1869162502]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -63,7 +63,7 @@ grow_vertical = 2
 texture = ExtResource("3_uvrn4")
 expand_mode = 3
 
-[node name="TabContainer" type="TabContainer" parent="UI"]
+[node name="TabContainer" type="TabContainer" parent="UI" unique_id=347701641]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -80,141 +80,141 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_vbfm6")
 current_tab = 0
 tabs_visible = false
 
-[node name="MainTab" type="PanelContainer" parent="UI/TabContainer"]
+[node name="MainTab" type="PanelContainer" parent="UI/TabContainer" unique_id=569911112]
 layout_mode = 2
 theme = ExtResource("2_ec3wj")
 theme_type_variation = &"MainPanelContainer"
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/TabContainer/MainTab"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TabContainer/MainTab" unique_id=1493529233]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="SingleplayerButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="SingleplayerButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=1419649800]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "SINGLEPLAYER_BUTTON"
 
-[node name="MultiplayerButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="MultiplayerButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=92334752]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "MULTIPLAYER_BUTTON"
 
-[node name="ProfileButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="ProfileButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=1308624597]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "PROFILE_BUTTON"
 
-[node name="EncyclopediaButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="EncyclopediaButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=1739869686]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "ENCYCLOPEDIA_BUTTON"
 
-[node name="SettingsButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=646856939]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "SETTINGS_BUTTON"
 
-[node name="CreditsButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="CreditsButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=2108119651]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "CREDITS_BUTTON"
 
-[node name="Spacer" type="VBoxContainer" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="Spacer" type="VBoxContainer" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=1037308110]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="QuitButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="UI/TabContainer/MainTab/VBoxContainer" unique_id=340443949]
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ButtonLarge"
 text = "QUIT_BUTTON"
 
-[node name="ConfigureSingleplayerMenu" parent="UI/TabContainer" instance=ExtResource("6_nj3u5")]
+[node name="ConfigureSingleplayerMenu" parent="UI/TabContainer" unique_id=603610326 instance=ExtResource("6_nj3u5")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="OnlineMatchListMenu" parent="UI/TabContainer" instance=ExtResource("7_ggn0o")]
+[node name="OnlineMatchListMenu" parent="UI/TabContainer" unique_id=106231664 instance=ExtResource("7_ggn0o")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="LanConnectMenu" parent="UI/TabContainer" instance=ExtResource("5_pc1mj")]
+[node name="LanConnectMenu" parent="UI/TabContainer" unique_id=590886279 instance=ExtResource("5_pc1mj")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="CreateOnlineMatchMenu" parent="UI/TabContainer" instance=ExtResource("9_f0p2i")]
+[node name="CreateOnlineMatchMenu" parent="UI/TabContainer" unique_id=401923345 instance=ExtResource("9_f0p2i")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="CreateLanMatchMenu" parent="UI/TabContainer" instance=ExtResource("7_8vssb")]
+[node name="CreateLanMatchMenu" parent="UI/TabContainer" unique_id=1997704235 instance=ExtResource("7_8vssb")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
-[node name="OnlineLobbyMenu" parent="UI/TabContainer" instance=ExtResource("11_b1t0j")]
+[node name="OnlineLobbyMenu" parent="UI/TabContainer" unique_id=1678767747 instance=ExtResource("11_b1t0j")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 
-[node name="LanLobbyMenu" parent="UI/TabContainer" instance=ExtResource("12_3m802")]
+[node name="LanLobbyMenu" parent="UI/TabContainer" unique_id=1036598301 instance=ExtResource("12_3m802")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 
-[node name="ProfileMenu" parent="UI/TabContainer" instance=ExtResource("8_7qboh")]
+[node name="ProfileMenu" parent="UI/TabContainer" unique_id=245640890 instance=ExtResource("8_7qboh")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 8
 
-[node name="EncyclopediaMenu" parent="UI/TabContainer" instance=ExtResource("17_7asif")]
+[node name="EncyclopediaMenu" parent="UI/TabContainer" unique_id=934370714 instance=ExtResource("17_7asif")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 9
 
-[node name="MissionsMenu" parent="UI/TabContainer" instance=ExtResource("14_5jj2m")]
+[node name="MissionsMenu" parent="UI/TabContainer" unique_id=1006129045 instance=ExtResource("14_5jj2m")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 10
 
-[node name="SettingsMenu" parent="UI/TabContainer" instance=ExtResource("5_q0hc3")]
+[node name="SettingsMenu" parent="UI/TabContainer" unique_id=97471846 instance=ExtResource("5_q0hc3")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 11
 
-[node name="CreditsMenu" parent="UI/TabContainer" instance=ExtResource("4_rdxi7")]
+[node name="CreditsMenu" parent="UI/TabContainer" unique_id=85331188 instance=ExtResource("4_rdxi7")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 12
 
-[node name="LoadingIndicator" type="VBoxContainer" parent="UI/TabContainer"]
+[node name="LoadingIndicator" type="VBoxContainer" parent="UI/TabContainer" unique_id=81504202]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 13
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/TabContainer/LoadingIndicator"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/TabContainer/LoadingIndicator" unique_id=1976483703]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_ec3wj")
 theme_type_variation = &"MainPanelContainer"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/TabContainer/LoadingIndicator/PanelContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/TabContainer/LoadingIndicator/PanelContainer" unique_id=1929306019]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][font_size=60]LOADING[/font_size][/center]"
 fit_content = true
 
-[node name="MarginContainer" type="MarginContainer" parent="UI"]
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1330621334]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -225,10 +225,10 @@ grow_vertical = 0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="BuildVersionLabel" parent="UI/MarginContainer" instance=ExtResource("16_xve8p")]
+[node name="BuildVersionLabel" parent="UI/MarginContainer" unique_id=1170441607 instance=ExtResource("16_xve8p")]
 layout_mode = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="UI"]
+[node name="MarginContainer2" type="MarginContainer" parent="UI" unique_id=996694821]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -244,16 +244,16 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="NotificationPanel" parent="UI/MarginContainer2" instance=ExtResource("17_whg35")]
+[node name="NotificationPanel" parent="UI/MarginContainer2" unique_id=1328661868 instance=ExtResource("17_whg35")]
 visible = false
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="UI"]
+[node name="PanelContainer" type="PanelContainer" parent="UI" unique_id=2000895996]
 layout_mode = 0
 offset_right = 4.0
 offset_bottom = 4.0
 
-[node name="ConnectingToServerIndicator" parent="UI" instance=ExtResource("18_5n8qn")]
+[node name="ConnectingToServerIndicator" parent="UI" unique_id=513979966 instance=ExtResource("18_5n8qn")]
 visible = false
 layout_mode = 1
 

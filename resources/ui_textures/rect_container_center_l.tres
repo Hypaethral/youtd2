@@ -1,4 +1,4 @@
-[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://cfgwdmgl12iia"]
+[gd_resource type="AtlasTexture" format=3 uid="uid://cfgwdmgl12iia"]
 
 [ext_resource type="Texture2D" uid="uid://dl22jvey8l5fo" path="res://assets/hud/hud_atlas.png" id="1_bqg8q"]
 
