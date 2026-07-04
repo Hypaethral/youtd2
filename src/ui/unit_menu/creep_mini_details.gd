@@ -64,11 +64,11 @@ func _get_stats_left_text() -> String:
 	var item_quality_ratio_string: String = Utils.format_percent(item_quality_ratio, 0)
 
 	var text: String = "" \
-	+ "[hint=%s][img=30 color=6495ed]res://resources/icons/generic_icons/barefoot.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_SPEED"), slow_amount_string] \
-	+ "[hint=%s][img=30 color=d2b48c]res://resources/icons/generic_icons/abdominal_armor.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_ARMOR"), overall_armor_string] \
-	+ "[hint=%s][img=30 color=9630f0]res://resources/icons/generic_icons/moebius_trefoil.tres[/img] %s[/hint]\n" % [tr("CREEP_DETAILS_EXP_RAT"), exp_ratio_string] \
-	+ "[hint=%s][img=30 color=bcde35]res://resources/icons/generic_icons/polar_star.tres[/img] %s[/hint]\n" % [tr("CREEP_DETAILS_DROP_RAT"), item_drop_ratio_string] \
-	+ "[hint=%s][img=30 color=bcde35]res://resources/icons/generic_icons/gold_bar.tres[/img] %s[/hint]\n" % [tr("CREEP_DETAILS_QUALITY_RAT"), item_quality_ratio_string] \
+	+ "[hint=\"%s\"][img=30 color=6495ed]res://resources/icons/generic_icons/barefoot.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_SPEED"), slow_amount_string] \
+	+ "[hint=\"%s\"][img=30 color=d2b48c]res://resources/icons/generic_icons/abdominal_armor.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_ARMOR"), overall_armor_string] \
+	+ "[hint=\"%s\"][img=30 color=9630f0]res://resources/icons/generic_icons/moebius_trefoil.tres[/img] %s[/hint]\n" % [tr("CREEP_DETAILS_EXP_RAT"), exp_ratio_string] \
+	+ "[hint=\"%s\"][img=30 color=bcde35]res://resources/icons/generic_icons/polar_star.tres[/img] %s[/hint]\n" % [tr("CREEP_DETAILS_DROP_RAT"), item_drop_ratio_string] \
+	+ "[hint=\"%s\"][img=30 color=bcde35]res://resources/icons/generic_icons/gold_bar.tres[/img] %s[/hint]\n" % [tr("CREEP_DETAILS_QUALITY_RAT"), item_quality_ratio_string] \
 	+ ""
 	
 	return text
@@ -82,8 +82,8 @@ func _get_stats_right_text() -> String:
 	var overall_mana_regen_string: String = Utils.format_float(overall_mana_regen, 1)
 
 	var text: String = "" \
-	+ "[hint=%s][img=30 color=32cd32]res://resources/icons/generic_icons/rolling_energy.tres[/img] %s/s[/hint]\n" % [tr("CREEP_MINI_DETAILS_HEALTH_REGEN"), overall_health_regen_string] \
-	+ "[hint=%s][img=30 color=31cde8]res://resources/icons/generic_icons/rolling_energy.tres[/img] %s/s[/hint]\n" % [tr("CREEP_MINI_DETAILS_MANA_REGEN"), overall_mana_regen_string] \
+	+ "[hint=\"%s\"][img=30 color=32cd32]res://resources/icons/generic_icons/rolling_energy.tres[/img] %s/s[/hint]\n" % [tr("CREEP_MINI_DETAILS_HEALTH_REGEN"), overall_health_regen_string] \
+	+ "[hint=\"%s\"][img=30 color=31cde8]res://resources/icons/generic_icons/rolling_energy.tres[/img] %s/s[/hint]\n" % [tr("CREEP_MINI_DETAILS_MANA_REGEN"), overall_mana_regen_string] \
 	+ ""
 	
 	return text
@@ -108,12 +108,12 @@ func _get_dmg_left_text() -> String:
 	var dmg_from_astral_string: String = Utils.format_percent(dmg_from_astral, 0)
 
 	var text: String = "" \
-	+ "[hint=%s][img=30 color=eb4f34]res://resources/icons/generic_icons/hammer_drop.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_ATTACK_DAMAGE_RECEIVED"), attack_damage_received_string] \
-	+ "[hint=%s][img=30 color=31e896]res://resources/icons/generic_icons/flame.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_SPELL_DAMAGE_RECEIVED"), spell_damage_received_string] \
-	+ "[hint=%s][img=30 color=6495ed]res://resources/icons/generic_icons/azul_flake.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_ICE"), dmg_from_ice_string] \
-	+ "[hint=%s][img=30 color=32cd32]res://resources/icons/generic_icons/root_tip.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_NATURE"), dmg_from_nature_string] \
-	+ "[hint=%s][img=30 color=ff4500]res://resources/icons/generic_icons/flame.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_FIRE"), dmg_from_fire_string] \
-	+ "[hint=%s][img=30 color=66cdaa]res://resources/icons/generic_icons/star_swirl.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_ASTRAL"), dmg_from_astral_string] \
+	+ "[hint=\"%s\"][img=30 color=eb4f34]res://resources/icons/generic_icons/hammer_drop.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_ATTACK_DAMAGE_RECEIVED"), attack_damage_received_string] \
+	+ "[hint=\"%s\"][img=30 color=31e896]res://resources/icons/generic_icons/flame.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_SPELL_DAMAGE_RECEIVED"), spell_damage_received_string] \
+	+ "[hint=\"%s\"][img=30 color=6495ed]res://resources/icons/generic_icons/azul_flake.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_ICE"), dmg_from_ice_string] \
+	+ "[hint=\"%s\"][img=30 color=32cd32]res://resources/icons/generic_icons/root_tip.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_NATURE"), dmg_from_nature_string] \
+	+ "[hint=\"%s\"][img=30 color=ff4500]res://resources/icons/generic_icons/flame.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_FIRE"), dmg_from_fire_string] \
+	+ "[hint=\"%s\"][img=30 color=66cdaa]res://resources/icons/generic_icons/star_swirl.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_ASTRAL"), dmg_from_astral_string] \
 	+ ""
 	
 	return text
@@ -130,9 +130,9 @@ func _get_dmg_right_text() -> String:
 	var dmg_from_storm_string: String = Utils.format_percent(dmg_from_storm, 0)
 
 	var text: String = "" \
-	+ "[hint=%s][img=30 color=9370db]res://resources/icons/generic_icons/animal_skull.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_DARKNESS"), dmg_from_darkness_string] \
-	+ "[hint=%s][img=30 color=d2b48c]res://resources/icons/generic_icons/pokecog.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_IRON"), dmg_from_iron_string] \
-	+ "[hint=%s][img=30 color=ffffe0]res://resources/icons/generic_icons/rolling_energy.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_STORM"), dmg_from_storm_string] \
+	+ "[hint=\"%s\"][img=30 color=9370db]res://resources/icons/generic_icons/animal_skull.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_DARKNESS"), dmg_from_darkness_string] \
+	+ "[hint=\"%s\"][img=30 color=d2b48c]res://resources/icons/generic_icons/pokecog.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_IRON"), dmg_from_iron_string] \
+	+ "[hint=\"%s\"][img=30 color=ffffe0]res://resources/icons/generic_icons/rolling_energy.tres[/img] %s[/hint]\n" % [tr("CREEP_MINI_DETAILS_DAMAGE_FROM_STORM"), dmg_from_storm_string] \
 	+ ""
 	
 	return text
