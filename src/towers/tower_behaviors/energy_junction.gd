@@ -54,7 +54,7 @@ func junction_on_cleanup(event: Event):
 	if b.user_int != 0:
 		var lightning: InterpolatedSprite = instance_from_id(b.user_int) as InterpolatedSprite
 		if lightning != null:
-			lightning.queue_free()
+			lightning.dispose()
 
 	b.get_buffed_unit().modify_property(ModificationType.enm.MOD_ATTACKSPEED, -b.user_real)
 

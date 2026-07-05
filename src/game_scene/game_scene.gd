@@ -41,6 +41,9 @@ func _enter_tree() -> void:
 	# freed casters/types from a prior game don't survive across the
 	# static UID counter reset below.
 	ProjectilePool.reset()
+	# NOTE: free parked lightning visuals so leftover nodes from a
+	# prior game don't accumulate across sessions.
+	InterpolatedSpritePool.reset()
 	# NOTE: ensure object UID counters are statically reset between sessions
 	_reset_uid_counters()
 
