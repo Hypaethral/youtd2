@@ -78,7 +78,7 @@ class_name Map extends Node2D
 
 
 @export var _camera_limits: Polygon2D
-@export var _ground_indicator_map: TileMap
+@onready var layer_0: TileMapLayer = $GroundIndicatorMap/Layer0
 
 
 #########################
@@ -106,8 +106,8 @@ func get_buildable_cells(player: Player) -> Array[Vector2i]:
 
 
 func pos_is_on_ground(pos: Vector2) -> bool:
-	var map_pos = _ground_indicator_map.local_to_map(pos)
-	var tile_data_at_pos: TileData = _ground_indicator_map.get_cell_tile_data(0, map_pos)
+	var map_pos = layer_0.local_to_map(pos)
+	var tile_data_at_pos: TileData = layer_0.get_cell_tile_data(map_pos)
 	var tile_exists: bool = tile_data_at_pos != null
 
 	return tile_exists

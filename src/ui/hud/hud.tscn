@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cngv1rgplre2c"]
+[gd_scene format=3 uid="uid://cngv1rgplre2c"]
 
 [ext_resource type="Theme" uid="uid://bql5sxaowafw3" path="res://resources/theme/wc3_theme.tres" id="1_xs0tv"]
 [ext_resource type="PackedScene" uid="uid://bakuxdbe6a7f0" path="res://src/ui/hud/mission_tracker_container.tscn" id="5_n7x4d"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://n8326r4m33s3" path="res://src/ui/hud/game_speed_controller.tscn" id="9_ilyra"]
 [ext_resource type="PackedScene" uid="uid://b3grhp7bp5t54" path="res://src/ui/top_left_menu/top_left_menu.tscn" id="10_agdn3"]
 [ext_resource type="Texture2D" uid="uid://1sklksk2awnr" path="res://resources/icons/hud/research_elements.tres" id="10_ylm6g"]
-[ext_resource type="Script" path="res://src/ui/hud/hud.gd" id="11"]
+[ext_resource type="Script" uid="uid://nly1aj31pxnn" path="res://src/ui/hud/hud.gd" id="11"]
 [ext_resource type="PackedScene" uid="uid://ino0lr2m12uh" path="res://src/ui/item_stash_menu/item_stash_menu.tscn" id="11_5i6a2"]
 [ext_resource type="PackedScene" uid="uid://nl0pvhb4rasi" path="res://src/ui/buttons/button_tooltip.tscn" id="11_ka7k1"]
 [ext_resource type="Texture2D" uid="uid://boxxhen27xatf" path="res://resources/icons/hud/item_stash.tres" id="12_vixmf"]
@@ -38,7 +38,7 @@ unicode = 105
 [sub_resource type="Shortcut" id="Shortcut_ree63"]
 events = [SubResource("InputEventKey_cgjl0")]
 
-[node name="HUD" type="Control" node_paths=PackedStringArray("_error_message_container", "_normal_message_container", "_game_over_label", "_elements_menu", "_tower_stash_menu", "_item_stash_menu", "_tower_stash_button", "_item_stash_button", "_top_left_menu", "_unit_menu", "_chat_line_edit", "_desync_indicator", "_button_tooltip_top", "_button_tooltip_bottom", "_tower_details", "_creep_details", "_ping_label", "_players_are_lagging_indicator", "_lagging_player_list_label", "_quit_button", "_drop_players_button", "_multiplayer_pause_indicator", "_mission_tracker_container", "_one_time_help_popup")]
+[node name="HUD" type="Control" unique_id=506242961 node_paths=PackedStringArray("_error_message_container", "_normal_message_container", "_game_over_label", "_elements_menu", "_tower_stash_menu", "_item_stash_menu", "_tower_stash_button", "_item_stash_button", "_top_left_menu", "_unit_menu", "_chat_line_edit", "_desync_indicator", "_button_tooltip_top", "_button_tooltip_bottom", "_tower_details", "_creep_details", "_ping_label", "_players_are_lagging_indicator", "_lagging_player_list_label", "_quit_button", "_drop_players_button", "_multiplayer_pause_indicator", "_mission_tracker_container", "_one_time_help_popup")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,7 +75,7 @@ _mission_tracker_container = NodePath("MarginContainer3/VBoxContainer/MissionTra
 _one_time_help_popup = NodePath("MarginContainer3/VBoxContainer/OneTimeHelpPopup")
 metadata/_edit_vertical_guides_ = [960.0]
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1685163231]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 1
 anchors_preset = 2
@@ -90,44 +90,44 @@ mouse_filter = 2
 theme_override_constants/margin_left = 80
 theme_override_constants/margin_bottom = 350
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1094194360]
 layout_mode = 2
 mouse_filter = 2
 alignment = 2
 
-[node name="NormalMessageContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="NormalMessageContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1054431429]
 custom_minimum_size = Vector2(0, 1050)
 layout_mode = 2
 mouse_filter = 2
 alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=1869234091]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ChatLineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/MarginContainer"]
+[node name="ChatLineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/MarginContainer" unique_id=1621646793]
 visible = false
 layout_mode = 2
 max_length = 200
 context_menu_enabled = false
-virtual_keyboard_enabled = false
 shortcut_keys_enabled = false
 middle_mouse_paste_enabled = false
 selecting_enabled = false
+virtual_keyboard_enabled = false
 caret_blink = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
+[node name="MarginContainer2" type="MarginContainer" parent="." unique_id=820218016]
 layout_mode = 1
 offset_right = 730.0
 offset_bottom = 388.0
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 
-[node name="TopLeftMenu" parent="MarginContainer2" instance=ExtResource("10_agdn3")]
+[node name="TopLeftMenu" parent="MarginContainer2" unique_id=810540732 instance=ExtResource("10_agdn3")]
 layout_mode = 2
 
-[node name="MarginContainer3" type="MarginContainer" parent="."]
+[node name="MarginContainer3" type="MarginContainer" parent="." unique_id=1636430787]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -138,28 +138,28 @@ offset_bottom = 61.0
 grow_horizontal = 2
 theme_override_constants/margin_top = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer3"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer3" unique_id=1559441517]
 layout_mode = 2
 
-[node name="PlayerResourceDisplay" parent="MarginContainer3/VBoxContainer" instance=ExtResource("15_ir4hq")]
+[node name="PlayerResourceDisplay" parent="MarginContainer3/VBoxContainer" unique_id=356480035 instance=ExtResource("15_ir4hq")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 metadata/_edit_vertical_guides_ = []
 
-[node name="Spacer" type="VBoxContainer" parent="MarginContainer3/VBoxContainer"]
+[node name="Spacer" type="VBoxContainer" parent="MarginContainer3/VBoxContainer" unique_id=408827656]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="MissionTrackerContainer" parent="MarginContainer3/VBoxContainer" instance=ExtResource("5_n7x4d")]
+[node name="MissionTrackerContainer" parent="MarginContainer3/VBoxContainer" unique_id=904492864 instance=ExtResource("5_n7x4d")]
 layout_mode = 2
 
-[node name="OneTimeHelpPopup" parent="MarginContainer3/VBoxContainer" instance=ExtResource("6_05w81")]
+[node name="OneTimeHelpPopup" parent="MarginContainer3/VBoxContainer" unique_id=321915640 instance=ExtResource("6_05w81")]
 visible = false
 layout_mode = 2
 
-[node name="MarginContainer4" type="MarginContainer" parent="."]
-layout_mode = 2
+[node name="MarginContainer4" type="MarginContainer" parent="." unique_id=109104213]
+layout_mode = 0
 offset_left = 15.0
 offset_top = 15.0
 offset_right = 15.0
@@ -169,15 +169,15 @@ size_flags_vertical = 0
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 80
 
-[node name="TowerDetails" parent="MarginContainer4" instance=ExtResource("17_12w0v")]
+[node name="TowerDetails" parent="MarginContainer4" unique_id=1114896613 instance=ExtResource("17_12w0v")]
 visible = false
 layout_mode = 2
 
-[node name="CreepDetails" parent="MarginContainer4" instance=ExtResource("18_acgvt")]
+[node name="CreepDetails" parent="MarginContainer4" unique_id=1282440747 instance=ExtResource("18_acgvt")]
 visible = false
 layout_mode = 2
 
-[node name="MarginContainer5" type="MarginContainer" parent="."]
+[node name="MarginContainer5" type="MarginContainer" parent="." unique_id=1573654318]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -191,25 +191,25 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/margin_bottom = 15
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer5"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer5" unique_id=1472458235]
 layout_mode = 2
 
-[node name="ButtonTooltipBottom" parent="MarginContainer5/VBoxContainer2" instance=ExtResource("11_ka7k1")]
+[node name="ButtonTooltipBottom" parent="MarginContainer5/VBoxContainer2" unique_id=877607668 instance=ExtResource("11_ka7k1")]
 visible = false
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Spacer" type="VBoxContainer" parent="MarginContainer5/VBoxContainer2"]
+[node name="Spacer" type="VBoxContainer" parent="MarginContainer5/VBoxContainer2" unique_id=2076355366]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="UnitMenu" parent="MarginContainer5/VBoxContainer2" instance=ExtResource("19_bqmfs")]
+[node name="UnitMenu" parent="MarginContainer5/VBoxContainer2" unique_id=898328302 instance=ExtResource("19_bqmfs")]
 visible = false
 layout_mode = 2
 
-[node name="MarginContainer6" type="MarginContainer" parent="."]
+[node name="MarginContainer6" type="MarginContainer" parent="." unique_id=1455544788]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -223,10 +223,10 @@ grow_vertical = 0
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="GameSpeedController" parent="MarginContainer6" instance=ExtResource("9_ilyra")]
+[node name="GameSpeedController" parent="MarginContainer6" unique_id=1641574191 instance=ExtResource("9_ilyra")]
 layout_mode = 2
 
-[node name="MarginContainer7" type="MarginContainer" parent="."]
+[node name="MarginContainer7" type="MarginContainer" parent="." unique_id=375132277]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -238,40 +238,40 @@ mouse_filter = 2
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 
-[node name="MarginContainer4" type="MarginContainer" parent="MarginContainer7"]
+[node name="MarginContainer4" type="MarginContainer" parent="MarginContainer7" unique_id=791528136]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer7/MarginContainer4"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer7/MarginContainer4" unique_id=1235531571]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 
-[node name="ElementsMenuButton" parent="MarginContainer7/MarginContainer4/VBoxContainer" node_paths=PackedStringArray("_menu") instance=ExtResource("7_2qbjb")]
+[node name="ElementsMenuButton" parent="MarginContainer7/MarginContainer4/VBoxContainer" unique_id=1212341820 node_paths=PackedStringArray("_menu") instance=ExtResource("7_2qbjb")]
 layout_mode = 2
 tooltip_text = "HUD_TOOLTIP_ELEMENTS"
 icon = ExtResource("10_ylm6g")
 _menu = NodePath("../../../MarginContainer3/VBoxContainer/ElementsMenu")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer7"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer7" unique_id=597987053]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 250
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer7/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer7/MarginContainer" unique_id=1219314582]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 
-[node name="TowerStashButton" parent="MarginContainer7/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_menu") instance=ExtResource("7_2qbjb")]
+[node name="TowerStashButton" parent="MarginContainer7/MarginContainer/VBoxContainer" unique_id=849626193 node_paths=PackedStringArray("_menu") instance=ExtResource("7_2qbjb")]
 layout_mode = 2
 tooltip_text = "HUD_TOOLTIP_TOWER_STASH"
 button_group = ExtResource("7_8m5sl")
 shortcut = SubResource("Shortcut_ejtke")
 _menu = NodePath("../../../MarginContainer2/HBoxContainer/TowerStashMenu")
 
-[node name="ItemStashButton" parent="MarginContainer7/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_menu") instance=ExtResource("7_2qbjb")]
+[node name="ItemStashButton" parent="MarginContainer7/MarginContainer/VBoxContainer" unique_id=1901718749 node_paths=PackedStringArray("_menu") instance=ExtResource("7_2qbjb")]
 layout_mode = 2
 tooltip_text = "HUD_TOOLTIP_ITEM_STASH"
 button_group = ExtResource("7_8m5sl")
@@ -279,57 +279,57 @@ shortcut = SubResource("Shortcut_ree63")
 icon = ExtResource("12_vixmf")
 _menu = NodePath("../../../MarginContainer2/HBoxContainer/ItemStashMenu")
 
-[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer7"]
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer7" unique_id=1841504967]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 120
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer7/MarginContainer3"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer7/MarginContainer3" unique_id=287143340]
 layout_mode = 2
 
-[node name="ElementsMenu" parent="MarginContainer7/MarginContainer3/VBoxContainer" instance=ExtResource("17_bxii1")]
+[node name="ElementsMenu" parent="MarginContainer7/MarginContainer3/VBoxContainer" unique_id=572584494 instance=ExtResource("17_bxii1")]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer7"]
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer7" unique_id=122660883]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 210
 theme_override_constants/margin_right = 120
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer7/MarginContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer7/MarginContainer2" unique_id=884190236]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 30
 alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer7/MarginContainer2/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer7/MarginContainer2/HBoxContainer" unique_id=683075988]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/margin_top = 40
 
-[node name="ButtonTooltipTop" parent="MarginContainer7/MarginContainer2/HBoxContainer/MarginContainer" instance=ExtResource("11_ka7k1")]
+[node name="ButtonTooltipTop" parent="MarginContainer7/MarginContainer2/HBoxContainer/MarginContainer" unique_id=1529814320 instance=ExtResource("11_ka7k1")]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 
-[node name="ItemStashMenu" parent="MarginContainer7/MarginContainer2/HBoxContainer" instance=ExtResource("11_5i6a2")]
+[node name="ItemStashMenu" parent="MarginContainer7/MarginContainer2/HBoxContainer" unique_id=30312670 instance=ExtResource("11_5i6a2")]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="TowerStashMenu" parent="MarginContainer7/MarginContainer2/HBoxContainer" instance=ExtResource("15_eivr8")]
+[node name="TowerStashMenu" parent="MarginContainer7/MarginContainer2/HBoxContainer" unique_id=431780452 instance=ExtResource("15_eivr8")]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="MarginContainer8" type="MarginContainer" parent="."]
+[node name="MarginContainer8" type="MarginContainer" parent="." unique_id=2103209825]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -343,20 +343,20 @@ size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/margin_top = 200
 
-[node name="ErrorMessageContainer" type="VBoxContainer" parent="MarginContainer8"]
+[node name="ErrorMessageContainer" type="VBoxContainer" parent="MarginContainer8" unique_id=1102216979]
 custom_minimum_size = Vector2(700, 200)
 layout_mode = 2
 mouse_filter = 2
 alignment = 2
 
-[node name="DevControls" parent="." instance_placeholder="res://src/ui/dev_controls/dev_controls.tscn"]
+[node name="DevControls" parent="." unique_id=727663297 instance_placeholder="res://src/ui/dev_controls/dev_controls.tscn"]
 visible = false
 layout_mode = 1
 mouse_filter = 2
 
-[node name="CombatLogWindow" parent="." instance=ExtResource("14_g64vx")]
-clip_contents = true
+[node name="CombatLogWindow" parent="." unique_id=515339841 instance=ExtResource("14_g64vx")]
 custom_minimum_size = Vector2(0, 0)
+clip_contents = true
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -366,7 +366,7 @@ offset_right = 1000.0
 offset_bottom = 251.5
 grow_vertical = 2
 
-[node name="MarginContainer10" type="MarginContainer" parent="."]
+[node name="MarginContainer10" type="MarginContainer" parent="." unique_id=1795181575]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -377,20 +377,20 @@ grow_vertical = 0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer10"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer10" unique_id=755421049]
 layout_mode = 2
 
-[node name="PingLabel" type="Label" parent="MarginContainer10/VBoxContainer"]
+[node name="PingLabel" type="Label" parent="MarginContainer10/VBoxContainer" unique_id=670370435]
 visible = false
 layout_mode = 2
 theme_type_variation = &"LabelSmall"
 text = "Ping: 123ms"
 
-[node name="BuildVersionLabel" parent="MarginContainer10/VBoxContainer" instance=ExtResource("21_ko2ou")]
+[node name="BuildVersionLabel" parent="MarginContainer10/VBoxContainer" unique_id=1434275493 instance=ExtResource("21_ko2ou")]
 layout_mode = 2
 text = "Version: 1.2.3"
 
-[node name="GameOverLabel" type="RichTextLabel" parent="."]
+[node name="GameOverLabel" type="RichTextLabel" parent="." unique_id=115698410]
 visible = false
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 1
@@ -411,7 +411,7 @@ text = "[center][color=RED]GAME OVER[/color]
 [font_size=30][color=RED]Press Escape and Quit to Title to Restart[/color][/font_size][/center]"
 fit_content = true
 
-[node name="DesyncIndicator" parent="." instance=ExtResource("19_mcs2s")]
+[node name="DesyncIndicator" parent="." unique_id=1169610078 instance=ExtResource("19_mcs2s")]
 visible = false
 layout_mode = 1
 anchors_preset = 3
@@ -426,7 +426,7 @@ offset_bottom = 0.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="PlayersAreLaggingIndicator" type="MarginContainer" parent="."]
+[node name="PlayersAreLaggingIndicator" type="MarginContainer" parent="." unique_id=659456544]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -435,41 +435,41 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="PlayersAreLaggingIndicator"]
+[node name="PanelContainer" type="PanelContainer" parent="PlayersAreLaggingIndicator" unique_id=1579526491]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("1_xs0tv")
 theme_type_variation = &"MainPanelContainer"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayersAreLaggingIndicator/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayersAreLaggingIndicator/PanelContainer" unique_id=1350206151]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" unique_id=763018876]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/VBoxContainer2"]
+[node name="Label" type="Label" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/VBoxContainer2" unique_id=1288709395]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "WAIT_FOR_LAG"
 
-[node name="LaggingPlayerListLabel" type="Label" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/VBoxContainer2"]
+[node name="LaggingPlayerListLabel" type="Label" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer/VBoxContainer2" unique_id=2132775129]
 layout_mode = 2
 text = "Dave
 Alice"
 horizontal_alignment = 1
 
-[node name="QuitButton" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" instance=ExtResource("22_bxpq0")]
+[node name="QuitButton" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" unique_id=630182506 instance=ExtResource("22_bxpq0")]
 visible = false
 layout_mode = 2
 text = "Quit to Title"
 
-[node name="DropPlayersButton" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" instance=ExtResource("22_bxpq0")]
+[node name="DropPlayersButton" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" unique_id=2044072816 instance=ExtResource("22_bxpq0")]
 visible = false
 layout_mode = 2
 text = "Drop Lagging Players"
 
-[node name="MultiplayerPauseIndicator" parent="." instance=ExtResource("20_cbamn")]
+[node name="MultiplayerPauseIndicator" parent="." unique_id=2021180893 instance=ExtResource("20_cbamn")]
 visible = false
 layout_mode = 1
 

@@ -127,10 +127,9 @@ func _show_wave_list(wave_list: Array[Wave]):
 		var armor_hint_escaped: String = Utils.escape_bbcode(armor_hint)
 		var specials_description_escaped: String = Utils.escape_bbcode(specials_description)
 
-		text += "[cell]%d[/cell][cell]%s[/cell][cell]%s[/cell][cell][hint=%s]%s[/hint][/cell][cell][hint=%s]%s[/hint][/cell]" % [level, size_string, race_string, armor_hint_escaped, armor_string, specials_description_escaped, specials_string]
+		text += "[cell]%d[/cell][cell]%s[/cell][cell]%s[/cell][cell][hint=\"%s\"]%s[/hint][/cell][cell][hint=\"%s\"]%s[/hint][/cell]" % [level, size_string, race_string, armor_hint_escaped, armor_string, specials_description_escaped, specials_string]
 	
 	text += "[/table]"
-
 	_label.append_text(text)
 
 

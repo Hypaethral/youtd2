@@ -22,9 +22,7 @@ func _ready():
 # being 0.
 func divide_safe_tool(a: float, b: float, result_when_divide_by_zero: float = 0.0) -> float:
 	if b != 0.0:
-		var ratio: float = a / b
-
-		return ratio
+		return a / b
 	else:
 		return result_when_divide_by_zero
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6i4cmhc3c8my"]
+[gd_scene format=3 uid="uid://bu66n31xiqy3x"]
 
 [ext_resource type="Texture2D" uid="uid://c22lkk5uieshi" path="res://assets/effects/bdragon/freezing_breath_519.png" id="1_c6rpb"]
 
@@ -89,11 +89,11 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0atpr")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 30.0
 }]
 
-[node name="ChimaeraAcid" type="AnimatedSprite2D"]
+[node name="ChimaeraAcid" type="AnimatedSprite2D" unique_id=139177723]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_6qi7j")

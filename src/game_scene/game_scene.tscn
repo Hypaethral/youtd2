@@ -1,31 +1,31 @@
-[gd_scene load_steps=49 format=3 uid="uid://ccr6p41srpf4p"]
+[gd_scene format=3 uid="uid://ccr6p41srpf4p"]
 
-[ext_resource type="Script" path="res://src/game_scene/game_scene.gd" id="1_0wd1b"]
-[ext_resource type="Script" path="res://src/game_scene/manual_timer.gd" id="2_gestc"]
-[ext_resource type="Script" path="res://src/game_scene/team_container.gd" id="3_qsih1"]
-[ext_resource type="Script" path="res://src/game_scene/game_time.gd" id="5_8syq6"]
-[ext_resource type="Script" path="res://src/game_scene/select_unit.gd" id="6_vam2w"]
-[ext_resource type="Script" path="res://src/game_scene/select_point_for_cast.gd" id="7_h82dk"]
-[ext_resource type="Script" path="res://src/game_scene/select_target_for_cast.gd" id="8_n5fu4"]
-[ext_resource type="Script" path="res://src/game_scene/move_item.gd" id="9_tujdk"]
-[ext_resource type="Script" path="res://src/game_scene/build_tower.gd" id="10_tkjjb"]
-[ext_resource type="Script" path="res://src/game_scene/mouse_state.gd" id="11_e0bvs"]
-[ext_resource type="Script" path="res://src/game_scene/combat_log_storage.gd" id="12_8gb75"]
+[ext_resource type="Script" uid="uid://dnlh1cf4bj6km" path="res://src/game_scene/game_scene.gd" id="1_0wd1b"]
+[ext_resource type="Script" uid="uid://osqftiqvdibx" path="res://src/game_scene/manual_timer.gd" id="2_gestc"]
+[ext_resource type="Script" uid="uid://dy5y1bw4fnnu7" path="res://src/game_scene/team_container.gd" id="3_qsih1"]
+[ext_resource type="Script" uid="uid://chatf62fnj88g" path="res://src/game_scene/game_time.gd" id="5_8syq6"]
+[ext_resource type="Script" uid="uid://chjpjj0khihfu" path="res://src/game_scene/select_unit.gd" id="6_vam2w"]
+[ext_resource type="Script" uid="uid://kgegejxy35rg" path="res://src/game_scene/select_point_for_cast.gd" id="7_h82dk"]
+[ext_resource type="Script" uid="uid://116ch75u3jye" path="res://src/game_scene/select_target_for_cast.gd" id="8_n5fu4"]
+[ext_resource type="Script" uid="uid://cq4kv7qag4dxc" path="res://src/game_scene/move_item.gd" id="9_tujdk"]
+[ext_resource type="Script" uid="uid://perqjcsl8770" path="res://src/game_scene/build_tower.gd" id="10_tkjjb"]
+[ext_resource type="Script" uid="uid://esfab8q28ad3" path="res://src/game_scene/mouse_state.gd" id="11_e0bvs"]
+[ext_resource type="Script" uid="uid://5wejy1d3ahyg" path="res://src/game_scene/combat_log_storage.gd" id="12_8gb75"]
 [ext_resource type="PackedScene" uid="uid://b8hcppig3r5q6" path="res://src/game_scene/game_host.tscn" id="12_sbijg"]
 [ext_resource type="PackedScene" uid="uid://dp2tmdi8ms5qo" path="res://src/game_scene/game_client.tscn" id="15_a5l86"]
-[ext_resource type="Script" path="res://src/game_scene/chat_commands.gd" id="16_amwbk"]
-[ext_resource type="Script" path="res://src/game_scene/build_space.gd" id="16_p1jwo"]
-[ext_resource type="Script" path="res://src/game_scene/tutorial_controller.gd" id="17_5cvlj"]
-[ext_resource type="Script" path="res://src/game_scene/camera_controller.gd" id="17_imw8o"]
+[ext_resource type="Script" uid="uid://bhn3sw2o4kswj" path="res://src/game_scene/chat_commands.gd" id="16_amwbk"]
+[ext_resource type="Script" uid="uid://pcb3t4rp6167" path="res://src/game_scene/build_space.gd" id="16_p1jwo"]
+[ext_resource type="Script" uid="uid://3sp6pc58txv1" path="res://src/game_scene/tutorial_controller.gd" id="17_5cvlj"]
+[ext_resource type="Script" uid="uid://b7531xeuuc4v0" path="res://src/game_scene/camera_controller.gd" id="17_imw8o"]
 [ext_resource type="PackedScene" uid="uid://bjvafnsglmpin" path="res://src/map/map_small.tscn" id="17_td8cv"]
-[ext_resource type="Script" path="res://src/creeps/wave_path.gd" id="18_m2fcq"]
+[ext_resource type="Script" uid="uid://cv7sbw41ug6a8" path="res://src/creeps/wave_path.gd" id="18_m2fcq"]
 [ext_resource type="PackedScene" uid="uid://u567sx64fpwa" path="res://src/missions/mission_manager.tscn" id="18_ujbrx"]
 [ext_resource type="PackedScene" uid="uid://ccrjj36jwy707" path="res://src/player/camera_origin.tscn" id="19_icnp7"]
-[ext_resource type="Script" path="res://src/effects/effects_container.gd" id="20_rnpn6"]
+[ext_resource type="Script" uid="uid://y8dwvdtcwggo" path="res://src/effects/effects_container.gd" id="20_rnpn6"]
 [ext_resource type="PackedScene" uid="uid://djkt0t0jveoks" path="res://src/effects/vampiric_aura.tscn" id="21_5ytv3"]
 [ext_resource type="PackedScene" uid="uid://db0630tccvc2i" path="res://src/towers/tower_preview.tscn" id="22_53ta1"]
-[ext_resource type="Shader" path="res://resources/shaders/saturation_burn.gdshader" id="23_go3nh"]
-[ext_resource type="Shader" path="res://resources/shaders/foggy_camera.gdshader" id="24_omg4c"]
+[ext_resource type="Shader" uid="uid://c7cgx3djo8far" path="res://resources/shaders/saturation_burn.gdshader" id="23_go3nh"]
+[ext_resource type="Shader" uid="uid://cai0vxasj6alj" path="res://resources/shaders/foggy_camera.gdshader" id="24_omg4c"]
 [ext_resource type="PackedScene" uid="uid://cngv1rgplre2c" path="res://src/ui/hud/hud.tscn" id="25_m068l"]
 [ext_resource type="PackedScene" uid="uid://4dakdefm73rd" path="res://src/ui/hud/builder_menu.tscn" id="26_2bi2s"]
 [ext_resource type="PackedScene" uid="uid://hiex318b5cvk" path="res://src/ui/game_menu/game_menu.tscn" id="26_xukvx"]
@@ -138,7 +138,7 @@ shader_parameter/vignette_intensity = 0.299
 shader_parameter/vignette_opacity = 0.742
 shader_parameter/vignette_rgb = Color(0, 0, 0.129412, 1)
 
-[node name="GameScene" type="Node" node_paths=PackedStringArray("_game_menu", "_hud", "_map_small", "_camera", "_camera_controller", "_team_container", "_game_start_timer", "_select_point_for_cast", "_select_target_for_cast", "_move_item", "_select_unit", "_build_tower", "_mouse_state", "_game_client", "_game_time", "_pause_shadow_rect", "_shadow_below_builder_menu", "_shadow_above_builder_menu", "_object_container", "_build_space", "_tutorial_menu", "_tutorial_controller", "_builder_menu", "_range_checker")]
+[node name="GameScene" type="Node" unique_id=2129743000 node_paths=PackedStringArray("_game_menu", "_hud", "_map_small", "_camera", "_camera_controller", "_team_container", "_game_start_timer", "_select_point_for_cast", "_select_target_for_cast", "_move_item", "_select_unit", "_build_tower", "_mouse_state", "_game_client", "_game_time", "_pause_shadow_rect", "_shadow_below_builder_menu", "_shadow_above_builder_menu", "_object_container", "_build_space", "_tutorial_menu", "_tutorial_controller", "_builder_menu", "_range_checker")]
 process_mode = 3
 script = ExtResource("1_0wd1b")
 _game_menu = NodePath("UI/GameMenu")
@@ -166,57 +166,57 @@ _tutorial_controller = NodePath("Gameplay/TutorialController")
 _builder_menu = NodePath("UI/BuilderMenu")
 _range_checker = NodePath("World/RangeChecker")
 
-[node name="Gameplay" type="Node" parent="."]
+[node name="Gameplay" type="Node" parent="." unique_id=1631521144]
 process_mode = 1
 
-[node name="GameStartTimer" type="Node" parent="Gameplay"]
+[node name="GameStartTimer" type="Node" parent="Gameplay" unique_id=2015496306]
 script = ExtResource("2_gestc")
 one_shot = true
 
-[node name="TeamContainer" type="Node" parent="Gameplay"]
+[node name="TeamContainer" type="Node" parent="Gameplay" unique_id=1685435249]
 script = ExtResource("3_qsih1")
 
-[node name="GameTime" type="Node" parent="Gameplay"]
+[node name="GameTime" type="Node" parent="Gameplay" unique_id=548140157]
 script = ExtResource("5_8syq6")
 
-[node name="SelectUnit" type="Node" parent="Gameplay" node_paths=PackedStringArray("_game_client")]
+[node name="SelectUnit" type="Node" parent="Gameplay" unique_id=1886061372 node_paths=PackedStringArray("_game_client")]
 script = ExtResource("6_vam2w")
 _game_client = NodePath("../GameClient")
 
-[node name="SelectPointForCast" type="Node" parent="Gameplay" node_paths=PackedStringArray("_mouse_state", "_game_client")]
+[node name="SelectPointForCast" type="Node" parent="Gameplay" unique_id=1411783845 node_paths=PackedStringArray("_mouse_state", "_game_client")]
 script = ExtResource("7_h82dk")
 _mouse_state = NodePath("../MouseState")
 _game_client = NodePath("../GameClient")
 
-[node name="SelectTargetForCast" type="Node" parent="Gameplay" node_paths=PackedStringArray("_mouse_state", "_game_client")]
+[node name="SelectTargetForCast" type="Node" parent="Gameplay" unique_id=1556475186 node_paths=PackedStringArray("_mouse_state", "_game_client")]
 script = ExtResource("8_n5fu4")
 _mouse_state = NodePath("../MouseState")
 _game_client = NodePath("../GameClient")
 
-[node name="MoveItem" type="Node" parent="Gameplay" node_paths=PackedStringArray("_mouse_state", "_world", "_game_client")]
+[node name="MoveItem" type="Node" parent="Gameplay" unique_id=234295581 node_paths=PackedStringArray("_mouse_state", "_world", "_game_client")]
 script = ExtResource("9_tujdk")
 _mouse_state = NodePath("../MouseState")
 _world = NodePath("../../World")
 _game_client = NodePath("../GameClient")
 
-[node name="BuildTower" type="Node" parent="Gameplay" node_paths=PackedStringArray("_mouse_state", "_build_space", "_tower_preview", "_game_client")]
+[node name="BuildTower" type="Node" parent="Gameplay" unique_id=910300435 node_paths=PackedStringArray("_mouse_state", "_build_space", "_tower_preview", "_game_client")]
 script = ExtResource("10_tkjjb")
 _mouse_state = NodePath("../MouseState")
 _build_space = NodePath("../BuildSpace")
 _tower_preview = NodePath("../../World/TowerPreview")
 _game_client = NodePath("../GameClient")
 
-[node name="MouseState" type="Node" parent="Gameplay"]
+[node name="MouseState" type="Node" parent="Gameplay" unique_id=262792006]
 script = ExtResource("11_e0bvs")
 
-[node name="CombatLogStorage" type="Node" parent="Gameplay"]
+[node name="CombatLogStorage" type="Node" parent="Gameplay" unique_id=203258300]
 script = ExtResource("12_8gb75")
 
-[node name="GameHost" parent="Gameplay" node_paths=PackedStringArray("_game_client", "_hud") instance=ExtResource("12_sbijg")]
+[node name="GameHost" parent="Gameplay" unique_id=816690434 node_paths=PackedStringArray("_game_client", "_hud") instance=ExtResource("12_sbijg")]
 _game_client = NodePath("../GameClient")
 _hud = NodePath("../../UI/HUD")
 
-[node name="GameClient" parent="Gameplay" node_paths=PackedStringArray("_game_host", "_game_time", "_hud", "_build_space", "_chat_commands", "_select_unit") instance=ExtResource("15_a5l86")]
+[node name="GameClient" parent="Gameplay" unique_id=740761255 node_paths=PackedStringArray("_game_host", "_game_time", "_hud", "_build_space", "_chat_commands", "_select_unit") instance=ExtResource("15_a5l86")]
 _game_host = NodePath("../GameHost")
 _game_time = NodePath("../GameTime")
 _hud = NodePath("../../UI/HUD")
@@ -224,163 +224,163 @@ _build_space = NodePath("../BuildSpace")
 _chat_commands = NodePath("../ChatCommands")
 _select_unit = NodePath("../SelectUnit")
 
-[node name="ChatCommands" type="Node" parent="Gameplay" node_paths=PackedStringArray("_team_container", "_hud", "_game_client", "_range_checker")]
+[node name="ChatCommands" type="Node" parent="Gameplay" unique_id=43131734 node_paths=PackedStringArray("_team_container", "_hud", "_game_client", "_range_checker")]
 script = ExtResource("16_amwbk")
 _team_container = NodePath("../TeamContainer")
 _hud = NodePath("../../UI/HUD")
 _game_client = NodePath("../GameClient")
 _range_checker = NodePath("../../World/RangeChecker")
 
-[node name="BuildSpace" type="Node" parent="Gameplay"]
+[node name="BuildSpace" type="Node" parent="Gameplay" unique_id=2003276516]
 script = ExtResource("16_p1jwo")
 
-[node name="TutorialController" type="Node" parent="Gameplay"]
+[node name="TutorialController" type="Node" parent="Gameplay" unique_id=1572394623]
 script = ExtResource("17_5cvlj")
 
-[node name="CameraController" type="Node" parent="Gameplay" node_paths=PackedStringArray("_camera")]
+[node name="CameraController" type="Node" parent="Gameplay" unique_id=1259884951 node_paths=PackedStringArray("_camera")]
 script = ExtResource("17_imw8o")
 _camera = NodePath("../../World/Camera2D")
 
-[node name="MissionManager" parent="Gameplay" node_paths=PackedStringArray("_hud") instance=ExtResource("18_ujbrx")]
+[node name="MissionManager" parent="Gameplay" unique_id=963777617 node_paths=PackedStringArray("_hud") instance=ExtResource("18_ujbrx")]
 _hud = NodePath("../../UI/HUD")
 
-[node name="World" type="Node2D" parent="."]
+[node name="World" type="Node2D" parent="." unique_id=1125788372]
 process_mode = 1
 y_sort_enabled = true
 
-[node name="MapSmall" parent="World" instance=ExtResource("17_td8cv")]
+[node name="MapSmall" parent="World" unique_id=4027961 instance=ExtResource("17_td8cv")]
 
-[node name="PathContainer" type="Node2D" parent="World"]
+[node name="PathContainer" type="Node2D" parent="World" unique_id=1414332965]
 z_index = 999
 
-[node name="Ground0" type="Path2D" parent="World/PathContainer"]
+[node name="Ground0" type="Path2D" parent="World/PathContainer" unique_id=2022713186]
 curve = SubResource("1")
 script = ExtResource("18_m2fcq")
 
-[node name="Air0" type="Path2D" parent="World/PathContainer"]
+[node name="Air0" type="Path2D" parent="World/PathContainer" unique_id=916364498]
 curve = SubResource("Curve2D_72x3r")
 script = ExtResource("18_m2fcq")
 is_air = true
 
-[node name="Ground1" type="Path2D" parent="World/PathContainer"]
+[node name="Ground1" type="Path2D" parent="World/PathContainer" unique_id=1917350731]
 modulate = Color(0.52549, 0.329412, 0, 1)
 curve = SubResource("Curve2D_u40fb")
 script = ExtResource("18_m2fcq")
 player_id = 1
 
-[node name="Air1" type="Path2D" parent="World/PathContainer"]
+[node name="Air1" type="Path2D" parent="World/PathContainer" unique_id=1249418261]
 modulate = Color(1, 0, 1, 1)
 curve = SubResource("Curve2D_gtbgo")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 1
 
-[node name="Ground2" type="Path2D" parent="World/PathContainer"]
+[node name="Ground2" type="Path2D" parent="World/PathContainer" unique_id=1793508684]
 curve = SubResource("Curve2D_cq3y7")
 script = ExtResource("18_m2fcq")
 player_id = 2
 
-[node name="Air2" type="Path2D" parent="World/PathContainer"]
+[node name="Air2" type="Path2D" parent="World/PathContainer" unique_id=1402312479]
 curve = SubResource("Curve2D_46yp1")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 2
 
-[node name="Ground3" type="Path2D" parent="World/PathContainer"]
+[node name="Ground3" type="Path2D" parent="World/PathContainer" unique_id=1659517721]
 curve = SubResource("Curve2D_pp4lg")
 script = ExtResource("18_m2fcq")
 player_id = 3
 
-[node name="Air3" type="Path2D" parent="World/PathContainer"]
+[node name="Air3" type="Path2D" parent="World/PathContainer" unique_id=1336747421]
 curve = SubResource("Curve2D_rkhsb")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 3
 
-[node name="Ground4" type="Path2D" parent="World/PathContainer"]
+[node name="Ground4" type="Path2D" parent="World/PathContainer" unique_id=823797619]
 curve = SubResource("Curve2D_bg1uo")
 script = ExtResource("18_m2fcq")
 player_id = 4
 
-[node name="Air4" type="Path2D" parent="World/PathContainer"]
+[node name="Air4" type="Path2D" parent="World/PathContainer" unique_id=905249166]
 curve = SubResource("Curve2D_6lk1i")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 4
 
-[node name="Ground5" type="Path2D" parent="World/PathContainer"]
+[node name="Ground5" type="Path2D" parent="World/PathContainer" unique_id=617367772]
 curve = SubResource("Curve2D_mksiu")
 script = ExtResource("18_m2fcq")
 player_id = 5
 
-[node name="Air5" type="Path2D" parent="World/PathContainer"]
+[node name="Air5" type="Path2D" parent="World/PathContainer" unique_id=848720783]
 curve = SubResource("Curve2D_niioj")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 5
 
-[node name="Ground6" type="Path2D" parent="World/PathContainer"]
+[node name="Ground6" type="Path2D" parent="World/PathContainer" unique_id=745110837]
 curve = SubResource("Curve2D_l5rss")
 script = ExtResource("18_m2fcq")
 player_id = 6
 
-[node name="Air6" type="Path2D" parent="World/PathContainer"]
+[node name="Air6" type="Path2D" parent="World/PathContainer" unique_id=1437276851]
 curve = SubResource("Curve2D_xs7e3")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 6
 
-[node name="Ground7" type="Path2D" parent="World/PathContainer"]
+[node name="Ground7" type="Path2D" parent="World/PathContainer" unique_id=1870788197]
 curve = SubResource("Curve2D_8wjuw")
 script = ExtResource("18_m2fcq")
 player_id = 7
 
-[node name="Air7" type="Path2D" parent="World/PathContainer"]
+[node name="Air7" type="Path2D" parent="World/PathContainer" unique_id=1659789296]
 curve = SubResource("Curve2D_sd1kw")
 script = ExtResource("18_m2fcq")
 is_air = true
 player_id = 7
 
-[node name="CameraOriginContainer" type="Node2D" parent="World"]
+[node name="CameraOriginContainer" type="Node2D" parent="World" unique_id=389018897]
 
-[node name="CameraOrigin0" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin0" parent="World/CameraOriginContainer" unique_id=1719617191 instance=ExtResource("19_icnp7")]
 position = Vector2(900, -1300)
 
-[node name="CameraOrigin1" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin1" parent="World/CameraOriginContainer" unique_id=1857819765 instance=ExtResource("19_icnp7")]
 position = Vector2(4000, 400)
 player_id = 1
 
-[node name="CameraOrigin2" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin2" parent="World/CameraOriginContainer" unique_id=821039004 instance=ExtResource("19_icnp7")]
 position = Vector2(3957, 4454)
 player_id = 2
 
-[node name="CameraOrigin3" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin3" parent="World/CameraOriginContainer" unique_id=2069881229 instance=ExtResource("19_icnp7")]
 position = Vector2(817, 5984)
 player_id = 3
 
-[node name="CameraOrigin4" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin4" parent="World/CameraOriginContainer" unique_id=1396397685 instance=ExtResource("19_icnp7")]
 position = Vector2(-7345, 6149)
 player_id = 4
 
-[node name="CameraOrigin5" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin5" parent="World/CameraOriginContainer" unique_id=188152043 instance=ExtResource("19_icnp7")]
 position = Vector2(-10235, 4538)
 player_id = 5
 
-[node name="CameraOrigin6" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin6" parent="World/CameraOriginContainer" unique_id=785906183 instance=ExtResource("19_icnp7")]
 position = Vector2(-10061, 638)
 player_id = 6
 
-[node name="CameraOrigin7" parent="World/CameraOriginContainer" instance=ExtResource("19_icnp7")]
+[node name="CameraOrigin7" parent="World/CameraOriginContainer" unique_id=757099125 instance=ExtResource("19_icnp7")]
 position = Vector2(-7166, -1087)
 player_id = 7
 
-[node name="ObjectContainer" type="Node2D" parent="World"]
+[node name="ObjectContainer" type="Node2D" parent="World" unique_id=1809116849]
 y_sort_enabled = true
 
-[node name="EffectsContainer" type="Node2D" parent="World"]
+[node name="EffectsContainer" type="Node2D" parent="World" unique_id=1687098158]
 script = ExtResource("20_rnpn6")
 
-[node name="VampiricAura" parent="World/EffectsContainer" instance=ExtResource("21_5ytv3")]
+[node name="VampiricAura" parent="World/EffectsContainer" unique_id=385049972 instance=ExtResource("21_5ytv3")]
 modulate = Color(0.341176, 0.72549, 0.992157, 0.901961)
 z_index = 9
 position = Vector2(-3200, 2560)
@@ -388,10 +388,10 @@ scale = Vector2(6, 3)
 autoplay = "default"
 frame_progress = 0.0
 
-[node name="FloatingTextContainer" type="Node2D" parent="World"]
+[node name="FloatingTextContainer" type="Node2D" parent="World" unique_id=1059126573]
 z_index = 1000
 
-[node name="Camera2D" type="Camera2D" parent="World"]
+[node name="Camera2D" type="Camera2D" parent="World" unique_id=672656884]
 z_index = 1000
 position = Vector2(2.08165e-12, 2.08165e-12)
 scale = Vector2(0.31481, 0.5)
@@ -399,20 +399,20 @@ limit_smoothed = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
 
-[node name="TowerPreview" parent="World" node_paths=PackedStringArray("_build_space") instance=ExtResource("22_53ta1")]
+[node name="TowerPreview" parent="World" unique_id=556032167 node_paths=PackedStringArray("_build_space") instance=ExtResource("22_53ta1")]
 visible = false
 z_index = 100
 _build_space = NodePath("../../Gameplay/BuildSpace")
 
-[node name="RangeChecker" parent="World" node_paths=PackedStringArray("_build_space") instance=ExtResource("22_53ta1")]
+[node name="RangeChecker" parent="World" unique_id=1265992021 node_paths=PackedStringArray("_build_space") instance=ExtResource("22_53ta1")]
 visible = false
 modulate = Color(1, 1, 1, 0.784314)
 z_index = 100
 _build_space = NodePath("../../Gameplay/BuildSpace")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=771214873]
 
-[node name="DesaturationFilter" type="ColorRect" parent="UI"]
+[node name="DesaturationFilter" type="ColorRect" parent="UI" unique_id=1862742677]
 material = SubResource("ShaderMaterial_cij5r")
 anchors_preset = 15
 anchor_right = 1.0
@@ -421,7 +421,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VignetteFilter" type="ColorRect" parent="UI"]
+[node name="VignetteFilter" type="ColorRect" parent="UI" unique_id=1580174057]
 material = SubResource("ShaderMaterial_6fevd")
 anchors_preset = 15
 anchor_right = 1.0
@@ -430,11 +430,14 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="HUD" parent="UI" instance=ExtResource("25_m068l")]
+[node name="HUD" parent="UI" unique_id=1325043897 instance=ExtResource("25_m068l")]
 unique_name_in_owner = true
 process_mode = 1
 size_flags_horizontal = 1
 mouse_filter = 2
+
+[node name="MarginContainer4" parent="UI/HUD" index="3"]
+layout_mode = 0
 
 [node name="PlayersAreLaggingIndicator" parent="UI/HUD" index="13"]
 visible = false
@@ -445,7 +448,7 @@ tooltip_text = "Press and hold to quit to title"
 [node name="DropPlayersButton" parent="UI/HUD/PlayersAreLaggingIndicator/PanelContainer/VBoxContainer" index="2"]
 tooltip_text = "Press and hold to drop lagging players"
 
-[node name="ShadowBelowBuilderMenu" type="ColorRect" parent="UI"]
+[node name="ShadowBelowBuilderMenu" type="ColorRect" parent="UI" unique_id=2025790038]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -455,14 +458,14 @@ grow_vertical = 2
 mouse_force_pass_scroll_events = false
 color = Color(0, 0, 0, 0.392157)
 
-[node name="BuilderMenu" parent="UI" instance=ExtResource("26_2bi2s")]
+[node name="BuilderMenu" parent="UI" unique_id=1298836251 instance=ExtResource("26_2bi2s")]
 visible = false
 offset_left = -350.0
 offset_top = -300.0
 offset_right = 350.0
 offset_bottom = 300.0
 
-[node name="PauseShadowRect" type="ColorRect" parent="UI"]
+[node name="PauseShadowRect" type="ColorRect" parent="UI" unique_id=2554166]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -471,7 +474,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.392157)
 
-[node name="ShadowAboveBuilderMenu" type="ColorRect" parent="UI"]
+[node name="ShadowAboveBuilderMenu" type="ColorRect" parent="UI" unique_id=1647703279]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -481,7 +484,7 @@ grow_vertical = 2
 mouse_force_pass_scroll_events = false
 color = Color(0, 0, 0, 0.392157)
 
-[node name="GameMenu" parent="UI" instance=ExtResource("26_xukvx")]
+[node name="GameMenu" parent="UI" unique_id=2123292108 instance=ExtResource("26_xukvx")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -495,7 +498,7 @@ offset_bottom = 192.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=1371576038]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -509,7 +512,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TutorialMenu" parent="UI/VBoxContainer" instance=ExtResource("27_vroom")]
+[node name="TutorialMenu" parent="UI/VBoxContainer" unique_id=341318851 instance=ExtResource("27_vroom")]
 process_mode = 3
 visible = false
 layout_mode = 2
