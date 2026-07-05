@@ -31,24 +31,28 @@ var _lifetime_timer: ManualTimer
 #########################
 
 func _ready():
-	var sprite_scene: PackedScene = load(_sprite_scene_path)
-	var sprite = sprite_scene.instantiate()
+#	NOTE: the AnimatedSprite2D visual is pooled (see
+#	InterpolatedSpritePool) - this replaces a per-spawn load() +
+#	instantiate() that dominated _ready. The owning node and the
+#	ManualTimer are intentionally NOT pooled so the deterministic
+#	timer UID stream is unchanged.
+	_sprite = InterpolatedSpritePool.acquire_visual(_sprite_scene_path)
 
-	if !sprite is AnimatedSprite2D:
-		push_error("InterpolatedSprite must receive a scene for AnimatedSprite2D type. Invalid scene: ", _sprite_scene_path)
-		_sprite = null
-
+	if _sprite == null:
 		return
 
-	_sprite = sprite as AnimatedSprite2D
 	add_child(_sprite)
 
-	_sprite_width = _get_sprite_width()
+#	Recycled visuals may have a stopped/advanced animation; restart
+#	so they play from the start like a fresh instantiate would.
+	_sprite.play()
+
+	_sprite_width = InterpolatedSpritePool.get_sprite_width(_sprite_scene_path, _sprite)
 
 	_lifetime_timer = ManualTimer.new()
 	_lifetime_timer.timeout.connect(_on_lifetime_timer_timeout)
 	add_child(_lifetime_timer)
-	
+
 	_update_transform()
 
 
@@ -95,23 +99,19 @@ func _update_transform():
 	position = middle
 	rotation = diff_vector.angle()
 
-func _get_sprite_width() -> float:
-	var sprite_frames: SpriteFrames = _sprite.sprite_frames
-	var animation_list: Array = sprite_frames.get_animation_names()
-	
-	if animation_list.is_empty():
-		return 0
-	
-	var animation: String = animation_list[0]
-	var frame_count: int = sprite_frames.get_frame_count(animation)
-	
-	if frame_count == 0:
-		return 0
-	
-	var texture: Texture2D = sprite_frames.get_frame_texture(animation, 0)
-	var texture_width: float = texture.get_size().x
-	
-	return texture_width
+
+# Returns the pooled visual subtree, then frees the (unpooled) owning
+# node. Callers that previously called queue_free() on the sprite must
+# call dispose() so the visual gets recycled instead of freed.
+func dispose():
+	if _sprite != null && is_instance_valid(_sprite):
+		if _sprite.get_parent() == self:
+			remove_child(_sprite)
+
+		InterpolatedSpritePool.release_visual(_sprite_scene_path, _sprite)
+		_sprite = null
+
+	queue_free()
 
 
 #########################
@@ -119,7 +119,7 @@ func _get_sprite_width() -> float:
 #########################
 
 func _on_lifetime_timer_timeout():
-	queue_free()
+	dispose()
 
 
 #########################

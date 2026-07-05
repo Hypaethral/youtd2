@@ -142,7 +142,7 @@ func aura_bt_on_create(event: Event):
 # NOTE: "LinkEnd()" in original script
 func aura_bt_on_cleanup(_event: Event):
 	if saved_lightning != null:
-		saved_lightning.queue_free()
+		saved_lightning.dispose()
 		saved_lightning = null
 
 	linked_tower = null

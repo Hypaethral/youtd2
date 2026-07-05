@@ -74,5 +74,5 @@ func grapple_bt_on_cleanup(event: Event):
 	var lightning_object: Object = instance_from_id(lightning_id)
 
 	if lightning_object != null:
-		var lightning_node: Node = lightning_object as Node
-		lightning_node.queue_free()
+		var lightning_node: InterpolatedSprite = lightning_object as InterpolatedSprite
+		lightning_node.dispose()
