@@ -5,7 +5,8 @@ extends Node
 # no "NONE" connection
 enum ConnectionType {
 	ENET,
-	NAKAMA
+	NAKAMA,
+	IROH
 }
 
 
@@ -25,6 +26,10 @@ var _game_peer_id_list: Array = []
 var _update_ticks_per_physics_tick: int = 1
 var _connection_type: ConnectionType = ConnectionType.ENET
 var _enet_peer_id_to_player_name: Dictionary = {}
+# NOTE: host's iroh connection string (base64 node id), stashed by a joining
+# client so it can redial the same host after a dropped connection. Empty for
+# the host and for non-iroh connection types.
+var _iroh_host_connection_string: String = ""
 var _title_screen_notification_list: Array[String] = []
 var _map: Map = null
 
@@ -106,6 +111,14 @@ func set_update_ticks_per_physics_tick(value: int):
 
 func get_connect_type() -> ConnectionType:
 	return _connection_type
+
+
+func set_iroh_host_connection_string(value: String):
+	_iroh_host_connection_string = value
+
+
+func get_iroh_host_connection_string() -> String:
+	return _iroh_host_connection_string
 
 
 func get_player_name_from_peer_id(peer_id: int):

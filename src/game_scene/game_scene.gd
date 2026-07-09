@@ -48,7 +48,7 @@ func _enter_tree() -> void:
 	_reset_uid_counters()
 
 func _ready():
-	print_verbose("GameScene has loaded.")
+	print("GameScene has loaded.")
 	Utils.init(self)
 	Effect.init(self)
 	Globals.reset()
@@ -114,7 +114,7 @@ func _ready():
 # 	on this game client is the same as on all other clients.
 	Globals.synced_rng.set_seed(origin_seed)
 
-	print_verbose("Origin seed to: ", origin_seed)
+	print("Origin seed to: ", origin_seed)
 
 	_setup_players()
 	PlayerManager.send_players_created_signal()
@@ -315,7 +315,7 @@ func _setup_players():
 	var peer_id_list: Array[int] = []
 	peer_id_list.assign(Globals.get_game_peer_id_list())
 
-	print_verbose("[desync-debug] _setup_players peer_id_list=%s (local peer %d)" % [str(peer_id_list), multiplayer.get_unique_id()])
+	print("[desync-debug] _setup_players peer_id_list=%s (local peer %d)" % [str(peer_id_list), multiplayer.get_unique_id()])
 	
 #	Create teams
 	var team_mode: TeamMode.enm = Globals.get_team_mode()
@@ -340,7 +340,7 @@ func _setup_players():
 
 		var user_id: String
 		match connection_type:
-			Globals.ConnectionType.ENET:
+			Globals.ConnectionType.ENET, Globals.ConnectionType.IROH:
 				user_id = ""
 			Globals.ConnectionType.NAKAMA:
 				var webrtc_player: OnlineMatch.WebrtcPlayer = OnlineMatch.get_player_by_peer_id(peer_id)

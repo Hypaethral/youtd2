@@ -385,10 +385,10 @@ func _on_peer_connected(_peer_id: int):
 	var player_count: int = peer_count + 1
 	var all_players_connected: bool = player_count == _expected_player_count
 
-	print_verbose("New peer connected to game match. peer_count=%s, player_count=%s, all_players_connected=%s" % [peer_count, player_count, all_players_connected])
+	print("New peer connected to game match. peer_count=%s, player_count=%s, all_players_connected=%s" % [peer_count, player_count, all_players_connected])
 
 	if all_players_connected:
-		print_verbose("All players connected to game match! Player count: %s. Starting the game." % player_count)
+		print("All players connected to game match! Player count: %s. Starting the game." % player_count)
 
 #		NOTE: wait a bit just in case (is this really
 #		needed?)
@@ -417,7 +417,7 @@ func _on_host_created_game_match(game_match_id: String):
 	OnlineMatch.match_created.disconnect(_on_host_created_game_match)
 	multiplayer.multiplayer_peer.peer_connected.connect(_on_peer_connected)
 
-	print_verbose("Created game match with id %s." % game_match_id);
+	print("Created game match with id %s." % game_match_id);
 
 	var data_dict: Dictionary = {
 		"match_id": game_match_id,

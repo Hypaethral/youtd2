@@ -95,7 +95,7 @@ func add_player(player: Player):
 func drop_player(id: int):
 	var maybePlayer: Array[Player] = _player_list.filter(func(p): return p.get_id() == id)
 	if maybePlayer.size() != 0:
-		print_verbose("found a player to drop: id=%s name=%s builder=%s" % [id, maybePlayer.front().get_player_name(), maybePlayer.front().get_builder()])
+		print("found a player to drop: id=%s name=%s builder=%s" % [id, maybePlayer.front().get_player_name(), maybePlayer.front().get_builder()])
 		maybePlayer.front().drop()
 
 func send_players_created_signal():

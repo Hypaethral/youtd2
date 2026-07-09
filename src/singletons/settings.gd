@@ -103,11 +103,11 @@ func _ready():
 		_cache = JSON.parse_string(cache_string) as Dictionary
 		_validate_cache()
 		
-		print_verbose("Opened settings file at path:", settings_file.get_path_absolute())
+		print("Opened settings file at path:", settings_file.get_path_absolute())
 	else:
 		var open_error: Error = FileAccess.get_open_error()
 		if open_error == Error.ERR_FILE_NOT_FOUND:
-			print_verbose("No settings file found. Will create new one from scratch.")
+			print("No settings file found. Will create new one from scratch.")
 		else:
 			push_error("Failed to open settings file. Error:", error_string(open_error))
 

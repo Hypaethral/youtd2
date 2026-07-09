@@ -18,6 +18,9 @@ enum Tab {
 	SETTINGS,
 	CREDITS,
 	LOADING,
+	IROH_CONNECT_MENU,
+	CREATE_IROH_MATCH,
+	IROH_LOBBY,
 }
 
 @export var _tab_container: TabContainer
@@ -154,6 +157,18 @@ func _on_create_online_match_menu_cancel_pressed():
 
 func _on_online_match_list_menu_lan_pressed() -> void:
 	_tab_container.current_tab = Tab.LAN_CONNECT_MENU
+
+
+func _on_online_match_list_menu_iroh_pressed() -> void:
+	_tab_container.current_tab = Tab.IROH_CONNECT_MENU
+
+
+func _on_iroh_lobby_menu_back_pressed():
+	_tab_container.current_tab = Tab.IROH_CONNECT_MENU
+
+
+func _on_create_iroh_match_menu_cancel_pressed():
+	_tab_container.current_tab = Tab.IROH_CONNECT_MENU
 
 
 func _on_profile_menu_missions_button_pressed() -> void:

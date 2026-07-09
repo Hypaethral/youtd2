@@ -752,7 +752,7 @@ func _determine_player_name() -> String:
 		player_name = Settings.get_setting(Settings.PLAYER_NAME)
 	else:
 		match connection_type:
-			Globals.ConnectionType.ENET:
+			Globals.ConnectionType.ENET, Globals.ConnectionType.IROH:
 				player_name = Globals.get_player_name_from_peer_id(_peer_id)
 			Globals.ConnectionType.NAKAMA:
 				player_name = NakamaConnection.get_display_name_of_user(_user_id)

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c8irhstpgame0"]
+
+[ext_resource type="Script" uid="uid://5o6altlswgqj" path="res://src/ui/title_screen/iroh_match/setup_iroh_game.gd" id="1_iroh0"]
+
+[node name="SetupIrohGame" type="Node" unique_id=1410199704]
+script = ExtResource("1_iroh0")

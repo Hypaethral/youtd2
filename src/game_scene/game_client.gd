@@ -27,6 +27,15 @@ const PING_HISTORY_SIZE: int = 10
 const TICKS_PER_SECOND: int = 30
 const CHECKSUM_PERIOD_TICKS: int = TICKS_PER_SECOND * GameHost.MULTIPLAYER_TURN_LENGTH
 
+# Iroh reconnect: when the transport drops mid-game, the client redials the
+# same host (by node id) with exponential backoff. The client keeps a stable
+# iroh identity across redials, so the host reissues its original peer id.
+const IROH_PEER_FACTORY_PATH: String = "res://src/ui/title_screen/iroh_match/iroh_peer_factory.gd"
+const REDIAL_MAX_ATTEMPTS: int = 8
+const REDIAL_BASE_DELAY_SEC: float = 0.5
+const REDIAL_MAX_DELAY_SEC: float = 15.0
+const REDIAL_CONNECT_TIMEOUT_MSEC: int = 5000
+
 
 var _tick_delta: float
 var _current_tick: int = 0
@@ -48,6 +57,13 @@ var _paused_by_host: bool = false
 var _last_received_timeslot_list: Array = []
 # Store checksum data for desync debugging: {tick -> checksum_data_dict}
 var _checksum_data_map: Dictionary = {}
+# Diagnostic (all connection types): wall-clock msec when the last timeslot
+# arrived from the host, and a throttle for the degraded-connection log.
+# Used to correlate a transport drop with a preceding traffic lull.
+var _last_timeslot_msec: int = 0
+var _last_net_log_msec: int = 0
+# True while an iroh redial loop is in progress (avoids overlapping loops).
+var _redialing: bool = false
 
 
 @export var _game_host: GameHost
@@ -76,6 +92,10 @@ func _ready():
 	_turn_length = Utils.get_turn_length()
 	_timeslot_buffer_size = _turn_length
 
+	multiplayer.server_disconnected.connect(_on_net_server_disconnected)
+	multiplayer.peer_disconnected.connect(_on_net_peer_disconnected)
+	multiplayer.connection_failed.connect(_on_net_connection_failed)
+
 
 # NOTE: using _physics_process() because it provides a
 # built-in way to do consistent tickrate, independent of
@@ -87,6 +107,8 @@ func _physics_process(_delta: float):
 	while _should_tick(ticks_during_this_process):
 		_do_tick()
 		ticks_during_this_process += 1
+
+	_log_connection_if_degraded()
 
 
 #########################
@@ -107,6 +129,103 @@ func add_action(action: Action):
 # calculations in multiplayer to avoid float precision issues.
 func get_current_tick() -> int:
 	return _current_tick
+
+
+#########################
+###   Net diagnostics ###
+#########################
+
+func _net_connection_status() -> int:
+	var peer: MultiplayerPeer = multiplayer.multiplayer_peer
+	if peer == null:
+		return MultiplayerPeer.CONNECTION_DISCONNECTED
+	return peer.get_connection_status()
+
+
+# Runs every physics frame but logs at most once/second, and only while the
+# connection is degraded (uid == -1 or not CONNECTED). Kept outside the tick
+# loop because a dropped client stops ticking but _physics_process keeps running.
+func _log_connection_if_degraded():
+	var now: int = Time.get_ticks_msec()
+	if now - _last_net_log_msec < 1000:
+		return
+	_last_net_log_msec = now
+
+	var uid: int = multiplayer.get_unique_id()
+	var status: int = _net_connection_status()
+	if uid == -1 or status != MultiplayerPeer.CONNECTION_CONNECTED:
+		var since_timeslot: int = now - _last_timeslot_msec
+		push_warning("[net] degraded tick=%d uid=%d status=%d %dms_since_timeslot connection_type=%d" % [_current_tick, uid, status, since_timeslot, Globals.get_connect_type()])
+#		Safety net in case server_disconnected didn't fire: the redial is
+#		guarded so repeated calls are harmless.
+		_try_redial_iroh_host()
+
+
+func _on_net_server_disconnected():
+	push_warning("[net] server_disconnected tick=%d uid=%d %dms_since_timeslot" % [_current_tick, multiplayer.get_unique_id(), Time.get_ticks_msec() - _last_timeslot_msec])
+	_try_redial_iroh_host()
+
+
+# Exponential-backoff redial of the iroh host after a dropped connection.
+func _try_redial_iroh_host():
+	if _redialing:
+		return
+	if Globals.get_connect_type() != Globals.ConnectionType.IROH:
+		return
+
+	var host_string: String = Globals.get_iroh_host_connection_string()
+	if host_string.is_empty():
+		return
+
+	_redialing = true
+	var delay: float = REDIAL_BASE_DELAY_SEC
+
+	for attempt in range(REDIAL_MAX_ATTEMPTS):
+		push_warning("[net] iroh redial attempt %d/%d in %.1fs" % [attempt + 1, REDIAL_MAX_ATTEMPTS, delay])
+		await get_tree().create_timer(delay).timeout
+
+#		Bail if the connection recovered on its own or we've left the game.
+		if !is_inside_tree() || _net_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+			break
+
+		if await _reconnect_to_host(host_string):
+			push_warning("[net] iroh redial succeeded, uid=%d" % multiplayer.get_unique_id())
+			_redialing = false
+			return
+
+		delay = minf(delay * 2.0, REDIAL_MAX_DELAY_SEC)
+
+	push_warning("[net] iroh redial gave up (or recovered) after up to %d attempts" % REDIAL_MAX_ATTEMPTS)
+	_redialing = false
+
+
+func _reconnect_to_host(host_string: String) -> bool:
+	var factory: GDScript = load(IROH_PEER_FACTORY_PATH)
+	if factory == null:
+		return false
+
+	var client: MultiplayerPeer = factory.make_client(host_string)
+	multiplayer.multiplayer_peer = client
+
+#	Poll the new peer's status until it connects, fails, or times out.
+	var deadline: int = Time.get_ticks_msec() + REDIAL_CONNECT_TIMEOUT_MSEC
+	while Time.get_ticks_msec() < deadline:
+		await get_tree().create_timer(0.1).timeout
+		var status: int = client.get_connection_status()
+		if status == MultiplayerPeer.CONNECTION_CONNECTED:
+			return true
+		if status == MultiplayerPeer.CONNECTION_DISCONNECTED:
+			return false
+
+	return false
+
+
+func _on_net_peer_disconnected(peer_id: int):
+	push_warning("[net] peer_disconnected peer=%d tick=%d uid=%d status=%d %dms_since_timeslot" % [peer_id, _current_tick, multiplayer.get_unique_id(), _net_connection_status(), Time.get_ticks_msec() - _last_timeslot_msec])
+
+
+func _on_net_connection_failed():
+	push_warning("[net] connection_failed tick=%d" % _current_tick)
 
 
 @rpc("authority", "call_local", "reliable")
@@ -139,6 +258,7 @@ func receive_timeslots(timeslot_list: Dictionary):
 		_timeslot_map[tick] = timeslot_list[tick]
 
 	_last_received_timeslot_list = timeslot_list.keys()
+	_last_timeslot_msec = Time.get_ticks_msec()
 
 
 @rpc("authority", "call_local", "reliable")

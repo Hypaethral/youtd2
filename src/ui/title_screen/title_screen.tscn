@@ -20,6 +20,10 @@
 [ext_resource type="PackedScene" uid="uid://dm74dudt8aesd" path="res://src/ui/title_screen/encyclopedia_menu.tscn" id="17_7asif"]
 [ext_resource type="PackedScene" uid="uid://bvc2yim85t7vs" path="res://src/ui/title_screen/notification_panel.tscn" id="17_whg35"]
 [ext_resource type="PackedScene" uid="uid://chegdechhho3d" path="res://src/ui/title_screen/connecting_to_server_indicator.tscn" id="18_5n8qn"]
+[ext_resource type="PackedScene" uid="uid://c8irhstpgame0" path="res://src/ui/title_screen/iroh_match/setup_iroh_game.tscn" id="20_iroh0"]
+[ext_resource type="PackedScene" uid="uid://c8irhconnmenu0" path="res://src/ui/title_screen/iroh_match/iroh_connect_menu.tscn" id="21_iroh1"]
+[ext_resource type="PackedScene" uid="uid://c8irhcreatmch0" path="res://src/ui/title_screen/iroh_match/create_iroh_match_menu.tscn" id="22_iroh2"]
+[ext_resource type="PackedScene" uid="uid://c8irhlobbymen0" path="res://src/ui/title_screen/iroh_match/iroh_lobby_menu.tscn" id="23_iroh3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vbfm6"]
 
@@ -43,6 +47,12 @@ _online_match_list_menu = NodePath("../UI/TabContainer/OnlineMatchListMenu")
 _online_lobby_menu = NodePath("../UI/TabContainer/OnlineLobbyMenu")
 _create_online_match_menu = NodePath("../UI/TabContainer/CreateOnlineMatchMenu")
 _connecting_to_server_indicator = NodePath("../UI/ConnectingToServerIndicator")
+
+[node name="SetupIrohGame" parent="." node_paths=PackedStringArray("_title_screen", "_iroh_connect_menu", "_iroh_lobby_menu", "_create_iroh_match_menu") instance=ExtResource("20_iroh0")]
+_title_screen = NodePath("..")
+_iroh_connect_menu = NodePath("../UI/TabContainer/IrohConnectMenu")
+_iroh_lobby_menu = NodePath("../UI/TabContainer/IrohLobbyMenu")
+_create_iroh_match_menu = NodePath("../UI/TabContainer/CreateIrohMatchMenu")
 
 [node name="UI" type="Control" parent="." unique_id=243678623]
 layout_mode = 3
@@ -214,6 +224,21 @@ bbcode_enabled = true
 text = "[center][font_size=60]LOADING[/font_size][/center]"
 fit_content = true
 
+[node name="IrohConnectMenu" parent="UI/TabContainer" instance=ExtResource("21_iroh1")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 14
+
+[node name="CreateIrohMatchMenu" parent="UI/TabContainer" instance=ExtResource("22_iroh2")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 15
+
+[node name="IrohLobbyMenu" parent="UI/TabContainer" instance=ExtResource("23_iroh3")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 16
+
 [node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1330621334]
 layout_mode = 1
 anchors_preset = 2
@@ -270,6 +295,7 @@ layout_mode = 1
 [connection signal="create_match_pressed" from="UI/TabContainer/OnlineMatchListMenu" to="SetupOnlineGame" method="_on_online_match_list_menu_create_match_pressed"]
 [connection signal="join_pressed" from="UI/TabContainer/OnlineMatchListMenu" to="SetupOnlineGame" method="_on_online_match_list_menu_join_pressed"]
 [connection signal="lan_pressed" from="UI/TabContainer/OnlineMatchListMenu" to="." method="_on_online_match_list_menu_lan_pressed"]
+[connection signal="iroh_pressed" from="UI/TabContainer/OnlineMatchListMenu" to="." method="_on_online_match_list_menu_iroh_pressed"]
 [connection signal="refresh_pressed" from="UI/TabContainer/OnlineMatchListMenu" to="SetupOnlineGame" method="_on_online_match_list_menu_refresh_pressed"]
 [connection signal="cancel_pressed" from="UI/TabContainer/LanConnectMenu" to="." method="_on_generic_tab_cancel_pressed"]
 [connection signal="create_pressed" from="UI/TabContainer/LanConnectMenu" to="SetupLanGame" method="_on_lan_connect_menu_create_pressed"]
@@ -283,6 +309,14 @@ layout_mode = 1
 [connection signal="back_pressed" from="UI/TabContainer/LanLobbyMenu" to="." method="_on_lan_lobby_menu_back_pressed"]
 [connection signal="back_pressed" from="UI/TabContainer/LanLobbyMenu" to="SetupLanGame" method="_on_lan_lobby_menu_back_pressed"]
 [connection signal="start_pressed" from="UI/TabContainer/LanLobbyMenu" to="SetupLanGame" method="_on_lan_lobby_menu_start_pressed"]
+[connection signal="cancel_pressed" from="UI/TabContainer/IrohConnectMenu" to="." method="_on_generic_tab_cancel_pressed"]
+[connection signal="create_pressed" from="UI/TabContainer/IrohConnectMenu" to="SetupIrohGame" method="_on_iroh_connect_menu_create_pressed"]
+[connection signal="join_pressed" from="UI/TabContainer/IrohConnectMenu" to="SetupIrohGame" method="_on_iroh_connect_menu_join_pressed"]
+[connection signal="cancel_pressed" from="UI/TabContainer/CreateIrohMatchMenu" to="." method="_on_create_iroh_match_menu_cancel_pressed"]
+[connection signal="create_pressed" from="UI/TabContainer/CreateIrohMatchMenu" to="SetupIrohGame" method="_on_create_iroh_match_menu_create_pressed"]
+[connection signal="back_pressed" from="UI/TabContainer/IrohLobbyMenu" to="." method="_on_iroh_lobby_menu_back_pressed"]
+[connection signal="back_pressed" from="UI/TabContainer/IrohLobbyMenu" to="SetupIrohGame" method="_on_iroh_lobby_menu_back_pressed"]
+[connection signal="start_pressed" from="UI/TabContainer/IrohLobbyMenu" to="SetupIrohGame" method="_on_iroh_lobby_menu_start_pressed"]
 [connection signal="close_pressed" from="UI/TabContainer/ProfileMenu" to="." method="_on_profile_menu_close_pressed"]
 [connection signal="missions_button_pressed" from="UI/TabContainer/ProfileMenu" to="." method="_on_profile_menu_missions_button_pressed"]
 [connection signal="close_pressed" from="UI/TabContainer/EncyclopediaMenu" to="." method="_on_encyclopedia_menu_close_pressed"]

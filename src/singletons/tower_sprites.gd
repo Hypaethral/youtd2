@@ -19,14 +19,14 @@ func _ready():
 	if !preload_towers:
 		return
 
-	print_verbose("Start loading tower sprites.")
+	print("Start loading tower sprites.")
 
 	var tower_id_list: Array = TowerProperties.get_tower_id_list()
 
 	for tower_id in tower_id_list:
 		_load_tower_sprite_scene(tower_id)
 
-	print_verbose("Finished loading tower sprites.")
+	print("Finished loading tower sprites.")
 
 
 #########################
@@ -58,4 +58,4 @@ func _load_tower_sprite_scene(tower_id: int):
 	_sprite_scene_map[tower_id] = sprite_scene
 
 	var tower_name: String = TowerProperties.get_display_name(tower_id)
-	print_verbose("Loaded tower [%s] with ID [%s]" % [tower_name, tower_id])
+	print("Loaded tower [%s] with ID [%s]" % [tower_name, tower_id])

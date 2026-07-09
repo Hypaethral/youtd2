@@ -66,6 +66,13 @@ var _showed_desync_indicator: bool = false
 # haven't been ack'ed yet.
 # {player_id -> {tick -> timeslot}}
 var _player_timeslot_send_queue: Dictionary = {}
+# Highest tick already sent to each player. Over a reliable transport each
+# timeslot only needs to be sent once (delivery is guaranteed), so we send
+# just the new ones each frame instead of re-blasting the whole unacked queue
+# at 30Hz. The full queue is still re-sent to a peer on reconnect (reset to
+# -1 in _on_net_peer_reconnected) so a returning client catches up.
+# {player_id -> tick}
+var _player_last_sent_tick: Dictionary = {}
 # NOTE: initial state is WAITING_FOR_LAGGING_PLAYERS until
 # host confirms that all players have connected successfully
 # and finished loading game scene.
@@ -83,7 +90,11 @@ func _ready():
 	EventBus.host_requested_drop_lagging_players.connect(_on_host_requested_drop_lagging_players)
 
 	PlayerManager.players_created.connect(_on_players_created)
-	
+
+#	NOTE: in-game, peer_connected fires only when a previously-connected peer
+#	reconnects (initial connections happen in the lobby, before this scene).
+	multiplayer.peer_connected.connect(_on_net_peer_reconnected)
+
 	_turn_length = Utils.get_turn_length()
 
 
@@ -238,11 +249,28 @@ func _update_state_running():
 	for player in player_list:
 		var player_id: int = player.get_id()
 		var peer_id: int = player.get_peer_id()
-		var timeslots_to_send: Dictionary = _player_timeslot_send_queue[player_id]
+		var send_queue: Dictionary = _player_timeslot_send_queue[player_id]
+
+		if send_queue.is_empty():
+			continue
+
+#		Send only timeslots not yet sent to this player. The transport is
+#		reliable, so a timeslot sent once is guaranteed to arrive - no need
+#		to re-blast the whole unacked queue every frame. (On reconnect,
+#		_player_last_sent_tick is reset to -1 so the full backlog re-sends.)
+		var last_sent_tick: int = _player_last_sent_tick.get(player_id, -1)
+		var timeslots_to_send: Dictionary = {}
+		var max_sent_tick: int = last_sent_tick
+
+		for tick in send_queue:
+			if tick > last_sent_tick:
+				timeslots_to_send[tick] = send_queue[tick]
+				max_sent_tick = max(max_sent_tick, tick)
 
 		if timeslots_to_send.is_empty():
 			continue
 
+		_player_last_sent_tick[player_id] = max_sent_tick
 		_game_client.receive_timeslots.rpc_id(peer_id, timeslots_to_send)
 
 
@@ -685,6 +713,44 @@ func _on_players_created():
 		_player_ping_time_map[player_id] = 0
 		_player_last_contact_time[player_id] = 0
 		_player_timeslot_send_queue[player_id] = {}
+		_player_last_sent_tick[player_id] = -1
+
+	_authorize_iroh_reconnects(player_list)
+
+
+# For IROH matches, allow each remote player to reclaim its peer id if its
+# connection drops and it redials. Authorizing up front (rather than on
+# disconnect) avoids a race where the client redials before the host has
+# noticed the drop. Safe because godot-iroh only reissues an id to the same
+# authenticated identity that originally held it. See GameClient redial and
+# IrohServer.authorize_reconnect.
+func _authorize_iroh_reconnects(player_list: Array[Player]):
+	if Globals.get_connect_type() != Globals.ConnectionType.IROH:
+		return
+
+	var server_peer: MultiplayerPeer = multiplayer.multiplayer_peer
+	if server_peer == null || !server_peer.has_method("authorize_reconnect"):
+		push_error("server peer did not have method authorize_reconnect. update the godot-iroh plugin version")
+		return
+
+	for player in player_list:
+		var peer_id: int = player.get_peer_id()
+		if peer_id == 1:
+			continue
+		server_peer.call("authorize_reconnect", peer_id)
+
+
+# A previously-connected peer reconnected mid-game. Reset its last-sent tick
+# so the next send re-sends the full unacked backlog, letting it catch up.
+func _on_net_peer_reconnected(peer_id: int):
+	if !multiplayer.is_server():
+		return
+
+	var player: Player = PlayerManager.get_player_by_peer_id(peer_id)
+	if player == null:
+		return
+
+	_player_last_sent_tick[player.get_id()] = -1
 
 
 # While waiting for lagging players, periodically send a

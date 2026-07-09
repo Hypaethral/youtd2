@@ -107,8 +107,6 @@ WaveSpecialProperties="*res://src/singletons/properties/wave_special_properties.
 
 [debug]
 
-settings/stdout/print_fps=true
-settings/stdout/verbose_stdout=true
 gdscript/warnings/unused_signal=0
 gdscript/warnings/return_value_discarded=false
 gdscript/warnings/assert_always_false=0

@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://bql5sxaowafw3" path="res://resources/theme/wc3_theme.tres" id="1_0djlm"]
 [ext_resource type="Script" path="res://src/ui/title_screen/online/online_match_list_menu.gd" id="2_inhau"]
 
-[node name="OnlineMatchListMenu" type="PanelContainer" node_paths=PackedStringArray("_searching_label", "_no_matches_found_label", "_failed_to_connect_label", "_match_card_grid", "_create_match_button", "_refresh_button")]
+[node name="OnlineMatchListMenu" type="PanelContainer" node_paths=PackedStringArray("_searching_label", "_no_matches_found_label", "_failed_to_connect_label", "_match_card_grid", "_create_match_button", "_refresh_button", "_iroh_button")]
 custom_minimum_size = Vector2(1122, 600)
 theme = ExtResource("1_0djlm")
 theme_type_variation = &"MainPanelContainer"
@@ -14,6 +14,7 @@ _failed_to_connect_label = NodePath("VBoxContainer/PanelContainer/MarginContaine
 _match_card_grid = NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/ScrollContainer/MatchCardGrid")
 _create_match_button = NodePath("VBoxContainer/HBoxContainer/CreateMatchButton")
 _refresh_button = NodePath("VBoxContainer/HBoxContainer/RefreshButton")
+_iroh_button = NodePath("VBoxContainer/HBoxContainer/IrohButton")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -98,6 +99,10 @@ text = "Refresh"
 layout_mode = 2
 text = "LAN Multiplayer"
 
+[node name="IrohButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Internet (P2P)"
+
 [node name="Spacer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -111,4 +116,5 @@ text = "Cancel"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CreateMatchButton" to="." method="_on_create_match_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/LANButton" to="." method="_on_lan_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/IrohButton" to="." method="_on_iroh_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]

@@ -18,6 +18,7 @@ signal refresh_pressed()
 signal cancel_pressed()
 signal create_match_pressed()
 signal lan_pressed()
+signal iroh_pressed()
 
 
 # NOTE: currently a max of 50 matches are supported
@@ -29,6 +30,7 @@ const MATCH_CARD_COUNT_MAX: int = 50
 @export var _match_card_grid: GridContainer
 @export var _create_match_button: Button
 @export var _refresh_button: Button
+@export var _iroh_button: Button
 
 
 #########################
@@ -36,6 +38,12 @@ const MATCH_CARD_COUNT_MAX: int = 50
 #########################
 
 func _ready():
+#	NOTE: the Iroh (p2p) option relies on the native-only godot-iroh
+#	GDExtension. Hide the entry point on platforms where it isn't loaded
+#	(e.g. web export) or when the plugin isn't installed.
+	if _iroh_button != null:
+		_iroh_button.visible = ClassDB.class_exists("IrohServer")
+
 	for i in range(0, MATCH_CARD_COUNT_MAX):
 #		var match_id: String = match_.match_id
 		var match_card: MatchCard = MatchCard.make()
@@ -174,3 +182,7 @@ func _on_refresh_button_pressed():
 
 func _on_lan_button_pressed() -> void:
 	lan_pressed.emit()
+
+
+func _on_iroh_button_pressed() -> void:
+	iroh_pressed.emit()
