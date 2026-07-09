@@ -21,8 +21,6 @@ const LIGHTNING_VISUAL_LIFETIME: float = 0.5
 # towers/creeps.
 const UNIT_Z_OFFSET: Vector3 = Vector3(0, 0, 60)
 
-# UID system for deterministic sorting in multiplayer
-static var _uid_max: int = 1
 var _uid: int = 0
 
 var _move_type: MoveType
@@ -108,8 +106,7 @@ func _ready():
 # assignment happens in byte-identical deterministic order to the
 # pre-pooling code. Runs for both fresh and recycled projectiles.
 func _acquire_init():
-	_uid = _uid_max
-	_uid_max += 1
+	_uid = UidMaxTracker.get_uid_max_and_increment(UidMaxTracker.Type.PROJECTILE)
 
 	GroupManager.add("projectiles", self, _uid)
 
