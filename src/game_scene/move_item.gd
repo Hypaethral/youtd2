@@ -64,12 +64,16 @@ func process_click_on_nothing():
 		
 		return false
 
+	var is_oil: bool = ItemProperties.get_is_oil(_moved_item.get_id())
+	if (is_oil):
+		SFX.play_sfx_random_pitch(SfxPaths.DROP_OIL)
+	else:
+		SFX.play_sfx_random_pitch(SfxPaths.DROP_ITEM)
+
 	_end_move_process()
 
 	var action: Action = ActionDropItem.make(item_uid, drop_pos, src_container_uid)
 	_game_client.add_action(action)
-	
-	SFX.play_sfx_random_pitch(SfxPaths.DROP_ITEM)
 
 
 func process_click_on_tower(tower: Tower):
@@ -92,7 +96,14 @@ func _add_move_action(item: Item, src_item_container: ItemContainer, dest_item_c
 	var src_container_uid: int = src_item_container.get_uid()
 	var dest_container_uid: int = dest_item_container.get_uid()
 
-	SFX.play_sfx_random_pitch(SfxPaths.DROP_ITEM)
+	var is_oil: bool = ItemProperties.get_is_oil(item.get_id())
+	var dest_is_tower: bool = dest_item_container is TowerItemContainer
+	if (is_oil && dest_is_tower):
+		SFX.play_sfx_random_pitch(SfxPaths.APPLY_OIL)
+	elif (is_oil):
+		SFX.play_sfx_random_pitch(SfxPaths.DROP_OIL)
+	else:
+		SFX.play_sfx_random_pitch(SfxPaths.DROP_ITEM)
 
 	var action: Action = ActionMoveItem.make(item_uid, src_container_uid, dest_container_uid, clicked_index)
 	_game_client.add_action(action)
@@ -112,7 +123,11 @@ func _add_swap_action(item_src: Item, item_dest: Item, src_item_container: ItemC
 	var src_container_uid: int = src_item_container.get_uid()
 	var dest_container_uid: int = dest_item_container.get_uid()
 
-	SFX.play_sfx_random_pitch(SfxPaths.DROP_ITEM)
+	var is_oil: bool = ItemProperties.get_is_oil(item_src.get_id())
+	if (is_oil):
+		SFX.play_sfx_random_pitch(SfxPaths.DROP_OIL)
+	else:
+		SFX.play_sfx_random_pitch(SfxPaths.DROP_ITEM)
 
 	var action: Action = ActionSwapItems.make(item_uid_src, item_uid_dest, src_container_uid, dest_container_uid)
 	_game_client.add_action(action)
