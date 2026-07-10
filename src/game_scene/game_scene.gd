@@ -44,8 +44,8 @@ func _enter_tree() -> void:
 	# NOTE: free parked lightning visuals so leftover nodes from a
 	# prior game don't accumulate across sessions.
 	InterpolatedSpritePool.reset()
-	# NOTE: ensure object UID counters are statically reset between sessions
-	_reset_uid_counters()
+#	NOTE: ensure object UID counters are statically reset between sessions
+	UidMaxTracker.reset()
 
 func _ready():
 	print("GameScene has loaded.")
@@ -115,9 +115,6 @@ func _ready():
 	Globals.synced_rng.set_seed(origin_seed)
 
 	print("Origin seed to: ", origin_seed)
-
-#	NOTE: ensure object UID counters are statically reset between sessions
-	UidMaxTracker.reset()
 
 	_setup_players()
 	PlayerManager.send_players_created_signal()
