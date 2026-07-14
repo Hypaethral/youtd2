@@ -52,7 +52,7 @@ func cancel():
 func process_click_on_nothing():
 	if !_move_in_progress():
 		return
-	
+
 	var local_player: Player = PlayerManager.get_local_player()
 	var item_uid: int = _moved_item.get_uid()
 	var drop_pos: Vector2 = _world.get_global_mouse_position()
@@ -87,7 +87,7 @@ func process_click_on_tower(tower: Tower):
 
 func _add_move_action(item: Item, src_item_container: ItemContainer, dest_item_container: ItemContainer, clicked_index: int = -1) -> bool:
 	var local_player: Player = PlayerManager.get_local_player()
-	
+
 	var verify_ok: bool = ActionMoveItem.verify(local_player, item, src_item_container, dest_item_container, clicked_index)
 	if !verify_ok:
 		return false
@@ -152,7 +152,7 @@ func _get_local_horadric_stash() -> ItemContainer:
 func _get_selected_tower_inventory() -> ItemContainer:
 	var local_player: Player = PlayerManager.get_local_player()
 	var selected_unit: Unit = local_player.get_selected_unit()
-	
+
 	if !selected_unit is Tower:
 		return null
 
@@ -161,7 +161,7 @@ func _get_selected_tower_inventory() -> ItemContainer:
 
 	if !tower_belongs_to_local_player:
 		return null
-	
+
 	var tower_inventory: ItemContainer = selected_tower.get_item_container()
 
 	return tower_inventory
@@ -188,7 +188,7 @@ func _move_in_progress() -> bool:
 func _item_was_clicked_in_item_container(container: ItemContainer, clicked_item: Item):
 	if !_can_start_moving():
 		return
-	
+
 	var clicked_on_moved_item: bool = _moved_item == clicked_item
 	if clicked_on_moved_item:
 		cancel()
@@ -211,12 +211,12 @@ func _item_was_clicked_in_item_container(container: ItemContainer, clicked_item:
 		_do_instant_move(container, clicked_item, instant_move_type)
 		
 		return
-	
+
 	_moved_item = clicked_item
 	_moved_item.tree_exited.connect(_on_moved_item_tree_exited)
 	_source_container = container
 	_mouse_state.set_state(MouseState.enm.MOVE_ITEM)
-	
+
 	var item_cursor_icon: Texture2D = _get_item_cursor_icon(clicked_item)
 	var hotspot: Vector2 = item_cursor_icon.get_size() / 2
 	Input.set_custom_mouse_cursor(item_cursor_icon, Input.CURSOR_ARROW, hotspot)
@@ -232,10 +232,10 @@ func _get_instant_move_type(src_container: ItemContainer) -> InstantMoveType:
 
 	var item_stash: ItemContainer = _get_local_item_stash()
 	var tower_inventory: ItemContainer = _get_selected_tower_inventory()
-	
+
 	var item_is_in_item_stash: bool = src_container == item_stash
 	var item_is_in_selected_tower: bool = src_container == tower_inventory
-	
+
 	var instant_move_type: InstantMoveType = InstantMoveType.NONE
 	if shift_click:
 		if item_is_in_item_stash:
@@ -266,7 +266,7 @@ func _do_instant_move(src_container: ItemContainer, clicked_item: Item, instant_
 
 	if dest_container == null:
 		return
-	
+
 	# instant move forces swap with the last slot if target_container is at capacity
 	var dest_has_space: bool = dest_container.can_add_item(clicked_item)
 	var dest_idx: int = -1
@@ -329,14 +329,14 @@ func _get_item_cursor_icon(item: Item) -> Texture2D:
 		Rarity.enm.UNCOMMON: background_texture = load("res://resources/ui_textures/uncommon_unit_button_hover.tres")
 		Rarity.enm.RARE: background_texture = load("res://resources/ui_textures/rare_unit_button_hover.tres")
 		Rarity.enm.UNIQUE: background_texture = load("res://resources/ui_textures/unique_unit_button_hover.tres")
-		
+
 	var background_image: Image = background_texture.get_image()
 	background_image.resize(cursor_icon_size.x, cursor_icon_size.y)
-	
+
 	var atlas_texture: Texture2D = ItemProperties.get_icon(item.get_id())
 	var image: Image = atlas_texture.get_image()
 	image.resize(item_icon_size.x, item_icon_size.y)
-	
+
 	var src_rect: Rect2i = Rect2i(Vector2i(0, 0), item_icon_size)
 	var dst: Vector2i = Vector2i((cursor_icon_size - item_icon_size) / 2)
 	background_image.blend_rect(image, src_rect, dst)
@@ -362,7 +362,7 @@ func _can_start_moving() -> bool:
 
 func _on_player_clicked_in_item_container(item_container: ItemContainer, clicked_index: int):
 	var clicked_item: Item = item_container.get_item_at_index(clicked_index)
-	
+
 	if clicked_item != null:
 		_item_was_clicked_in_item_container(item_container, clicked_item)
 	else:
