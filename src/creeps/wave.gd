@@ -454,15 +454,15 @@ static func _generate_champion_count(wave_level: int, creep_size: CreepSize.enm)
 
 static func get_scene_name_for_creep_type(creep_size: CreepSize.enm, creep_race: CreepCategory.enm) -> String:
 	if creep_size == CreepSize.enm.CHALLENGE_BOSS:
-		return "ChallengeBoss"
+		return "SoniBoss"
 	elif creep_size == CreepSize.enm.CHALLENGE_MASS:
-		return "ChallengeMass"
+		return "SoniMass"
 
 #	NOTE: must use convert_to_string() which is non-display
 #	string here because this is for filename, so no
 #	translation needed!
 	var creep_size_string: String = CreepSize.convert_to_string(creep_size)
-	var creep_race_string: String = CreepCategory.convert_to_string(creep_race)
+	#var creep_race_string: String = CreepCategory.convert_to_string(creep_race)
 #	NOTE: currently, all creep races use orc scenes. Loading
 #	only orc scenes because loading creep scenes is taking a
 #	long time in-game and it serves no purpose, because
@@ -470,8 +470,20 @@ static func get_scene_name_for_creep_type(creep_size: CreepSize.enm, creep_race:
 # 	Remove this when other creep race scenes are added but
 # 	should also improve perfomance so that loading creep
 # 	scenes doesn't lag the game.
-	if Config.load_only_orc_scenes():
+	var creep_theme = Settings.get_creep_theme()
+	var creep_race_string = ""
+	if creep_theme == Settings.CreepThemeEnm.ORC_ONLY:
 		creep_race_string = CreepCategory.convert_to_string(CreepCategory.enm.ORC)
-	var scene_name: String = creep_race_string.capitalize() + creep_size_string.capitalize()
+	elif creep_theme == Settings.CreepThemeEnm.OMEGA_STRIKERS:
+		var os_creep_race = CreepCategoryThemes.convert_from_creep_category(creep_race)
+		creep_race_string = CreepCategoryThemes.convert_to_string(os_creep_race)
 
+	var scene_name: String = creep_race_string.capitalize() + creep_size_string.capitalize()
 	return scene_name
+
+
+static func omega_striker_to_race(omega_striker: CreepCategoryThemes.OSEnm) -> CreepCategory.enm:
+	return CreepCategoryThemes.convert_to_creep_category(omega_striker)
+
+static func race_to_omega_striker(race: CreepCategory.enm) -> CreepCategoryThemes.OSEnm: 
+	return CreepCategoryThemes.convert_from_creep_category(race)

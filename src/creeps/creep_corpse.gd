@@ -92,7 +92,11 @@ func get_creep_uid() -> int:
 # Copies sprite from creep and starts the death animation.
 # NOTE: need to copy original sprite's position and scale to
 # correctly display the same thing.
-func _setup_sprite(creep_sprite: CreepSprite, death_animation: String):
+func _setup_sprite(creep_sprite: CreepSprite, death_animation_container: Dictionary):
+	var death_animation: String = death_animation_container.get("animation")
+	#var should_flip_h: bool = death_animation_container.get("should_flip_h")
+	_sprite.flip_h = creep_sprite.flip_h
+	_sprite.modulate = creep_sprite.modulate
 	_sprite.sprite_frames = creep_sprite.sprite_frames.duplicate()
 	_sprite.scale = creep_sprite.scale
 #	NOTE: need to copy position of sprite because creep
@@ -119,11 +123,11 @@ func _on_expire_timer_timeout():
 ###       Static      ###
 #########################
 
-static func make(creep: Creep, sprite: AnimatedSprite2D, death_animation: String) -> CreepCorpse:
+static func make(creep: Creep, sprite: AnimatedSprite2D, death_animation_container: Dictionary) -> CreepCorpse:
 	var corpse: Node2D = Preloads.corpse_scene.instantiate()
 	var player: Player = creep.get_player()
 	corpse.set_player(player)
-	corpse._setup_sprite(sprite, death_animation)
+	corpse._setup_sprite(sprite, death_animation_container)
 	corpse._creep_uid = creep.get_uid()
 	corpse._creep_unit_scale = creep.get_unit_scale()
 

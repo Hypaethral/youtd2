@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cs4j32lmbc7d2"
+
+[deps]
+
+files=["res://assets/creeps/soni/champion/metadata.row.translation", "res://assets/creeps/soni/champion/metadata.col.translation", "res://assets/creeps/soni/champion/metadata.sprite.translation", "res://assets/creeps/soni/champion/metadata.offset.translation", "res://assets/creeps/soni/champion/metadata.offset.translation"]
+
+source_file="res://assets/creeps/soni/champion/metadata.csv"
+dest_files=["res://assets/creeps/soni/champion/metadata.row.translation", "res://assets/creeps/soni/champion/metadata.col.translation", "res://assets/creeps/soni/champion/metadata.sprite.translation", "res://assets/creeps/soni/champion/metadata.offset.translation", "res://assets/creeps/soni/champion/metadata.offset.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

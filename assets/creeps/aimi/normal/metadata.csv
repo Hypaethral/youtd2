@@ -1,0 +1,5 @@
+name,row_count,col_count,sprite_count,offset_x,offset_y
+death_E,1,89,89,0,-0.45
+death_W,1,44,44,0,-0.45
+slow_run_E,1,19,19,0,-0.45
+slow_run_W,1,19,19,0,-0.45

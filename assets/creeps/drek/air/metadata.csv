@@ -1,0 +1,7 @@
+name,row_count,col_count,sprite_count,offset_x,offset_y
+fly_E,1,16,16,0,-0.45
+fly_NE,1,16,16,0,-0.45
+fly_NW,1,16,16,0,-0.45
+fly_SE,1,16,16,0,-0.45
+fly_SW,1,16,16,0,-0.45
+fly_W,1,16,16,0,-0.45

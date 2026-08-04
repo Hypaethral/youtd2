@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://btks3lr85xwge"
+
+[deps]
+
+files=["res://assets/creeps/drek/air/metadata.row.translation", "res://assets/creeps/drek/air/metadata.col.translation", "res://assets/creeps/drek/air/metadata.sprite.translation", "res://assets/creeps/drek/air/metadata.offset.translation", "res://assets/creeps/drek/air/metadata.offset.translation"]
+
+source_file="res://assets/creeps/drek/air/metadata.csv"
+dest_files=["res://assets/creeps/drek/air/metadata.row.translation", "res://assets/creeps/drek/air/metadata.col.translation", "res://assets/creeps/drek/air/metadata.sprite.translation", "res://assets/creeps/drek/air/metadata.offset.translation", "res://assets/creeps/drek/air/metadata.offset.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

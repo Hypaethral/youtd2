@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dl00il26vb7sy"
+
+[deps]
+
+files=["res://assets/creeps/juno/normal/metadata.row.translation", "res://assets/creeps/juno/normal/metadata.col.translation", "res://assets/creeps/juno/normal/metadata.sprite.translation", "res://assets/creeps/juno/normal/metadata.offset.translation", "res://assets/creeps/juno/normal/metadata.offset.translation"]
+
+source_file="res://assets/creeps/juno/normal/metadata.csv"
+dest_files=["res://assets/creeps/juno/normal/metadata.row.translation", "res://assets/creeps/juno/normal/metadata.col.translation", "res://assets/creeps/juno/normal/metadata.sprite.translation", "res://assets/creeps/juno/normal/metadata.offset.translation", "res://assets/creeps/juno/normal/metadata.offset.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

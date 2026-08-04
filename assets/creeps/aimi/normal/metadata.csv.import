@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ha53fhqtyfqn"
+
+[deps]
+
+files=["res://assets/creeps/aimi/normal/metadata.row.translation", "res://assets/creeps/aimi/normal/metadata.col.translation", "res://assets/creeps/aimi/normal/metadata.sprite.translation", "res://assets/creeps/aimi/normal/metadata.offset.translation", "res://assets/creeps/aimi/normal/metadata.offset.translation"]
+
+source_file="res://assets/creeps/aimi/normal/metadata.csv"
+dest_files=["res://assets/creeps/aimi/normal/metadata.row.translation", "res://assets/creeps/aimi/normal/metadata.col.translation", "res://assets/creeps/aimi/normal/metadata.sprite.translation", "res://assets/creeps/aimi/normal/metadata.offset.translation", "res://assets/creeps/aimi/normal/metadata.offset.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

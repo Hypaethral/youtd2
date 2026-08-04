@@ -11,10 +11,12 @@ const HEIGHT_TWEEN_FAST_FORWARD_DELTA: float = 100.0
 # selection visual doesn't clip into floor2 tiles.
 const MAX_SELECTION_VISUAL_SIZE: float = 120.0
 
-const slow_run_animations: Array[String] = ["slow_run_E", "slow_run_S", "slow_run_W", "slow_run_N"]
-const fly_animations: Array[String] = ["fly_E", "fly_SE", "fly_S", "fly_SW", "fly_W", "fly_NW", "fly_N", "fly_NE"]
-const death_animations: Array[String] = ["death_E", "death_S", "death_W", "death_N"]
-
+const slow_run_animations: Array[String] = ["slow_run_E", "slow_run_E", "slow_run_W", "slow_run_W"]
+const fly_animations: Array[String] = ["fly_E", "fly_SE", "fly_E", "fly_SW", "fly_W", "fly_NW", "fly_W", "fly_NE"]
+const death_animations: Array[String] = ["death_E", "death_E", "death_W", "death_W"]
+# flip east sprite for south; flip west sprite for north
+const flip_mask_nofly: Array[bool] = [false, true, false, true]
+const flip_mask_fly: Array[bool] = [false, false, true, false, false, false, true, false]
 
 var _path: Path2D
 var _size: CreepSize.enm
@@ -79,6 +81,7 @@ func _ready():
 	_set_selection_size(selection_size)
 
 	death.connect(_on_death)
+	_unit_selection_outline_parent.scale = _unit_sprite_parent.scale
 
 
 func update(delta: float):
@@ -87,9 +90,11 @@ func update(delta: float):
 	if !is_stunned():
 		_move(delta)
 
-#	NOTE: need to also play animation for outline, so it
-#	matches sprite
-	var creep_animation: String = _get_creep_animation()
+#	NOTE: need to also play animation for outline, so it matches sprite
+	var creep_animation_container: Dictionary = _get_creep_animation()
+	var creep_animation: String = creep_animation_container.get("animation")
+	var should_flip_h: bool = creep_animation_container.get("should_flip_h")
+	_sprite.flip_h = should_flip_h
 	_sprite.play(creep_animation)
 	var selection_outline: Node2D = get_selection_outline()
 	selection_outline.play(creep_animation)
@@ -398,26 +403,21 @@ func _get_current_movement_angle() -> float:
 	return facing_angle_degrees
 
 
-func _get_creep_animation() -> String:
-	var animation_list: Array[String]
-	
+func _get_creep_animation() -> Dictionary:
 	if get_size() == CreepSize.enm.AIR:
-		animation_list = fly_animations
+		return _get_animation_based_on_facing_angle(fly_animations, flip_mask_fly)
 	else:
-		animation_list = slow_run_animations
+		return _get_animation_based_on_facing_angle(slow_run_animations, flip_mask_nofly)
 
-	var animation: String = _get_animation_based_on_facing_angle(animation_list)
-
-	return animation
-
-
-func _get_death_animation() -> String:
-	var animation: String = _get_animation_based_on_facing_angle(death_animations)
+func _get_death_animation() -> Dictionary:
+	var animation: Dictionary = _get_animation_based_on_facing_angle(death_animations, flip_mask_nofly)
 
 	return animation
 
 
-func _get_animation_based_on_facing_angle(animation_order: Array[String]) -> String:
+# returns a dict {animation: String, should_flip_h: boolean}
+# allows mirrored sprite re-use.  the fliph mask is separate for fliers which have more directions
+func _get_animation_based_on_facing_angle(animation_order: Array[String], fliph_mask: Array[bool]) -> Dictionary:
 # 	NOTE: convert facing angle to animation index by
 # 	breaking down the 360 degree space into sections. 4 for
 # 	ground units and 8 for air units. Then we figure out
@@ -434,8 +434,9 @@ func _get_animation_based_on_facing_angle(animation_order: Array[String]) -> Str
 		animation_index = 0
 
 	var animation: String = animation_order[animation_index]
+	var should_flip_h = fliph_mask[animation_index]
 
-	return animation
+	return { "animation": animation, "should_flip_h": should_flip_h }
 
 
 # NOTE: different thickness is used for different sizes to
@@ -476,8 +477,8 @@ func _on_death(_event: Event):
 
 # 	Add corpse object
 	if _size != CreepSize.enm.AIR:
-		var death_animation: String = _get_death_animation()
-		var corpse: CreepCorpse = CreepCorpse.make(self, _sprite, death_animation)
+		var death_animation_container: Dictionary = _get_death_animation()
+		var corpse: CreepCorpse = CreepCorpse.make(self, _sprite, death_animation_container)
 		var corpse_pos: Vector3 = Vector3(get_x(), get_y(), 0)
 		corpse.set_position_wc3(corpse_pos)
 		Utils.add_object_to_world(corpse)
@@ -533,12 +534,15 @@ func set_unit_facing(angle: float):
 # 	NOTE: limit facing angle to (0, 360) range
 	_facing_angle = int(angle + 360) % 360
 
-	var animation: String = _get_creep_animation()
-	if animation != "":
-		_sprite.play(animation)
-		var selection_outline: Node2D = get_selection_outline()
-		selection_outline.play(animation)
-
+#	NOTE: need to also orient the outline
+	var creep_animation_container: Dictionary = _get_creep_animation()
+	var selection_outline: Node2D = get_selection_outline()
+	var creep_animation: String = creep_animation_container.get("animation")
+	var should_flip_h: bool = creep_animation_container.get("should_flip_h")
+	_sprite.flip_h = should_flip_h
+	selection_outline.flip_h = should_flip_h
+	_sprite.play(creep_animation)
+	selection_outline.play(creep_animation)
 
 # NOTE: angle is top down
 # NOTE: GetUnitFacing() in JASS

@@ -17,6 +17,11 @@ enum InterfaceSize {
 	LARGE
 }
 
+enum CreepThemeEnm {
+	ORC_ONLY,
+	OMEGA_STRIKERS
+}
+
 # List of setting names
 const ENABLE_PLUS_MODE: String = "enable_plus_mode"
 const SHOW_ALL_DAMAGE_NUMBERS: String = "show_all_damage_numbers"
@@ -28,6 +33,8 @@ const MOUSE_SCROLL: String = "mouse_scroll"
 const KEYBOARD_SCROLL: String = "keyboard_scroll"
 const ENABLE_MOUSE_SCROLL: String = "enable_mouse_scroll"
 const SHOW_COMBAT_LOG: String = "show_combat_log"
+const CREEP_THEME: String = "creep_theme"
+
 # NOTE: storing x and y separately instead of Vector2
 # because Vector2 can't be deserialized from JSON
 const COMBAT_LOG_X: String = "combat_log_x"
@@ -82,6 +89,7 @@ var _default_value_map: Dictionary = {
 	MISSION_STATUS: {},
 	SHOWED_ONE_TIME_HELP_POPUP: false,
 	LANGUAGE: OS.get_locale_language(),
+	CREEP_THEME: CreepThemeEnm.ORC_ONLY as float
 }
 
 
@@ -102,7 +110,7 @@ func _ready():
 		var cache_string: String = settings_file.get_as_text()
 		_cache = JSON.parse_string(cache_string) as Dictionary
 		_validate_cache()
-		
+
 		print("Opened settings file at path:", settings_file.get_path_absolute())
 	else:
 		var open_error: Error = FileAccess.get_open_error()
@@ -118,7 +126,7 @@ func _ready():
 		flush()
 
 	_load_window_settings()
-	
+
 	load_language_setting()
 
 
@@ -132,14 +140,14 @@ func _ready():
 func load_language_setting():
 	var selected_language: String = get_setting(Settings.LANGUAGE)
 	TranslationServer.set_locale(selected_language)
-	
+
 	var chinese_locale: String = Language.get_locale_from_enum(Language.enm.CHINESE)
 	var font_for_selected_language: Font
 	if selected_language == chinese_locale:
 		font_for_selected_language = Preloads.noto_sans_chinese_font
 	else:
 		font_for_selected_language = Preloads.friz_font
-	
+
 	var theme: Theme = preload("res://resources/theme/wc3_theme.tres")
 	theme.default_font = font_for_selected_language
 
@@ -168,7 +176,7 @@ func get_bool_setting(setting: String) -> bool:
 
 func set_setting(setting: String, value: Variant):
 	_cache[setting] = value
-	
+
 	if setting == Settings.LANGUAGE:
 		load_language_setting()
 
@@ -180,14 +188,17 @@ func flush():
 	settings_file.store_line(cache_string)
 
 	_load_window_settings()
-	
+
 	changed.emit()
 
+func get_creep_theme() -> Settings.CreepThemeEnm:
+	var creep_theme_int: int = Settings.get_setting(Settings.CREEP_THEME) as int
+	var creep_theme_enum: Settings.CreepThemeEnm = creep_theme_int as Settings.CreepThemeEnm
+	return creep_theme_enum
 
 func get_interface_size_enum() -> Settings.InterfaceSize:
 	var interface_size_int: int = Settings.get_setting(Settings.INTERFACE_SIZE) as int
 	var interface_size_enum: Settings.InterfaceSize = interface_size_int as Settings.InterfaceSize
-	
 	return interface_size_enum
 
 

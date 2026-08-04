@@ -49,14 +49,47 @@ const element_icons: Dictionary = {
 	Element.enm.STORM: preload("res://resources/icons/elements/storm.tres"),
 }
 
-
+# todo: clone creep scenes for each creep upsidedown smileyface
+# each creep scene will be loaded dynamically from creep_spawner.gd (Wave.get_scene_name_for_creep_type(creep_size, creep_race))
 const creep_scenes: Dictionary = {
 	"OrcChampion": preload("res://src/creeps/instances/orc/orc_champion_creep.tscn"),
 	"OrcAir": preload("res://src/creeps/instances/orc/orc_air_creep.tscn"),
 	"OrcBoss": preload("res://src/creeps/instances/orc/orc_boss_creep.tscn"),
 	"OrcMass": preload("res://src/creeps/instances/orc/orc_mass_creep.tscn"),
 	"OrcNormal": preload("res://src/creeps/instances/orc/orc_normal_creep.tscn"),
-	
 	"ChallengeBoss": preload("res://src/creeps/instances/challenge/challenge_boss_creep.tscn"),
 	"ChallengeMass": preload("res://src/creeps/instances/challenge/challenge_mass_creep.tscn"),
+
+	"AimiAir": preload("res://src/creeps/instances/aimi/aimi_air_creep.tscn"),
+	"AimiChampion": preload("res://src/creeps/instances/aimi/aimi_champion_creep.tscn"),
+	"AimiBoss": preload("res://src/creeps/instances/aimi/aimi_boss_creep.tscn"),
+	"AimiMass": preload("res://src/creeps/instances/aimi/aimi_mass_creep.tscn"),
+	"AimiNormal": preload("res://src/creeps/instances/aimi/aimi_normal_creep.tscn"),
+
+	"DrekAir": preload("res://src/creeps/instances/drek/drek_air_creep.tscn"),
+	"DrekChampion": preload("res://src/creeps/instances/drek/drek_champion_creep.tscn"),
+	"DrekBoss": preload("res://src/creeps/instances/drek/drek_boss_creep.tscn"),
+	"DrekMass": preload("res://src/creeps/instances/drek/drek_mass_creep.tscn"),
+	"DrekNormal": preload("res://src/creeps/instances/drek/drek_normal_creep.tscn"),
+
+	"FiniAir": preload("res://src/creeps/instances/fini/fini_air_creep.tscn"),
+	"FiniChampion": preload("res://src/creeps/instances/fini/fini_champion_creep.tscn"),
+	"FiniBoss": preload("res://src/creeps/instances/fini/fini_boss_creep.tscn"),
+	"FiniMass": preload("res://src/creeps/instances/fini/fini_mass_creep.tscn"),
+	"FiniNormal": preload("res://src/creeps/instances/fini/fini_normal_creep.tscn"),
+
+	"JunoAir": preload("res://src/creeps/instances/juno/juno_air_creep.tscn"),
+	"JunoChampion": preload("res://src/creeps/instances/juno/juno_champion_creep.tscn"),
+	"JunoBoss": preload("res://src/creeps/instances/juno/juno_boss_creep.tscn"),
+	"JunoMass": preload("res://src/creeps/instances/juno/juno_mass_creep.tscn"),
+	"JunoNormal": preload("res://src/creeps/instances/juno/juno_normal_creep.tscn"),
+
+	"RuneAir": preload("res://src/creeps/instances/rune/rune_air_creep.tscn"),
+	"RuneChampion": preload("res://src/creeps/instances/rune/rune_champion_creep.tscn"),
+	"RuneBoss": preload("res://src/creeps/instances/rune/rune_boss_creep.tscn"),
+	"RuneMass": preload("res://src/creeps/instances/rune/rune_mass_creep.tscn"),
+	"RuneNormal": preload("res://src/creeps/instances/rune/rune_normal_creep.tscn"),
+
+	"SoniBoss": preload("res://src/creeps/instances/soni/soni_boss_creep.tscn"),
+	"SoniMass": preload("res://src/creeps/instances/soni/soni_mass_creep.tscn"),
 }

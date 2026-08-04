@@ -20,6 +20,7 @@ signal ok_pressed()
 @export var _apply_button: Button
 @export var _display_mode_combo: OptionButton
 @export var _language_combo: OptionButton
+@export var _creep_theme_combo: OptionButton
 @export var _interface_size_button_small: Button
 @export var _interface_size_button_medium: Button
 @export var _interface_size_button_large: Button
@@ -45,6 +46,7 @@ func _ready():
 	_setting_to_combo_map = {
 		Settings.DISPLAY_MODE: _display_mode_combo,
 		Settings.LANGUAGE: _language_combo,
+		Settings.CREEP_THEME: _creep_theme_combo
 	}
 	
 	for setting in _setting_to_combo_map.keys():
@@ -101,6 +103,9 @@ func _load_current_settings():
 	var language_string: String = Settings.get_setting(Settings.LANGUAGE)
 	var selected_language_int: int = Language.get_option_from_locale(language_string)
 	_language_combo.select(selected_language_int)
+	
+	var selected_creep_theme_int: int = Settings.get_setting(Settings.CREEP_THEME) as int
+	_creep_theme_combo.select(selected_creep_theme_int)
 	
 	for setting in _setting_to_checkbox_map.keys():
 		var checkbox: CheckBox = _setting_to_checkbox_map[setting]
@@ -230,6 +235,9 @@ func _on_display_mode_combo_item_selected(index: int):
 	var display_mode_int: int = index
 	Settings.set_setting(Settings.DISPLAY_MODE, display_mode_int)
 
+func _on_creep_theme_combo_item_selected(index: int):
+	var creep_theme_int: int = index
+	Settings.set_setting(Settings.CREEP_THEME, creep_theme_int)
 
 func _on_language_item_selected(index: int) -> void:
 	var selected_locale: String = Language.get_locale_from_option(index)

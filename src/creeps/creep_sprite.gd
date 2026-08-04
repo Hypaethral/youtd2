@@ -9,6 +9,7 @@ const ACTIONS = ["slow_run", "death", "fly"]
 const DIRECTIONS = ["E", "SW", "W", "NE", "S", "SE", "N", "NW"]
 const ANIMATION_FPS = 15.0
 
+const FLIPPABLE_DIRECTIONS = ["E", "W"]
 
 func _ready():
 	# The code below is used to generate SpriteFrames in the editor.
