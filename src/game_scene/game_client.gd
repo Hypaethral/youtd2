@@ -54,7 +54,11 @@ var _time_when_sent_ping: int = 0
 var _ping_history: Array = [0]
 var _received_any_timeslots: bool = false
 var _paused_by_host: bool = false
-var _last_received_timeslot_list: Array = []
+# High-water mark: highest tick this client has ever received from the host.
+# Sent in each ping so the host can drop every timeslot <= this from its
+# per-player send queue. Monotonic + reliable transport means a lost ping
+# self-heals (the next ping re-carries the same or a higher mark).
+var _max_received_tick: int = -1
 # Store checksum data for desync debugging: {tick -> checksum_data_dict}
 var _checksum_data_map: Dictionary = {}
 # Diagnostic (all connection types): wall-clock msec when the last timeslot
@@ -252,12 +256,11 @@ func receive_timeslots(timeslot_list: Dictionary):
 	var sorted_timeslot_keys: Array = timeslot_list.keys()
 	sorted_timeslot_keys.sort()
 	for tick in sorted_timeslot_keys:
+		_max_received_tick = max(_max_received_tick, int(tick))
 		if tick < _current_tick:
 			continue
 
 		_timeslot_map[tick] = timeslot_list[tick]
-
-	_last_received_timeslot_list = timeslot_list.keys()
 	_last_timeslot_msec = Time.get_ticks_msec()
 
 
@@ -622,9 +625,9 @@ func _get_ping_max() -> float:
 #########################
 
 # Periodically send a ping from client to host. This ping is
-# used to calculate ping time. It also includes a list of
-# last received timeslots to ack receival of those timeslots
-# and let the host know which timeslots it can stop sending.
+# used to calculate ping time. It also carries the highest tick
+# this client has received, letting the host drop every timeslot
+# up to that mark from its per-player send queue.
 func _on_ping_timer_timeout():
 	_time_when_sent_ping = Time.get_ticks_msec()
-	_game_host.receive_ping.rpc_id(1, _last_received_timeslot_list)
+	_game_host.receive_ping.rpc_id(1, _max_received_tick)

@@ -78,7 +78,6 @@ var _player_last_sent_tick: Dictionary = {}
 # and finished loading game scene.
 var _state: HostState = HostState.WAITING_FOR_LAGGING_PLAYERS
 
-
 #########################
 ###     Built-in      ###
 #########################
@@ -165,18 +164,21 @@ func receive_timeslot_checksum(tick: int, checksum: PackedByteArray):
 
 
 @rpc("any_peer", "call_local", "reliable")
-func receive_ping(last_received_timeslot_list: Array):
+func receive_ping(last_received_tick: int):
 	var peer_id: int = multiplayer.get_remote_sender_id()
 	var player: Player = PlayerManager.get_player_by_peer_id(peer_id)
 	var player_id: int = player.get_id()
 
 	_update_last_contact_time_for_player(player_id)
 
-#	When player ack's timeslots, host erases ack'd timeslots
-#	from queue and stops sending them.
+#	The client reports the highest tick it has received. Every timeslot
+#	<= that mark is guaranteed delivered (reliable RPC), so drop it from
+#	the queue; this bounds each per-player send queue to roughly one
+#	ping-interval of ticks instead of letting unacked ticks accumulate.
 	var timeslots_to_send: Dictionary = _player_timeslot_send_queue[player_id]
-	for tick in last_received_timeslot_list:
-		timeslots_to_send.erase(tick)
+	for tick in timeslots_to_send.keys():
+		if int(tick) <= last_received_tick:
+			timeslots_to_send.erase(tick)
 
 	_game_client.receive_pong.rpc_id(peer_id)
 
